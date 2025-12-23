@@ -181,5 +181,42 @@
     "today": "Hoy",
     "justNow": "Ahora mismo",
     "daysAgo": "días atrás"
+  },
+  "apply": {
+    "title": "Enviar solicitud de ayuda",
+    "subtitle": "Describe tu situación. Tu solicitud será revisada por un moderador y puede ser seleccionada para votación.",
+    "form": {
+      "description": {
+        "label": "Descripción de la situación",
+        "placeholder": "Describe tu situación en detalle y para qué se necesitan los fondos...",
+        "hint": "Mínimo 200 caracteres, máximo 1000"
+      },
+      "amount": {
+        "label": "Cantidad necesaria (USD)",
+        "hint": "Indica la cantidad real necesaria para resolver el problema"
+      },
+      "country": {
+        "label": "País",
+        "placeholder": "Selecciona un país"
+      },
+      "contact": {
+        "label": "Información de contacto",
+        "placeholder": "Email o Telegram",
+        "hint": "Esta información no será publicada, solo para contacto del moderador"
+      },
+      "agree": {
+        "text": "Confirmo que he leído las",
+        "link": "reglas del proyecto"
+      },
+      "submit": "Enviar solicitud",
+      "submitting": "Enviando..."
+    },
+    "success": {
+      "title": "¡Solicitud enviada!",
+      "message": "Tu solicitud ha sido recibida y será revisada por un moderador. Si pasa la verificación, puede ser seleccionada para votación."
+    },
+    "errors": {
+      "generic": "Ocurrió un error. Por favor, inténtalo de nuevo."
+    }
   }
 }

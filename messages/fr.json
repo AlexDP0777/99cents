@@ -181,5 +181,42 @@
     "today": "Aujourd'hui",
     "justNow": "À l'instant",
     "daysAgo": "jours"
+  },
+  "apply": {
+    "title": "Soumettre une demande d'aide",
+    "subtitle": "Décrivez votre situation. Votre demande sera examinée par un modérateur et peut être sélectionnée pour le vote.",
+    "form": {
+      "description": {
+        "label": "Description de la situation",
+        "placeholder": "Décrivez votre situation en détail et à quoi les fonds sont destinés...",
+        "hint": "Minimum 200 caractères, maximum 1000"
+      },
+      "amount": {
+        "label": "Montant nécessaire (USD)",
+        "hint": "Indiquez le montant réel nécessaire pour résoudre le problème"
+      },
+      "country": {
+        "label": "Pays",
+        "placeholder": "Sélectionnez un pays"
+      },
+      "contact": {
+        "label": "Coordonnées",
+        "placeholder": "Email ou Telegram",
+        "hint": "Ces informations ne seront pas publiées, uniquement pour le contact du modérateur"
+      },
+      "agree": {
+        "text": "Je confirme avoir lu les",
+        "link": "règles du projet"
+      },
+      "submit": "Soumettre la demande",
+      "submitting": "Envoi en cours..."
+    },
+    "success": {
+      "title": "Demande soumise !",
+      "message": "Votre demande a été reçue et sera examinée par un modérateur. Si elle est validée, elle peut être sélectionnée pour le vote."
+    },
+    "errors": {
+      "generic": "Une erreur s'est produite. Veuillez réessayer."
+    }
   }
 }

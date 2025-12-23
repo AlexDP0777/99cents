@@ -181,5 +181,42 @@
     "today": "Heute",
     "justNow": "Gerade eben",
     "daysAgo": "Tage her"
+  },
+  "apply": {
+    "title": "Hilfsantrag einreichen",
+    "subtitle": "Beschreiben Sie Ihre Situation. Ihr Antrag wird von einem Moderator geprüft und kann zur Abstimmung ausgewählt werden.",
+    "form": {
+      "description": {
+        "label": "Beschreibung der Situation",
+        "placeholder": "Beschreiben Sie Ihre Situation ausführlich und wofür die Mittel benötigt werden...",
+        "hint": "Mindestens 200 Zeichen, maximal 1000"
+      },
+      "amount": {
+        "label": "Benötigter Betrag (USD)",
+        "hint": "Geben Sie den tatsächlich benötigten Betrag zur Lösung des Problems an"
+      },
+      "country": {
+        "label": "Land",
+        "placeholder": "Land auswählen"
+      },
+      "contact": {
+        "label": "Kontaktdaten",
+        "placeholder": "E-Mail oder Telegram",
+        "hint": "Diese Daten werden nicht veröffentlicht, nur für Moderator-Kontakt"
+      },
+      "agree": {
+        "text": "Ich bestätige, dass ich die",
+        "link": "Projektregeln gelesen habe"
+      },
+      "submit": "Antrag einreichen",
+      "submitting": "Wird gesendet..."
+    },
+    "success": {
+      "title": "Antrag eingereicht!",
+      "message": "Ihr Antrag wurde empfangen und wird von einem Moderator geprüft. Bei erfolgreicher Prüfung kann er zur Abstimmung ausgewählt werden."
+    },
+    "errors": {
+      "generic": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    }
   }
 }

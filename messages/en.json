@@ -181,5 +181,42 @@
     "today": "Today",
     "justNow": "Just now",
     "daysAgo": "days ago"
+  },
+  "apply": {
+    "title": "Submit a Request for Help",
+    "subtitle": "Describe your situation. Your request will be reviewed by a moderator and may be selected for voting.",
+    "form": {
+      "description": {
+        "label": "Description of the situation",
+        "placeholder": "Describe your situation in detail and what the funds are needed for...",
+        "hint": "Minimum 200 characters, maximum 1000"
+      },
+      "amount": {
+        "label": "Amount needed (USD)",
+        "hint": "Specify the actual amount needed to solve the problem"
+      },
+      "country": {
+        "label": "Country",
+        "placeholder": "Select a country"
+      },
+      "contact": {
+        "label": "Contact information",
+        "placeholder": "Email or Telegram",
+        "hint": "This information will not be published, only for moderator contact"
+      },
+      "agree": {
+        "text": "I confirm that I have read the",
+        "link": "project rules"
+      },
+      "submit": "Submit request",
+      "submitting": "Submitting..."
+    },
+    "success": {
+      "title": "Request submitted!",
+      "message": "Your request has been received and will be reviewed by a moderator. If it passes verification, it may be selected for voting."
+    },
+    "errors": {
+      "generic": "An error occurred. Please try again."
+    }
   }
 }

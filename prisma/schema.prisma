@@ -6,7 +6,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 // Участник (идентифицируется по кошельку или уникальному токену)
@@ -34,7 +33,9 @@ model Payment {
   amount        Float    @default(0.99)
   currency      String   @default("USD")
   paymentType   String   // "USDC" или "STRIPE"
-  txHash        String?  // хеш транзакции для блокчейна
+  txHash        String?  @unique // хеш транзакции для блокчейна
+  chain         String?  // 'abstract', 'base', etc.
+  paymentHash   String?  @unique // уникальный хеш для голосования
   stripeId      String?  // ID платежа Stripe
   status        String   @default("pending") // pending, completed, failed
   createdAt     DateTime @default(now())
@@ -42,7 +43,7 @@ model Payment {
   participant   Participant @relation(fields: [participantId], references: [id])
 }
 
-// Проект для голосования
+// Проект для голосования (старая модель, оставляем для совместимости)
 model Project {
   id          String   @id @default(cuid())
   title       String
@@ -56,7 +57,7 @@ model Project {
   votes       Vote[]
 }
 
-// Голос
+// Голос за проект (старая модель)
 model Vote {
   id            String   @id @default(cuid())
   participantId String
@@ -71,19 +72,72 @@ model Vote {
 
 // Период голосования
 model VotingPeriod {
-  id        String   @id @default(cuid())
-  startDate DateTime
-  endDate   DateTime
-  isActive  Boolean  @default(true)
-  winnerId  String?  // ID победившего проекта
-  createdAt DateTime @default(now())
+  id               String       @id @default(cuid())
+  startDate        DateTime
+  endDate          DateTime
+  status           PeriodStatus @default(COLLECTING)
+  winnerId         String?
+  totalCollected   Float        @default(0)
+  totalTransferred Float?
+  transactionHash  String?
+  createdAt        DateTime     @default(now())
+
+  applications     Application[]
+  applicationVotes ApplicationVote[]
+}
+
+enum PeriodStatus {
+  COLLECTING  // сбор заявок
+  VOTING      // голосование активно
+  COMPLETED   // голосование завершено
+  FUNDED      // средства отправлены
+}
+
+// Заявка на помощь
+model Application {
+  id          String            @id @default(cuid())
+  description String            @db.Text
+  amount      Float
+  country     String
+  contact     String            // email/telegram - приватное поле
+  status      ApplicationStatus @default(PENDING)
+  periodId    String?
+  period      VotingPeriod?     @relation(fields: [periodId], references: [id])
+  votesCount  Int               @default(0)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  applicationVotes ApplicationVote[]
+}
+
+enum ApplicationStatus {
+  PENDING   // ожидает модерации
+  APPROVED  // одобрена
+  SELECTED  // выбрана для голосования
+  WINNER    // победила
+  REJECTED  // отклонена
+  FUNDED    // средства отправлены
+}
+
+// Голос за заявку
+model ApplicationVote {
+  id            String       @id @default(cuid())
+  visitorHash   String       // fingerprint или payment-hash
+  applicationId String
+  application   Application  @relation(fields: [applicationId], references: [id])
+  periodId      String
+  period        VotingPeriod @relation(fields: [periodId], references: [id])
+  createdAt     DateTime     @default(now())
+
+  @@unique([visitorHash, applicationId, periodId])
+  @@index([visitorHash, createdAt])
 }
 
 // Глобальная статистика (кеш)
 model Stats {
-  id               String   @id @default("global")
-  totalParticipants Int     @default(0)
-  totalCountries    Int     @default(0)
-  totalAmount       Float   @default(0)
+  id                String   @id @default("global")
+  totalParticipants Int      @default(0)
+  totalCountries    Int      @default(0)
+  totalAmount       Float    @default(0)
   updatedAt         DateTime @updatedAt
 }

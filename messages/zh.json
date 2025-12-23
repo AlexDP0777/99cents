@@ -181,5 +181,42 @@
     "today": "今天",
     "justNow": "刚刚",
     "daysAgo": "天前"
+  },
+  "apply": {
+    "title": "提交帮助申请",
+    "subtitle": "描述您的情况。您的申请将由管理员审核，可能被选入投票。",
+    "form": {
+      "description": {
+        "label": "情况描述",
+        "placeholder": "详细描述您的情况以及资金用途...",
+        "hint": "最少200个字符，最多1000个"
+      },
+      "amount": {
+        "label": "所需金额（美元）",
+        "hint": "请注明解决问题所需的实际金额"
+      },
+      "country": {
+        "label": "国家",
+        "placeholder": "选择国家"
+      },
+      "contact": {
+        "label": "联系方式",
+        "placeholder": "电子邮件或Telegram",
+        "hint": "此信息不会公开，仅供管理员联系使用"
+      },
+      "agree": {
+        "text": "我确认已阅读",
+        "link": "项目规则"
+      },
+      "submit": "提交申请",
+      "submitting": "提交中..."
+    },
+    "success": {
+      "title": "申请已提交！",
+      "message": "您的申请已收到，将由管理员审核。如果通过审核，可能被选入投票。"
+    },
+    "errors": {
+      "generic": "发生错误，请重试。"
+    }
   }
 }
