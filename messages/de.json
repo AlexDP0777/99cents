@@ -1,0 +1,185 @@
+{
+  "meta": {
+    "title": "99 Cent",
+    "description": "Eine kleine Tat. Die Wahl der Starken."
+  },
+  "home": {
+    "title": "99 Cent.",
+    "subtitle1": "Eine kleine Tat.",
+    "subtitle2": "Die Wahl der Starken.",
+    "tagline": "Ein Klick. Keine Anmeldung. Keine Belohnung.",
+    "cta": {
+      "description": "Du sendest 99 Cent und bekommst nichts zurück.",
+      "meaning": "Das ist der Sinn.",
+      "button": "99 Cent senden",
+      "connecting": "Verbindung wird hergestellt...",
+      "note": "Keine Registrierung. Keine E-Mails. Keine Bedingungen."
+    },
+    "stats": {
+      "people": "Menschen",
+      "countries": "Länder",
+      "collected": "gesammelt"
+    },
+    "map": {
+      "caption": "Jeder Punkt ist jemand, der es getan hat."
+    },
+    "voting": "Für Projekte abstimmen →"
+  },
+  "voting": {
+    "title": "Abstimmung",
+    "subtitle": "Wähle das Projekt, das die gesammelten Gelder erhält",
+    "voteButton": "Abstimmen",
+    "voted": "Du hast abgestimmt",
+    "votes": "Stimmen",
+    "endsIn": "Abstimmung endet in",
+    "days": "Tage",
+    "hours": "Stunden",
+    "minutes": "Minuten",
+    "mustPay": "Um abzustimmen, musst du zuerst 99 Cent senden",
+    "oneVotePerDay": "Eine Stimme pro Tag"
+  },
+  "rules": {
+    "title": "Projektregeln",
+    "sections": {
+      "idea": {
+        "title": "Die Idee",
+        "content": "99 Cent ist ein Experiment im kollektiven Spenden. Wir glauben, dass kleine Taten vieler Menschen die Welt verändern können."
+      },
+      "howItWorks": {
+        "title": "So funktioniert es",
+        "items": [
+          "Du sendest genau 99 Cent",
+          "Deine Zahlung erscheint auf der Karte",
+          "Du kannst für Projekte abstimmen",
+          "Das Gewinnerprojekt erhält alle Gelder"
+        ]
+      },
+      "whatYouGet": {
+        "title": "Was du bekommst",
+        "content": "Nichts Materielles. Nur das Wissen, dass du eine kleine, aber bedeutsame Tat vollbracht hast. Und einen Punkt auf der Karte."
+      },
+      "transparency": {
+        "title": "Transparenz",
+        "content": "Alle Transaktionen sind öffentlich. Alle Überweisungen an Projekte werden dokumentiert. Wir nehmen keine Provision."
+      }
+    }
+  },
+  "transparency": {
+    "title": "Transparenz",
+    "sections": {
+      "full": {
+        "title": "Volle Transparenz",
+        "content": "Wir glauben, dass Vertrauen durch Offenheit entsteht. Jeder Cent, den du sendest, wird öffentlich verfolgt und dokumentiert."
+      },
+      "publish": {
+        "title": "Was wir veröffentlichen",
+        "items": [
+          "Gesamtsumme in Echtzeit",
+          "Anzahl der Teilnehmer und ihre geografische Verteilung",
+          "Ergebnisse jeder Abstimmung",
+          "Berichte über Überweisungen an Gewinner",
+          "Alle Blockchain-Transaktionen (für Krypto-Zahlungen)"
+        ]
+      },
+      "blockchain": {
+        "title": "Blockchain-Verifizierung",
+        "content": "Alle USDC-Zahlungen werden in der Blockchain aufgezeichnet und können von jedem überprüft werden.",
+        "wallet": "Projekt-Wallet-Adresse:",
+        "walletNote": "(wird nach dem Start veröffentlicht)"
+      },
+      "reports": {
+        "title": "Monatliche Berichte",
+        "content": "Jeden Monat veröffentlichen wir einen detaillierten Bericht:",
+        "items": [
+          "Wie viel gesammelt wurde",
+          "Welches Projekt die Abstimmung gewonnen hat",
+          "Nachweis der Überweisung",
+          "Feedback von Empfängern"
+        ]
+      },
+      "fees": {
+        "title": "Keine versteckten Gebühren",
+        "content": "Wir nehmen keine Provision von deinen 99 Cent. Die einzigen Kosten sind Zahlungsabwicklungsgebühren (Stripe ~3% oder Blockchain-Gas)."
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "Wie die Gelder verwendet werden",
+    "sections": {
+      "process": {
+        "title": "Einfacher Prozess",
+        "steps": [
+          {
+            "title": "Sammlung",
+            "content": "Teilnehmer senden jeweils 99 Cent. Die Gelder sammeln sich während des Abstimmungszeitraums."
+          },
+          {
+            "title": "Abstimmung",
+            "content": "Teilnehmer stimmen für Projekte, die sie unterstützen möchten. Eine Person — eine Stimme pro Tag."
+          },
+          {
+            "title": "Gewinnerwahl",
+            "content": "Am Ende des Zeitraums gewinnt das Projekt mit den meisten Stimmen."
+          },
+          {
+            "title": "Überweisung",
+            "content": "Die gesamte Summe geht an das Gewinnerprojekt."
+          }
+        ]
+      },
+      "projects": {
+        "title": "Projekte, die wir unterstützen",
+        "items": [
+          "Zugang zu sauberem Wasser",
+          "Bildungsprogramme",
+          "Medizinische Hilfe",
+          "Umweltinitiativen",
+          "Gemeinschaftsunterstützung"
+        ],
+        "note": "Projekte werden vor der Aufnahme in die Abstimmung geprüft."
+      },
+      "distribution": {
+        "title": "Verteilung der Gelder",
+        "toProject": "An das Gewinnerprojekt",
+        "note": "Wir nehmen keine Provision. Alle gesammelten Gelder gehen an das gewählte Projekt."
+      },
+      "reporting": {
+        "title": "Berichterstattung",
+        "content": "Nach jeder Überweisung veröffentlichen wir:",
+        "items": [
+          "Transaktionsbestätigung",
+          "Fotobericht zur Projektumsetzung",
+          "Feedback von Empfängern"
+        ]
+      }
+    }
+  },
+  "admin": {
+    "title": "Admin-Panel",
+    "password": "Passwort",
+    "login": "Anmelden",
+    "wrongPassword": "Falsches Passwort",
+    "projects": "Projekte",
+    "addProject": "Projekt hinzufügen",
+    "projectName": "Projektname",
+    "projectDescription": "Beschreibung",
+    "save": "Speichern",
+    "delete": "Löschen"
+  },
+  "footer": {
+    "rules": "Projektregeln",
+    "transparency": "Transparenz",
+    "howItWorks": "Wie Gelder verwendet werden"
+  },
+  "nav": {
+    "back": "← Zurück zur Startseite"
+  },
+  "map": {
+    "loading": "Karte wird geladen...",
+    "participant": "Teilnehmer",
+    "new": "Neu!",
+    "today": "Heute",
+    "justNow": "Gerade eben",
+    "daysAgo": "Tage her"
+  }
+}

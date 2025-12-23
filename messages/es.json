@@ -1,0 +1,185 @@
+{
+  "meta": {
+    "title": "99 centavos",
+    "description": "Una pequeña acción. La elección de los fuertes."
+  },
+  "home": {
+    "title": "99 centavos.",
+    "subtitle1": "Una pequeña acción.",
+    "subtitle2": "La elección de los fuertes.",
+    "tagline": "Un clic. Sin registro. Sin recompensas.",
+    "cta": {
+      "description": "Envías 99 centavos y no recibes nada a cambio.",
+      "meaning": "Ese es el punto.",
+      "button": "Enviar 99 centavos",
+      "connecting": "Conectando...",
+      "note": "Sin registro. Sin correos. Sin condiciones."
+    },
+    "stats": {
+      "people": "personas",
+      "countries": "países",
+      "collected": "recaudado"
+    },
+    "map": {
+      "caption": "Cada punto es alguien que lo hizo."
+    },
+    "voting": "Votar por proyectos →"
+  },
+  "voting": {
+    "title": "Votación",
+    "subtitle": "Elige el proyecto que recibirá los fondos recaudados",
+    "voteButton": "Votar",
+    "voted": "Has votado",
+    "votes": "votos",
+    "endsIn": "La votación termina en",
+    "days": "días",
+    "hours": "horas",
+    "minutes": "minutos",
+    "mustPay": "Para votar, primero debes enviar 99 centavos",
+    "oneVotePerDay": "Un voto por día"
+  },
+  "rules": {
+    "title": "Reglas del Proyecto",
+    "sections": {
+      "idea": {
+        "title": "La Idea",
+        "content": "99 centavos es un experimento de donación colectiva. Creemos que pequeñas acciones de muchas personas pueden cambiar el mundo."
+      },
+      "howItWorks": {
+        "title": "Cómo Funciona",
+        "items": [
+          "Envías exactamente 99 centavos",
+          "Tu pago aparece en el mapa",
+          "Puedes votar por proyectos",
+          "El proyecto ganador recibe todos los fondos"
+        ]
+      },
+      "whatYouGet": {
+        "title": "Qué Obtienes",
+        "content": "Nada material. Solo la satisfacción de haber hecho una pequeña pero significativa acción. Y un punto en el mapa."
+      },
+      "transparency": {
+        "title": "Transparencia",
+        "content": "Todas las transacciones son públicas. Todas las transferencias a proyectos están documentadas. No cobramos comisión."
+      }
+    }
+  },
+  "transparency": {
+    "title": "Transparencia",
+    "sections": {
+      "full": {
+        "title": "Transparencia Total",
+        "content": "Creemos que la confianza se construye con apertura. Cada centavo que envías es rastreado y registrado públicamente."
+      },
+      "publish": {
+        "title": "Qué Publicamos",
+        "items": [
+          "Monto total recaudado en tiempo real",
+          "Número de participantes y su distribución geográfica",
+          "Resultados de cada votación",
+          "Informes de transferencias a ganadores",
+          "Todas las transacciones en blockchain (para pagos cripto)"
+        ]
+      },
+      "blockchain": {
+        "title": "Verificación Blockchain",
+        "content": "Todos los pagos en USDC se registran en blockchain y pueden ser verificados por cualquiera.",
+        "wallet": "Dirección del monedero del proyecto:",
+        "walletNote": "(se publicará después del lanzamiento)"
+      },
+      "reports": {
+        "title": "Informes Mensuales",
+        "content": "Cada mes publicamos un informe detallado:",
+        "items": [
+          "Cuánto se recaudó",
+          "Qué proyecto ganó la votación",
+          "Prueba de transferencia de fondos",
+          "Retroalimentación de los beneficiarios"
+        ]
+      },
+      "fees": {
+        "title": "Cero Comisiones Ocultas",
+        "content": "No cobramos comisión de tus 99 centavos. Los únicos costos son las comisiones de procesadores de pago (Stripe ~3% o gas de blockchain)."
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "Cómo se Usan los Fondos",
+    "sections": {
+      "process": {
+        "title": "Proceso Simple",
+        "steps": [
+          {
+            "title": "Recaudación",
+            "content": "Los participantes envían 99 centavos cada uno. Los fondos se acumulan durante el período de votación."
+          },
+          {
+            "title": "Votación",
+            "content": "Los participantes votan por los proyectos que quieren apoyar. Una persona — un voto por día."
+          },
+          {
+            "title": "Selección del Ganador",
+            "content": "Al final del período, el proyecto con más votos gana."
+          },
+          {
+            "title": "Transferencia de Fondos",
+            "content": "Todo el monto recaudado va al proyecto ganador."
+          }
+        ]
+      },
+      "projects": {
+        "title": "Proyectos que Apoyamos",
+        "items": [
+          "Acceso a agua limpia",
+          "Programas educativos",
+          "Asistencia médica",
+          "Iniciativas ambientales",
+          "Apoyo comunitario"
+        ],
+        "note": "Los proyectos son verificados antes de agregarse a la votación."
+      },
+      "distribution": {
+        "title": "Distribución de Fondos",
+        "toProject": "Al proyecto ganador",
+        "note": "No cobramos comisión. Todos los fondos recaudados van al proyecto elegido."
+      },
+      "reporting": {
+        "title": "Informes",
+        "content": "Después de cada transferencia publicamos:",
+        "items": [
+          "Confirmación de transacción",
+          "Informe fotográfico de implementación",
+          "Retroalimentación de beneficiarios"
+        ]
+      }
+    }
+  },
+  "admin": {
+    "title": "Panel de Administración",
+    "password": "Contraseña",
+    "login": "Iniciar sesión",
+    "wrongPassword": "Contraseña incorrecta",
+    "projects": "Proyectos",
+    "addProject": "Agregar Proyecto",
+    "projectName": "Nombre del proyecto",
+    "projectDescription": "Descripción",
+    "save": "Guardar",
+    "delete": "Eliminar"
+  },
+  "footer": {
+    "rules": "Reglas del Proyecto",
+    "transparency": "Transparencia",
+    "howItWorks": "Cómo se Usan los Fondos"
+  },
+  "nav": {
+    "back": "← Volver al inicio"
+  },
+  "map": {
+    "loading": "Cargando mapa...",
+    "participant": "Participante",
+    "new": "¡Nuevo!",
+    "today": "Hoy",
+    "justNow": "Ahora mismo",
+    "daysAgo": "días atrás"
+  }
+}

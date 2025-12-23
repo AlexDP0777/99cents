@@ -1,0 +1,185 @@
+{
+  "meta": {
+    "title": "99美分",
+    "description": "小小的行动，强者的选择。"
+  },
+  "home": {
+    "title": "99美分。",
+    "subtitle1": "小小的行动。",
+    "subtitle2": "强者的选择。",
+    "tagline": "一次点击。无需注册。没有回报。",
+    "cta": {
+      "description": "您发送99美分，不会得到任何回报。",
+      "meaning": "这就是意义所在。",
+      "button": "发送99美分",
+      "connecting": "连接中...",
+      "note": "无需注册。无需邮件。没有任何条件。"
+    },
+    "stats": {
+      "people": "人",
+      "countries": "个国家",
+      "collected": "已筹集"
+    },
+    "map": {
+      "caption": "每一个点代表一个参与者。"
+    },
+    "voting": "为项目投票 →"
+  },
+  "voting": {
+    "title": "投票",
+    "subtitle": "选择将获得筹集资金的项目",
+    "voteButton": "投票",
+    "voted": "您已投票",
+    "votes": "票",
+    "endsIn": "投票结束倒计时",
+    "days": "天",
+    "hours": "小时",
+    "minutes": "分钟",
+    "mustPay": "要投票，您需要先发送99美分",
+    "oneVotePerDay": "每天一票"
+  },
+  "rules": {
+    "title": "项目规则",
+    "sections": {
+      "idea": {
+        "title": "理念",
+        "content": "99美分是一个集体捐赠的实验。我们相信，许多人的小小行动可以改变世界。"
+      },
+      "howItWorks": {
+        "title": "运作方式",
+        "items": [
+          "您发送正好99美分",
+          "您的支付会显示在地图上",
+          "您可以为项目投票",
+          "获胜项目获得全部资金"
+        ]
+      },
+      "whatYouGet": {
+        "title": "您会得到什么",
+        "content": "没有物质回报。只有您做出了一个虽小但有意义的行动的认知。以及地图上的一个点。"
+      },
+      "transparency": {
+        "title": "透明度",
+        "content": "所有交易都是公开的。所有项目转账都有记录。我们不收取任何佣金。"
+      }
+    }
+  },
+  "transparency": {
+    "title": "透明度",
+    "sections": {
+      "full": {
+        "title": "完全透明",
+        "content": "我们相信信任建立在公开之上。您发送的每一分钱都会被公开追踪和记录。"
+      },
+      "publish": {
+        "title": "我们公开的内容",
+        "items": [
+          "实时筹集总额",
+          "参与者数量及其地理分布",
+          "每次投票的结果",
+          "资金转账给获胜者的报告",
+          "所有区块链交易（加密货币支付）"
+        ]
+      },
+      "blockchain": {
+        "title": "区块链验证",
+        "content": "所有USDC支付都记录在区块链上，任何人都可以验证。",
+        "wallet": "项目钱包地址：",
+        "walletNote": "（将在启动后公布）"
+      },
+      "reports": {
+        "title": "月度报告",
+        "content": "每月我们发布详细报告：",
+        "items": [
+          "筹集了多少资金",
+          "哪个项目赢得了投票",
+          "资金转账证明",
+          "受益者的反馈"
+        ]
+      },
+      "fees": {
+        "title": "零隐藏费用",
+        "content": "我们不从您的99美分中收取任何佣金。唯一的成本是支付处理费（Stripe约3%或区块链gas费）。"
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "资金使用方式",
+    "sections": {
+      "process": {
+        "title": "简单流程",
+        "steps": [
+          {
+            "title": "筹款",
+            "content": "参与者各自发送99美分。资金在投票期间累积。"
+          },
+          {
+            "title": "投票",
+            "content": "参与者为他们想支持的项目投票。每人每天一票。"
+          },
+          {
+            "title": "确定获胜者",
+            "content": "投票期结束后，得票最多的项目获胜。"
+          },
+          {
+            "title": "资金转账",
+            "content": "全部筹集金额转给获胜项目。"
+          }
+        ]
+      },
+      "projects": {
+        "title": "我们支持的项目",
+        "items": [
+          "清洁水源获取",
+          "教育项目",
+          "医疗援助",
+          "环保倡议",
+          "社区支持"
+        ],
+        "note": "项目在加入投票前会经过审核。"
+      },
+      "distribution": {
+        "title": "资金分配",
+        "toProject": "给获胜项目",
+        "note": "我们不收取任何佣金。所有筹集的资金都用于选定的项目。"
+      },
+      "reporting": {
+        "title": "报告",
+        "content": "每次转账后我们发布：",
+        "items": [
+          "交易确认",
+          "项目实施照片报告",
+          "受益者反馈"
+        ]
+      }
+    }
+  },
+  "admin": {
+    "title": "管理面板",
+    "password": "密码",
+    "login": "登录",
+    "wrongPassword": "密码错误",
+    "projects": "项目",
+    "addProject": "添加项目",
+    "projectName": "项目名称",
+    "projectDescription": "描述",
+    "save": "保存",
+    "delete": "删除"
+  },
+  "footer": {
+    "rules": "项目规则",
+    "transparency": "透明度",
+    "howItWorks": "资金使用方式"
+  },
+  "nav": {
+    "back": "← 返回首页"
+  },
+  "map": {
+    "loading": "地图加载中...",
+    "participant": "参与者",
+    "new": "新！",
+    "today": "今天",
+    "justNow": "刚刚",
+    "daysAgo": "天前"
+  }
+}

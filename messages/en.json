@@ -1,0 +1,185 @@
+{
+  "meta": {
+    "title": "99 Cents",
+    "description": "A small action. A choice of the strong."
+  },
+  "home": {
+    "title": "99 cents.",
+    "subtitle1": "A small action.",
+    "subtitle2": "A choice of the strong.",
+    "tagline": "One click. No sign-up. No rewards.",
+    "cta": {
+      "description": "You send 99 cents and get nothing in return.",
+      "meaning": "That's the whole point.",
+      "button": "Send 99 cents",
+      "connecting": "Connecting...",
+      "note": "No registration. No emails. No strings attached."
+    },
+    "stats": {
+      "people": "people",
+      "countries": "countries",
+      "collected": "collected"
+    },
+    "map": {
+      "caption": "Each dot is someone who did it."
+    },
+    "voting": "Vote for projects →"
+  },
+  "voting": {
+    "title": "Voting",
+    "subtitle": "Choose the project that will receive the collected funds",
+    "voteButton": "Vote",
+    "voted": "You voted",
+    "votes": "votes",
+    "endsIn": "Voting ends in",
+    "days": "days",
+    "hours": "hours",
+    "minutes": "minutes",
+    "mustPay": "To vote, you need to send 99 cents first",
+    "oneVotePerDay": "One vote per day"
+  },
+  "rules": {
+    "title": "Project Rules",
+    "sections": {
+      "idea": {
+        "title": "The Idea",
+        "content": "99 cents is an experiment in collective giving. We believe that small actions by many people can change the world."
+      },
+      "howItWorks": {
+        "title": "How It Works",
+        "items": [
+          "You send exactly 99 cents",
+          "Your payment appears on the map",
+          "You can vote for projects",
+          "The winning project receives all funds"
+        ]
+      },
+      "whatYouGet": {
+        "title": "What You Get",
+        "content": "Nothing material. Just the knowledge that you made a small but meaningful action. And a dot on the map."
+      },
+      "transparency": {
+        "title": "Transparency",
+        "content": "All transactions are public. All transfers to projects are documented. We take no commission."
+      }
+    }
+  },
+  "transparency": {
+    "title": "Transparency",
+    "sections": {
+      "full": {
+        "title": "Full Transparency",
+        "content": "We believe trust is built on openness. Every cent you send is tracked and accounted for publicly."
+      },
+      "publish": {
+        "title": "What We Publish",
+        "items": [
+          "Total amount collected in real-time",
+          "Number of participants and their geographic distribution",
+          "Results of each voting round",
+          "Reports on fund transfers to winners",
+          "All blockchain transactions (for crypto payments)"
+        ]
+      },
+      "blockchain": {
+        "title": "Blockchain Verification",
+        "content": "All USDC payments are recorded on the blockchain and can be verified by anyone.",
+        "wallet": "Project wallet address:",
+        "walletNote": "(to be published after launch)"
+      },
+      "reports": {
+        "title": "Monthly Reports",
+        "content": "Every month we publish a detailed report:",
+        "items": [
+          "How much was collected",
+          "Which project won the vote",
+          "Proof of fund transfer",
+          "Feedback from recipients"
+        ]
+      },
+      "fees": {
+        "title": "Zero Hidden Fees",
+        "content": "We take no commission from your 99 cents. The only costs are payment processor fees (Stripe ~3% or blockchain gas)."
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "How Funds Are Used",
+    "sections": {
+      "process": {
+        "title": "Simple Process",
+        "steps": [
+          {
+            "title": "Fundraising",
+            "content": "Participants send 99 cents each. Funds accumulate during the voting period."
+          },
+          {
+            "title": "Voting",
+            "content": "Participants vote for projects they want to support. One person — one vote per day."
+          },
+          {
+            "title": "Winner Selection",
+            "content": "At the end of the period, the project with the most votes wins."
+          },
+          {
+            "title": "Fund Transfer",
+            "content": "The entire collected amount goes to the winning project."
+          }
+        ]
+      },
+      "projects": {
+        "title": "Projects We Support",
+        "items": [
+          "Clean water access",
+          "Educational programs",
+          "Medical assistance",
+          "Environmental initiatives",
+          "Community support"
+        ],
+        "note": "Projects are vetted before being added to the voting."
+      },
+      "distribution": {
+        "title": "Fund Distribution",
+        "toProject": "To the winning project",
+        "note": "We take no commission. All collected funds go to the chosen project."
+      },
+      "reporting": {
+        "title": "Reporting",
+        "content": "After each transfer we publish:",
+        "items": [
+          "Transaction confirmation",
+          "Photo report on project implementation",
+          "Feedback from recipients"
+        ]
+      }
+    }
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "password": "Password",
+    "login": "Log in",
+    "wrongPassword": "Wrong password",
+    "projects": "Projects",
+    "addProject": "Add Project",
+    "projectName": "Project name",
+    "projectDescription": "Description",
+    "save": "Save",
+    "delete": "Delete"
+  },
+  "footer": {
+    "rules": "Project Rules",
+    "transparency": "Transparency",
+    "howItWorks": "How Funds Are Used"
+  },
+  "nav": {
+    "back": "← Back to home"
+  },
+  "map": {
+    "loading": "Loading map...",
+    "participant": "Participant",
+    "new": "New!",
+    "today": "Today",
+    "justNow": "Just now",
+    "daysAgo": "days ago"
+  }
+}

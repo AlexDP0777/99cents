@@ -1,0 +1,185 @@
+{
+  "meta": {
+    "title": "99 centimes",
+    "description": "Un petit geste. Le choix des forts."
+  },
+  "home": {
+    "title": "99 centimes.",
+    "subtitle1": "Un petit geste.",
+    "subtitle2": "Le choix des forts.",
+    "tagline": "Un clic. Sans inscription. Sans récompense.",
+    "cta": {
+      "description": "Vous envoyez 99 centimes et ne recevez rien en retour.",
+      "meaning": "C'est tout l'intérêt.",
+      "button": "Envoyer 99 centimes",
+      "connecting": "Connexion...",
+      "note": "Sans inscription. Sans emails. Sans conditions."
+    },
+    "stats": {
+      "people": "personnes",
+      "countries": "pays",
+      "collected": "collectés"
+    },
+    "map": {
+      "caption": "Chaque point représente quelqu'un qui l'a fait."
+    },
+    "voting": "Voter pour des projets →"
+  },
+  "voting": {
+    "title": "Vote",
+    "subtitle": "Choisissez le projet qui recevra les fonds collectés",
+    "voteButton": "Voter",
+    "voted": "Vous avez voté",
+    "votes": "votes",
+    "endsIn": "Le vote se termine dans",
+    "days": "jours",
+    "hours": "heures",
+    "minutes": "minutes",
+    "mustPay": "Pour voter, vous devez d'abord envoyer 99 centimes",
+    "oneVotePerDay": "Un vote par jour"
+  },
+  "rules": {
+    "title": "Règles du Projet",
+    "sections": {
+      "idea": {
+        "title": "L'Idée",
+        "content": "99 centimes est une expérience de don collectif. Nous croyons que les petites actions de nombreuses personnes peuvent changer le monde."
+      },
+      "howItWorks": {
+        "title": "Comment ça marche",
+        "items": [
+          "Vous envoyez exactement 99 centimes",
+          "Votre paiement apparaît sur la carte",
+          "Vous pouvez voter pour des projets",
+          "Le projet gagnant reçoit tous les fonds"
+        ]
+      },
+      "whatYouGet": {
+        "title": "Ce que vous obtenez",
+        "content": "Rien de matériel. Juste la satisfaction d'avoir fait un petit geste significatif. Et un point sur la carte."
+      },
+      "transparency": {
+        "title": "Transparence",
+        "content": "Toutes les transactions sont publiques. Tous les transferts aux projets sont documentés. Nous ne prenons aucune commission."
+      }
+    }
+  },
+  "transparency": {
+    "title": "Transparence",
+    "sections": {
+      "full": {
+        "title": "Transparence totale",
+        "content": "Nous croyons que la confiance se construit sur l'ouverture. Chaque centime que vous envoyez est suivi et comptabilisé publiquement."
+      },
+      "publish": {
+        "title": "Ce que nous publions",
+        "items": [
+          "Montant total collecté en temps réel",
+          "Nombre de participants et leur répartition géographique",
+          "Résultats de chaque vote",
+          "Rapports sur les transferts aux gagnants",
+          "Toutes les transactions blockchain (pour les paiements crypto)"
+        ]
+      },
+      "blockchain": {
+        "title": "Vérification Blockchain",
+        "content": "Tous les paiements en USDC sont enregistrés sur la blockchain et peuvent être vérifiés par tous.",
+        "wallet": "Adresse du portefeuille du projet :",
+        "walletNote": "(sera publiée après le lancement)"
+      },
+      "reports": {
+        "title": "Rapports mensuels",
+        "content": "Chaque mois, nous publions un rapport détaillé :",
+        "items": [
+          "Combien a été collecté",
+          "Quel projet a remporté le vote",
+          "Preuve du transfert de fonds",
+          "Retours des bénéficiaires"
+        ]
+      },
+      "fees": {
+        "title": "Zéro frais cachés",
+        "content": "Nous ne prenons aucune commission sur vos 99 centimes. Les seuls coûts sont les frais de traitement des paiements (Stripe ~3% ou gas blockchain)."
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "Comment les fonds sont utilisés",
+    "sections": {
+      "process": {
+        "title": "Processus simple",
+        "steps": [
+          {
+            "title": "Collecte",
+            "content": "Les participants envoient 99 centimes chacun. Les fonds s'accumulent pendant la période de vote."
+          },
+          {
+            "title": "Vote",
+            "content": "Les participants votent pour les projets qu'ils veulent soutenir. Une personne — un vote par jour."
+          },
+          {
+            "title": "Sélection du gagnant",
+            "content": "À la fin de la période, le projet avec le plus de votes gagne."
+          },
+          {
+            "title": "Transfert des fonds",
+            "content": "La totalité des fonds collectés va au projet gagnant."
+          }
+        ]
+      },
+      "projects": {
+        "title": "Projets que nous soutenons",
+        "items": [
+          "Accès à l'eau potable",
+          "Programmes éducatifs",
+          "Assistance médicale",
+          "Initiatives environnementales",
+          "Soutien communautaire"
+        ],
+        "note": "Les projets sont vérifiés avant d'être ajoutés au vote."
+      },
+      "distribution": {
+        "title": "Distribution des fonds",
+        "toProject": "Au projet gagnant",
+        "note": "Nous ne prenons aucune commission. Tous les fonds collectés vont au projet choisi."
+      },
+      "reporting": {
+        "title": "Rapports",
+        "content": "Après chaque transfert, nous publions :",
+        "items": [
+          "Confirmation de transaction",
+          "Rapport photo sur la mise en œuvre",
+          "Retours des bénéficiaires"
+        ]
+      }
+    }
+  },
+  "admin": {
+    "title": "Panneau d'administration",
+    "password": "Mot de passe",
+    "login": "Connexion",
+    "wrongPassword": "Mot de passe incorrect",
+    "projects": "Projets",
+    "addProject": "Ajouter un projet",
+    "projectName": "Nom du projet",
+    "projectDescription": "Description",
+    "save": "Enregistrer",
+    "delete": "Supprimer"
+  },
+  "footer": {
+    "rules": "Règles du projet",
+    "transparency": "Transparence",
+    "howItWorks": "Comment les fonds sont utilisés"
+  },
+  "nav": {
+    "back": "← Retour à l'accueil"
+  },
+  "map": {
+    "loading": "Chargement de la carte...",
+    "participant": "Participant",
+    "new": "Nouveau !",
+    "today": "Aujourd'hui",
+    "justNow": "À l'instant",
+    "daysAgo": "jours"
+  }
+}
