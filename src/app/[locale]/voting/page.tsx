@@ -5,56 +5,141 @@ import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 
-interface Project {
+interface Application {
   id: string;
-  name: string;
   description: string;
-  votes: number;
-  target: number;
+  amount: number;
+  country: string;
+  votesCount: number;
 }
 
-const mockProjects: Project[] = [
-  {
-    id: '1',
-    name: 'Clean Water Initiative',
-    description: 'Providing clean drinking water to 500 families in rural areas',
-    votes: 342,
-    target: 5000,
-  },
-  {
-    id: '2',
-    name: 'School Supplies Drive',
-    description: 'Educational materials for underprivileged children',
-    votes: 289,
-    target: 3000,
-  },
-  {
-    id: '3',
-    name: 'Medical Equipment Fund',
-    description: 'Essential medical equipment for local clinics',
-    votes: 198,
-    target: 8000,
-  },
-];
+// Генерируем уникальный хеш посетителя
+function getVisitorHash(): string {
+  if (typeof window === 'undefined') return '';
+
+  let hash = localStorage.getItem('visitorHash');
+  if (!hash) {
+    hash = 'v_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+    localStorage.setItem('visitorHash', hash);
+  }
+  return hash;
+}
 
 export default function VotingPage() {
   const t = useTranslations('voting');
   const tFooter = useTranslations('footer');
   const locale = useLocale();
 
-  const [projects, setProjects] = useState<Project[]>(mockProjects);
-  const [votedProject, setVotedProject] = useState<string | null>(null);
-  const [timeLeft, setTimeLeft] = useState({ days: 12, hours: 8, minutes: 45 });
+  const [applications, setApplications] = useState<Application[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [votedId, setVotedId] = useState<string | null>(null);
+  const [canVote, setCanVote] = useState(true);
+  const [message, setMessage] = useState('');
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 });
+  const [periodEnd, setPeriodEnd] = useState<Date | null>(null);
 
-  const totalVotes = projects.reduce((sum, p) => sum + p.votes, 0);
+  // Загрузка заявок
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const res = await fetch('/api/applications?status=SELECTED');
+        const data = await res.json();
+        setApplications(data.applications || []);
+        if (data.periodEnd) {
+          setPeriodEnd(new Date(data.periodEnd));
+        }
 
-  const handleVote = (projectId: string) => {
-    if (votedProject) return;
-    setProjects((prev) =>
-      prev.map((p) => (p.id === projectId ? { ...p, votes: p.votes + 1 } : p))
-    );
-    setVotedProject(projectId);
+        // Проверяем статус голосования
+        const hash = getVisitorHash();
+        if (hash) {
+          const statusRes = await fetch(`/api/vote?hash=${hash}`);
+          const status = await statusRes.json();
+          setCanVote(status.canVote);
+          if (status.todayVotes?.length > 0) {
+            setVotedId(status.todayVotes[0]);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading data:', error);
+      }
+      setLoading(false);
+    }
+    loadData();
+  }, []);
+
+  // Таймер обратного отсчёта
+  useEffect(() => {
+    if (!periodEnd) return;
+
+    const updateTimer = () => {
+      const now = new Date();
+      const diff = periodEnd.getTime() - now.getTime();
+
+      if (diff <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0 });
+        return;
+      }
+
+      setTimeLeft({
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+      });
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 60000);
+    return () => clearInterval(interval);
+  }, [periodEnd]);
+
+  const handleVote = async (applicationId: string) => {
+    if (!canVote || votedId) return;
+
+    const hash = getVisitorHash();
+    if (!hash) return;
+
+    try {
+      const res = await fetch('/api/vote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ visitorHash: hash, applicationId })
+      });
+
+      const result = await res.json();
+
+      if (result.success) {
+        setVotedId(applicationId);
+        setCanVote(false);
+        setApplications(prev =>
+          prev.map(app =>
+            app.id === applicationId
+              ? { ...app, votesCount: app.votesCount + 1 }
+              : app
+          )
+        );
+        setMessage(result.message);
+      } else {
+        setMessage(result.message);
+        if (result.message.includes('уже голосовали')) {
+          setCanVote(false);
+        }
+      }
+    } catch (error) {
+      setMessage('Ошибка при голосовании');
+    }
+
+    setTimeout(() => setMessage(''), 3000);
   };
+
+  const totalVotes = applications.reduce((sum, a) => sum + a.votesCount, 0);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-500">Загрузка...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -71,6 +156,12 @@ export default function VotingPage() {
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl font-bold text-[#1e3a5f] mb-2">{t('title')}</h1>
           <p className="text-gray-500 mb-8">{t('subtitle')}</p>
+
+          {message && (
+            <div className="bg-blue-100 text-blue-800 p-4 rounded-lg mb-6">
+              {message}
+            </div>
+          )}
 
           {/* Timer */}
           <div className="bg-gray-50 rounded-lg p-4 mb-8 text-center">
@@ -91,31 +182,34 @@ export default function VotingPage() {
             </div>
           </div>
 
-          {/* Projects */}
+          {/* Applications */}
           <div className="space-y-4">
-            {projects.map((project) => {
-              const percentage = Math.round((project.votes / totalVotes) * 100);
-              const isVoted = votedProject === project.id;
+            {applications.map((app) => {
+              const percentage = totalVotes > 0 ? Math.round((app.votesCount / totalVotes) * 100) : 0;
+              const isVoted = votedId === app.id;
 
               return (
                 <div
-                  key={project.id}
+                  key={app.id}
                   className={`bg-white border rounded-lg p-6 ${
                     isVoted ? 'border-green-500 ring-2 ring-green-500/20' : 'border-gray-200'
                   }`}
                 >
                   <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="text-lg font-semibold text-[#1e3a5f]">{project.name}</h3>
-                      <p className="text-gray-500 text-sm mt-1">{project.description}</p>
+                    <div className="flex-1 pr-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs bg-gray-100 px-2 py-1 rounded">{app.country}</span>
+                        <span className="text-xs text-gray-500">${app.amount.toLocaleString()} USD</span>
+                      </div>
+                      <p className="text-gray-700 text-sm">{app.description}</p>
                     </div>
                     <button
-                      onClick={() => handleVote(project.id)}
-                      disabled={!!votedProject}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      onClick={() => handleVote(app.id)}
+                      disabled={!canVote || !!votedId}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
                         isVoted
                           ? 'bg-green-500 text-white'
-                          : votedProject
+                          : !canVote || votedId
                           ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                           : 'bg-[#1e3a5f] text-white hover:bg-[#2d4a6f]'
                       }`}
@@ -127,7 +221,7 @@ export default function VotingPage() {
                   {/* Progress bar */}
                   <div className="mt-4">
                     <div className="flex justify-between text-sm mb-1">
-                      <span className="text-gray-500">{project.votes} {t('votes')}</span>
+                      <span className="text-gray-500">{app.votesCount} {t('votes')}</span>
                       <span className="text-[#1e3a5f] font-medium">{percentage}%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
@@ -148,7 +242,7 @@ export default function VotingPage() {
 
           <div className="mt-8 text-center">
             <Link href={`/${locale}`} className="text-[#1e3a5f] hover:underline">
-              ← {t('title')}
+              ← Back
             </Link>
           </div>
         </div>
