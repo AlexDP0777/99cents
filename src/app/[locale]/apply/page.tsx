@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -32,6 +32,20 @@ export default function ApplyPage() {
   const [errors, setErrors] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [detectedFlag, setDetectedFlag] = useState('');
+
+  // Автоопределение страны по IP
+  useEffect(() => {
+    fetch('/api/geo')
+      .then(res => res.json())
+      .then(data => {
+        if (data.detected && data.countryName && COUNTRIES.includes(data.countryName)) {
+          setForm(f => ({ ...f, country: data.countryName }));
+          setDetectedFlag(data.flag);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const charCount = form.description.length;
   const isValidLength = charCount >= 200 && charCount <= 1000;
@@ -167,7 +181,7 @@ export default function ApplyPage() {
 
             <div>
               <label className="block text-sm font-medium text-[#1e3a5f] mb-2">
-                {t('form.country.label')} *
+                {t('form.country.label')} * {detectedFlag && <span className="ml-1">{detectedFlag}</span>}
               </label>
               <select
                 value={form.country}
