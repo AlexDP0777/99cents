@@ -241,3 +241,113 @@ export async function getVotingStatus(visitorHash: string, periodId: string) {
     todayVotes: todayVotes.map(v => v.applicationId)
   };
 }
+
+/**
+ * Получает полную информацию о текущем периоде
+ */
+export async function getCurrentPeriodInfo() {
+  if (!prisma) return null;
+
+  const period = await prisma.votingPeriod.findFirst({
+    where: { status: { in: ['COLLECTING', 'VOTING'] } },
+    orderBy: { createdAt: 'desc' }
+  });
+
+  if (!period) return null;
+
+  const selectedApplications = await prisma.application.findMany({
+    where: { status: 'SELECTED', periodId: period.id },
+    select: { id: true, description: true, amount: true, country: true, votesCount: true },
+    orderBy: { votesCount: 'desc' }
+  });
+
+  const totalVotes = selectedApplications.reduce((sum, app) => sum + app.votesCount, 0);
+  const approvedCount = await prisma.application.count({ where: { status: 'APPROVED' } });
+  const pendingCount = await prisma.application.count({ where: { status: 'PENDING' } });
+
+  return {
+    id: period.id,
+    status: period.status,
+    startDate: period.startDate,
+    endDate: period.endDate,
+    selectedApplications,
+    totalVotes,
+    approvedCount,
+    pendingCount
+  };
+}
+
+/**
+ * Завершает период голосования и определяет победителя
+ */
+export async function endVotingPeriod(periodId: string) {
+  if (!prisma) throw new Error('Database not connected');
+
+  // Находим заявку с максимумом голосов
+  const winner = await prisma.application.findFirst({
+    where: { status: 'SELECTED', periodId },
+    orderBy: { votesCount: 'desc' }
+  });
+
+  // Обновляем статус периода
+  const period = await prisma.votingPeriod.update({
+    where: { id: periodId },
+    data: {
+      status: 'COMPLETED',
+      winnerId: winner?.id || null
+    }
+  });
+
+  // Обновляем статус победителя
+  if (winner) {
+    await prisma.application.update({
+      where: { id: winner.id },
+      data: { status: 'WINNER' }
+    });
+  }
+
+  // Сбрасываем статус остальных SELECTED заявок
+  await prisma.application.updateMany({
+    where: { status: 'SELECTED', periodId },
+    data: { status: 'APPROVED', periodId: null }
+  });
+
+  return { period, winner };
+}
+
+/**
+ * Получает историю завершённых периодов
+ */
+export async function getCompletedPeriods(limit: number = 10) {
+  if (!prisma) return [];
+
+  return prisma.votingPeriod.findMany({
+    where: { status: 'COMPLETED' },
+    orderBy: { endDate: 'desc' },
+    take: limit
+  });
+}
+
+/**
+ * Создаёт новый период голосования
+ */
+export async function createNewPeriod(durationDays: number = 30) {
+  if (!prisma) throw new Error('Database not connected');
+
+  // Проверяем что нет активного периода
+  const activePeriod = await prisma.votingPeriod.findFirst({
+    where: { status: { in: ['COLLECTING', 'VOTING'] } }
+  });
+
+  if (activePeriod) {
+    throw new Error('Активный период уже существует');
+  }
+
+  const now = new Date();
+  const endDate = new Date(now);
+  endDate.setDate(endDate.getDate() + durationDays);
+
+  return prisma.votingPeriod.create({
+    data: { startDate: now, endDate, status: 'COLLECTING' }
+  });
+}

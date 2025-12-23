@@ -5,7 +5,10 @@ import {
   startVoting,
   getPendingApplications,
   approveApplication,
-  rejectApplication
+  rejectApplication,
+  getCurrentPeriodInfo,
+  endVotingPeriod,
+  createNewPeriod
 } from '@/lib/applications';
 
 // Простая проверка пароля админа
@@ -21,7 +24,7 @@ function checkAuth(request: NextRequest): boolean {
 
 /**
  * GET /api/admin/applications
- * Получить все заявки на модерацию
+ * Получить заявки и информацию о периоде
  */
 export async function GET(request: NextRequest) {
   if (!checkAuth(request)) {
@@ -30,7 +33,8 @@ export async function GET(request: NextRequest) {
 
   try {
     const applications = await getPendingApplications();
-    return NextResponse.json({ applications });
+    const periodInfo = await getCurrentPeriodInfo();
+    return NextResponse.json({ applications, period: periodInfo });
   } catch (error) {
     console.error('Error fetching applications:', error);
     return NextResponse.json(
@@ -42,7 +46,7 @@ export async function GET(request: NextRequest) {
 
 /**
  * POST /api/admin/applications
- * Действия: approve, reject, select, startVoting
+ * Действия: approve, reject, select, startVoting, endVoting, newPeriod
  */
 export async function POST(request: NextRequest) {
   if (!checkAuth(request)) {
@@ -51,7 +55,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { action, applicationId, count } = body;
+    const { action, applicationId, count, durationDays } = body;
 
     switch (action) {
       case 'approve': {
@@ -77,10 +81,7 @@ export async function POST(request: NextRequest) {
       }
 
       case 'select': {
-        // Получаем или создаём период голосования
         const period = await getOrCreateVotingPeriod();
-
-        // Выбираем случайные заявки
         const result = await selectRandomApplications(count || 5, period.id);
 
         return NextResponse.json({
@@ -99,6 +100,34 @@ export async function POST(request: NextRequest) {
           success: true,
           period: updatedPeriod,
           message: 'Голосование запущено'
+        });
+      }
+
+      case 'endVoting': {
+        const periodInfo = await getCurrentPeriodInfo();
+        if (!periodInfo) {
+          return NextResponse.json(
+            { error: 'Нет активного периода' },
+            { status: 400 }
+          );
+        }
+        
+        const result = await endVotingPeriod(periodInfo.id);
+        return NextResponse.json({
+          success: true,
+          winner: result.winner,
+          message: result.winner 
+            ? `Голосование завершено! Победитель: заявка на ${result.winner.amount} USD`
+            : 'Голосование завершено, победитель не определён'
+        });
+      }
+
+      case 'newPeriod': {
+        const period = await createNewPeriod(durationDays || 30);
+        return NextResponse.json({
+          success: true,
+          period,
+          message: 'Новый период создан'
         });
       }
 

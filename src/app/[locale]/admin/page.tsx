@@ -7,6 +7,16 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 interface Project { id: string; name: string; description: string; votes: number; }
 interface Application { id: string; description: string; amount: number; country: string; contact?: string; status: string; votesCount: number; createdAt: string; }
+interface PeriodInfo {
+  id: string;
+  status: string;
+  startDate: string;
+  endDate: string;
+  selectedApplications: { id: string; description: string; amount: number; country: string; votesCount: number; }[];
+  totalVotes: number;
+  approvedCount: number;
+  pendingCount: number;
+}
 
 export default function AdminPage() {
   const t = useTranslations('admin');
@@ -20,6 +30,7 @@ export default function AdminPage() {
   ]);
   const [newProject, setNewProject] = useState({ name: '', description: '' });
   const [applications, setApplications] = useState<Application[]>([]);
+  const [period, setPeriod] = useState<PeriodInfo | null>(null);
   const [loadingApps, setLoadingApps] = useState(false);
   const [actionMessage, setActionMessage] = useState('');
 
@@ -28,7 +39,7 @@ export default function AdminPage() {
     setLoadingApps(true);
     try {
       const res = await fetch('/api/admin/applications', { headers: { 'Authorization': 'Bearer ' + password } });
-      if (res.ok) { const data = await res.json(); setApplications(data.applications || []); }
+      if (res.ok) { const data = await res.json(); setApplications(data.applications || []); setPeriod(data.period || null); }
     } catch (err) { console.error('Error:', err); }
     setLoadingApps(false);
   };
@@ -93,6 +104,42 @@ export default function AdminPage() {
       <main className="max-w-4xl mx-auto py-8 px-4 space-y-6">
         {actionMessage && <div className="bg-blue-100 text-blue-800 p-4 rounded-lg">{actionMessage}</div>}
 
+        {/* Period Info */}
+        {period && (
+          <div className="bg-white rounded-lg p-6">
+            <h2 className="text-lg font-semibold text-[#1e3a5f] mb-4">Текущий период</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+              <div className="bg-gray-50 p-3 rounded-lg text-center">
+                <p className="text-xl font-bold text-[#1e3a5f]">{period.status}</p>
+                <p className="text-xs text-gray-500">Статус</p>
+              </div>
+              <div className="bg-gray-50 p-3 rounded-lg text-center">
+                <p className="text-xl font-bold text-[#1e3a5f]">{period.totalVotes}</p>
+                <p className="text-xs text-gray-500">Голосов</p>
+              </div>
+              <div className="bg-gray-50 p-3 rounded-lg text-center">
+                <p className="text-xl font-bold text-green-600">{period.approvedCount}</p>
+                <p className="text-xs text-gray-500">Одобренных</p>
+              </div>
+              <div className="bg-gray-50 p-3 rounded-lg text-center">
+                <p className="text-xl font-bold text-yellow-600">{period.pendingCount}</p>
+                <p className="text-xs text-gray-500">На модерации</p>
+              </div>
+            </div>
+            {period.selectedApplications.length > 0 && (
+              <div className="mt-4">
+                <h3 className="font-medium mb-2">На голосовании ({period.selectedApplications.length}):</h3>
+                {period.selectedApplications.map((app, idx) => (
+                  <div key={app.id} className="flex justify-between p-2 bg-gray-50 rounded mb-1">
+                    <span className="text-sm">#{idx+1} {app.description.substring(0,50)}...</span>
+                    <span className="font-bold">{app.votesCount} гол.</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Applications Management */}
         <div className="bg-white rounded-lg p-6">
           <h2 className="text-lg font-semibold text-[#1e3a5f] mb-4">Управление заявками</h2>
@@ -102,6 +149,12 @@ export default function AdminPage() {
             </button>
             <button onClick={() => handleAction('startVoting')} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
               Запустить голосование
+            </button>
+            <button onClick={() => handleAction('endVoting')} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
+              Завершить голосование
+            </button>
+            <button onClick={() => handleAction('newPeriod')} className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg">
+              Новый период
             </button>
             <button onClick={loadApplications} className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg">
               Обновить
