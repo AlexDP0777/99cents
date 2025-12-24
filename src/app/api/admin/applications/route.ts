@@ -3,7 +3,7 @@ import {
   selectRandomApplications,
   getOrCreateVotingPeriod,
   startVoting,
-  getPendingApplications,
+  getAllApplications,
   approveApplication,
   rejectApplication,
   getCurrentPeriodInfo,
@@ -12,7 +12,7 @@ import {
 } from '@/lib/applications';
 
 // Простая проверка пароля админа
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin99';
 
 function checkAuth(request: NextRequest): boolean {
   const authHeader = request.headers.get('Authorization');
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const applications = await getPendingApplications();
+    const applications = await getAllApplications();
     const periodInfo = await getCurrentPeriodInfo();
     return NextResponse.json({ applications, period: periodInfo });
   } catch (error) {

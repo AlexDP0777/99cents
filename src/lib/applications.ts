@@ -105,6 +105,16 @@ export async function getPendingApplications() {
 }
 
 /**
+ * Получает все заявки для админки
+ */
+export async function getAllApplications() {
+  if (!prisma) return [];
+  return prisma.application.findMany({
+    orderBy: { createdAt: 'desc' }
+  });
+}
+
+/**
  * Одобряет заявку
  */
 export async function approveApplication(id: string) {
