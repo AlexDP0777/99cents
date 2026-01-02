@@ -1,0 +1,67 @@
+name: Deploy via SSH
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          # Add jump host and target host to known_hosts
+          ssh-keyscan -H ${{ secrets.JUMP_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: Configure SSH with Jump Host
+        run: |
+          cat >> ~/.ssh/config << EOF
+          Host jump
+            HostName ${{ secrets.JUMP_HOST }}
+            User ${{ secrets.JUMP_USER }}
+            IdentityFile ~/.ssh/deploy_key
+            StrictHostKeyChecking no
+
+          Host target
+            HostName ${{ secrets.TARGET_HOST }}
+            User ${{ secrets.TARGET_USER }}
+            IdentityFile ~/.ssh/deploy_key
+            ProxyJump jump
+            StrictHostKeyChecking no
+          EOF
+          chmod 600 ~/.ssh/config
+
+      - name: Deploy to server
+        run: |
+          ssh target << 'ENDSSH'
+            cd ${{ secrets.DEPLOY_PATH }}
+
+            # Pull latest changes
+            git pull origin master
+
+            # Install dependencies
+            npm ci
+
+            # Generate Prisma client
+            npx prisma generate
+
+            # Build the app
+            npm run build
+
+            # Restart the app (PM2 or systemd)
+            pm2 restart 99cents || pm2 start npm --name "99cents" -- start
+          ENDSSH
+
+      - name: Verify deployment
+        run: |
+          ssh target "cd ${{ secrets.DEPLOY_PATH }} && pm2 status 99cents"
