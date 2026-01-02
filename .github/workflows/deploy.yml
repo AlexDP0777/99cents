@@ -1,12 +1,16 @@
   name: Deploy via SSH
+
   on:
     workflow_dispatch:
+
   jobs:
     deploy:
       runs-on: ubuntu-latest
+  
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: "Install SSH key of bastion"
         uses: shimataro/ssh-key-action@v2
         with:
@@ -18,6 +22,7 @@
               HostName ${{ secrets.JUMP_HOST }}
               User ${{ secrets.JUMP_USER }}
               IdentityFile ~/.ssh/id_rsa_bastion
+
       - name: "Install SSH key of target"
         uses: shimataro/ssh-key-action@v2
         with:
@@ -30,6 +35,7 @@
               User ${{ secrets.TARGET_USER }}
               IdentityFile ~/.ssh/id_rsa_target
               ProxyCommand ssh -W %h:%p bastion
+
       - name: Deploy to server
         run: |
           rsync -avz --delete \
@@ -39,15 +45,18 @@
             --exclude '.env' \
             -e "ssh" \
             ./ target:${{ secrets.DEPLOY_PATH }}
+
       - name: Restart application
         run: |
           ssh target "cd ${{ secrets.DEPLOY_PATH }} && pm2 restart 99cents || pm2
           start npm --name 99cents -- start"
+
       - name: Clear Cloudflare cache
         uses: Cyb3r-Jak3/action-cloudflare-cache@main
         with:
           zone: '${{ secrets.CLOUDFLARE_ZONE_ID }}'
           api_token: '${{ secrets.CLOUDFLARE_API_TOKEN }}'
+
       - name: Notify Telegram
         uses: appleboy/telegram-action@master
         with:
