@@ -1,6 +1,6 @@
 name: Deploy via SSH
 on:
-  workflow_dispatch: null
+  workflow_dispatch:
 jobs:
   deploy:
     runs-on: ubuntu-latest
