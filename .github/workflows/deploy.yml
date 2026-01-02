@@ -47,8 +47,7 @@ on:
 
         - name: Restart application
           run: |
-            ssh target "cd ${{ secrets.DEPLOY_PATH }} && pm2 restart 99cents || pm2
-            start npm --name 99cents -- start"
+            ssh target "cd ${{ secrets.DEPLOY_PATH }} && pm2 restart 99cents || pm2 start npm --name 99cents -- start"
 
         - name: Clear Cloudflare cache
           uses: Cyb3r-Jak3/action-cloudflare-cache@main
