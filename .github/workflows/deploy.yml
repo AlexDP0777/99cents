@@ -13,7 +13,7 @@ steps:
 
   - name: Install SSH key of bastion 🔑
     uses: shimataro/ssh-key-action@v2
-      with:
+    with:
       key: ${{ secrets.SSH_PRIVATE_KEY_BASTION }}
       name: id_rsa_bastion
       known_hosts: ${{ secrets.KNOWN_HOSTS }}
@@ -25,7 +25,7 @@ steps:
 
   - name: Install SSH key of target 🔑
     uses: shimataro/ssh-key-action@v2
-      with:
+    with:
         key: ${{ secrets.SSH_PRIVATE_KEY_TARGET }}
         name: id_rsa_target
         known_hosts: ${{ secrets.KNOWN_HOSTS }}
@@ -51,14 +51,14 @@ steps:
         ssh target "cd ${{ secrets.DEPLOY_PATH }} && pm2 restart 99cents || pm2 start npm --name 99cents -- start"
 
   - name: Clear Cloudflare cache
-      uses: Cyb3r-Jak3/action-cloudflare-cache@main
-      with:
+    uses: Cyb3r-Jak3/action-cloudflare-cache@main
+    with:
         zone: ${{ secrets.CLOUDFLARE_ZONE_ID }}
         api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
   - name: Notify Telegram
-      uses: appleboy/telegram-action@master
-      with:
+    uses: appleboy/telegram-action@master
+    with:
         to: ${{ secrets.TELEGRAM_CHAT_ID }}
         token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         message: |
