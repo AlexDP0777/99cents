@@ -13,9 +13,9 @@ on:
         - name: "Install SSH key of bastion"
           uses: shimataro/ssh-key-action@v2
           with:
-            key: '${{ secrets.SSH_PRIVATE_KEY_BASTION }}'
+            key: ${{ secrets.SSH_PRIVATE_KEY_BASTION }}
             name: id_rsa_bastion
-            known_hosts: '${{ secrets.KNOWN_HOSTS }}'
+            known_hosts: ${{ secrets.KNOWN_HOSTS }}
             config: |
               Host bastion
                 HostName ${{ secrets.JUMP_HOST }}
@@ -25,9 +25,9 @@ on:
         - name: "Install SSH key of target"
           uses: shimataro/ssh-key-action@v2
           with:
-            key: '${{ secrets.SSH_PRIVATE_KEY_TARGET }}'
+            key: ${{ secrets.SSH_PRIVATE_KEY_TARGET }}
             name: id_rsa_target
-            known_hosts: '${{ secrets.KNOWN_HOSTS }}'
+            known_hosts: ${{ secrets.KNOWN_HOSTS }}
             config: |
               Host target
                 HostName ${{ secrets.TARGET_HOST }}
@@ -52,14 +52,14 @@ on:
         - name: Clear Cloudflare cache
           uses: Cyb3r-Jak3/action-cloudflare-cache@main
           with:
-            zone: '${{ secrets.CLOUDFLARE_ZONE_ID }}'
-            api_token: '${{ secrets.CLOUDFLARE_API_TOKEN }}'
+            zone: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+            api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
         - name: Notify Telegram
           uses: appleboy/telegram-action@master
           with:
-            to: '${{ secrets.TELEGRAM_CHAT_ID }}'
-            token: '${{ secrets.TELEGRAM_BOT_TOKEN }}'
+            to: ${{ secrets.TELEGRAM_CHAT_ID }}
+            token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
             message: |
               ✅ Deploy 99cents.one completed!
               Commit: ${{ github.sha }}
