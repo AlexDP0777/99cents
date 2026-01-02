@@ -3,9 +3,9 @@ name: Deploy via SSH
 on:
   workflow_dispatch:  # Manual deploy only
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  jobs:
+    deploy:
+      runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
