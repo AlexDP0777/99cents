@@ -14,29 +14,45 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup SSH key
+      - name: Setup SSH key for Bastion
         uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SSH_PRIVATE_KEY_BASTION }}
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
-          config: |
-            Host jump
-              HostName ${{ secrets.JUMP_HOST }}
-              User ${{ secrets.JUMP_USER }}
+          name: id_rsa_bastion
 
-            Host target
-              HostName ${{ secrets.TARGET_HOST }}
-              User ${{ secrets.TARGET_USER }}
-              ProxyJump jump
+      - name: Setup SSH key for Target
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY_TARGET }}
+          known_hosts: unnecessary
+          name: id_rsa_target
+          if_key_exists: ignore
+
+      - name: Configure SSH
+        run: |
+          cat >> ~/.ssh/config << EOF
+          Host jump
+            HostName ${{ secrets.JUMP_HOST }}
+            User ${{ secrets.JUMP_USER }}
+            IdentityFile ~/.ssh/id_rsa_bastion
+
+          Host target
+            HostName ${{ secrets.TARGET_HOST }}
+            User ${{ secrets.TARGET_USER }}
+            IdentityFile ~/.ssh/id_rsa_target
+            ProxyJump jump
+          EOF
 
       - name: Deploy to server
-        uses: easingthemes/ssh-deploy@main
-        with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          REMOTE_HOST: target
-          REMOTE_USER: ${{ secrets.TARGET_USER }}
-          TARGET: ${{ secrets.DEPLOY_PATH }}
-          EXCLUDE: ".git, .github, node_modules, .env"
+        run: |
+          rsync -avz --delete \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude 'node_modules' \
+            --exclude '.env' \
+            -e "ssh" \
+            ./ target:${{ secrets.DEPLOY_PATH }}
 
       - name: Restart application
         run: |
