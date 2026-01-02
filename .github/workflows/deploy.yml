@@ -1,4 +1,4 @@
-  name: Deploy via SSH
+name: Deploy via SSH
 
   on:
     workflow_dispatch:
@@ -6,8 +6,7 @@
   jobs:
     deploy:
       runs-on: ubuntu-latest
-  
-    steps:
+      steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
