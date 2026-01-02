@@ -37,33 +37,33 @@ steps:
             ProxyCommand ssh -W %h:%p bastion
 
   - name: Deploy to server
-      run: |
-        rsync -avz --delete \
-          --exclude '.git' \
-          --exclude '.github' \
-          --exclude 'node_modules' \
-          --exclude '.env' \
-          -e "ssh" \
-          ./ target:${{ secrets.DEPLOY_PATH }}
+    run: |
+      rsync -avz --delete \
+        --exclude '.git' \
+        --exclude '.github' \
+        --exclude 'node_modules' \
+        --exclude '.env' \
+        -e "ssh" \
+        ./ target:${{ secrets.DEPLOY_PATH }}
 
   - name: Restart application
-      run: |
-        ssh target "cd ${{ secrets.DEPLOY_PATH }} && pm2 restart 99cents || pm2 start npm --name 99cents -- start"
+    run: |
+      ssh target "cd ${{ secrets.DEPLOY_PATH }} && pm2 restart 99cents || pm2 start npm --name 99cents -- start"
 
   - name: Clear Cloudflare cache
     uses: Cyb3r-Jak3/action-cloudflare-cache@main
     with:
-        zone: ${{ secrets.CLOUDFLARE_ZONE_ID }}
-        api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      zone: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+      api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
   - name: Notify Telegram
     uses: appleboy/telegram-action@master
     with:
-        to: ${{ secrets.TELEGRAM_CHAT_ID }}
-        token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        message: |
-          ✅ Deploy 99cents.one completed!
+      to: ${{ secrets.TELEGRAM_CHAT_ID }}
+      token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      message: |
+        ✅ Deploy 99cents.one completed!
 
-          Commit: ${{ github.sha }}
-          Author: ${{ github.actor }}
-          Message: ${{ github.event.head_commit.message }}
+        Commit: ${{ github.sha }}
+        Author: ${{ github.actor }}
+        Message: ${{ github.event.head_commit.message }}
