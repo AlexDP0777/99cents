@@ -40,7 +40,7 @@ jobs:
           ssh target "cd ${{ secrets.DEPLOY_PATH }} && git pull origin master && pm2 restart 99cents"
 
       - name: Clear Cloudflare cache 🆑
-        uses: Cyb3r-Jak3/action-cloudflare-cache@v3
+        uses: Cyb3r-Jak3/action-cloudflare-cache@v3.0.0
         with:
           zone: ${{ secrets.CLOUDFLARE_ZONE_ID }}
           api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
