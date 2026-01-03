@@ -1,0 +1,12 @@
+name: tabs-test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "secret is set"
+        env:
+          TEST: ${{ secrets.GITHUB_TOKEN }}
