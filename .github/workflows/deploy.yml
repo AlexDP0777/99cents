@@ -64,4 +64,4 @@ jobs:
             *Author:* `${{ github.actor }}`
             *Message:* _${{ github.event.head_commit.message }}_
             [🔗 Open workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+            [🔗 See changes](${{ github.server_url }}/${{ github.repository }}/commit/${{github.sha}})
