@@ -49,14 +49,19 @@ jobs:
           zone: ${{ secrets.CLOUDFLARE_ZONE_ID }}
           api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
-      - name: Notify Telegram
+      - name: Notify to Telegram
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
           message: |
-            ✅ Deploy 99cents.one completed!
-            Commit: ${{ github.sha }}
-            Author: ${{ github.actor }}
-            Message: ${{ github.event.head_commit.message }}
+            ${{ job.status == 'success' && '✅ *Deploy 99cents.one SUCCESS*' || '❌ *Deploy 99cents.one FAILED*' }}
+
+            *Repo:* `${{ github.repository }}`
+            *Branch:* `${{ github.ref_name }}`
+            *Commit:* `${{ github.sha }}`
+            *Author:* `${{ github.actor }}`
+            *Message:* _${{ github.event.head_commit.message }}_
+            [🔗 Open workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
             See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
