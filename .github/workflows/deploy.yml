@@ -7,7 +7,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout code 🛎
         uses: actions/checkout@v4
 
       - name: Install SSH key of bastion 🔑
@@ -35,21 +35,11 @@ jobs:
               IdentityFile ~/.ssh/id_rsa_target
               ProxyCommand ssh -W %h:%p bastion
 
-      - name: Deploy to server
+      - name: Deploy to server 📡
         run: |
-          rsync -avz --delete \
-            --exclude '.git' \
-            --exclude '.github' \
-            --exclude 'node_modules' \
-            --exclude '.env' \
-            -e "ssh" \
-            ./ target:${{ secrets.DEPLOY_PATH }}
+          ssh target "cd ${{ secrets.DEPLOY_PATH }} && git pull origin master && pm2 restart 99cents"
 
-      - name: Restart application
-        run: |
-          ssh target "cd ${{ secrets.DEPLOY_PATH }} && pm2 restart 99cents || pm2 start npm --name 99cents -- start"
-
-      - name: Clear Cloudflare cache
+      - name: Clear Cloudflare cache 🆑
         uses: Cyb3r-Jak3/action-cloudflare-cache@main
         with:
           zone: ${{ secrets.CLOUDFLARE_ZONE_ID }}
