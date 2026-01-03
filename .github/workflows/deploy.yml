@@ -59,3 +59,4 @@ jobs:
             Commit: ${{ github.sha }}
             Author: ${{ github.actor }}
             Message: ${{ github.event.head_commit.message }}
+            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
