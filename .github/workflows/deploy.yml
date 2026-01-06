@@ -50,6 +50,7 @@ jobs:
           api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
       - name: Notify to Telegram
+        if: always()
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
