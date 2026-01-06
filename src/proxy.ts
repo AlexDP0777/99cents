@@ -4,8 +4,10 @@ import { locales, defaultLocale } from './i18n/config';
 
 // Маппинг страны -> язык
 const countryToLocale: Record<string, string> = {
-  // Русскоязычные страны
-  RU: 'ru', BY: 'ru', KZ: 'ru', UA: 'ru', KG: 'ru', UZ: 'ru', TJ: 'ru', MD: 'ru', AM: 'ru', AZ: 'ru', GE: 'ru',
+  // Украина
+  UA: 'uk',
+  // Русскоязычные страны (остальные без перевода -> fallback en)
+  RU: 'ru', BY: 'ru',
   // Испаноязычные страны
   ES: 'es', MX: 'es', AR: 'es', CO: 'es', CL: 'es', PE: 'es', VE: 'es', EC: 'es', GT: 'es', CU: 'es',
   BO: 'es', DO: 'es', HN: 'es', PY: 'es', SV: 'es', NI: 'es', CR: 'es', PA: 'es', UY: 'es',
@@ -19,12 +21,14 @@ const countryToLocale: Record<string, string> = {
 
 // Маппинг Accept-Language -> наш локаль
 const languageToLocale: Record<string, string> = {
-  ru: 'ru', uk: 'ru', be: 'ru', kk: 'ru',
+  ru: 'ru',
+  uk: 'uk',
   es: 'es',
   de: 'de',
   fr: 'fr',
   zh: 'zh',
   en: 'en',
+  // Все остальные языки без перевода -> английский (обрабатывается в fallback)
 };
 
 function getPreferredLocale(request: NextRequest): string {
