@@ -10,4 +10,4 @@ export const localeNames: Record<Locale, string> = {
   zh: '中文',
 };
 
-export const defaultLocale: Locale = 'ru';
+export const defaultLocale: Locale = 'en';

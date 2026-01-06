@@ -4,13 +4,13 @@
     "description": "Eine kleine Tat. Die Wahl der Starken."
   },
   "home": {
-    "title": "99 Cent.",
-    "subtitle1": "Eine kleine Tat.",
-    "subtitle2": "Die Wahl der Starken.",
+    "title": "99 cents",
+    "subtitle1": "Ein globales Projekt",
+    "subtitle2": "kleiner guter Taten",
     "tagline": "Ein Klick. Keine Anmeldung. Keine Belohnung.",
     "cta": {
-      "description": "Du sendest 99 Cent und bekommst nichts zurück.",
-      "meaning": "Das ist der Sinn.",
+      "description": "Eine kleine Tat. Die Wahl der Starken.",
+      "meaning": "",
       "button": "99 Cent senden",
       "connecting": "Verbindung wird hergestellt...",
       "note": "Keine Registrierung. Keine E-Mails. Keine Bedingungen."
@@ -43,25 +43,67 @@
     "sections": {
       "idea": {
         "title": "Die Idee",
-        "content": "99 Cent ist ein Experiment im kollektiven Spenden. Wir glauben, dass kleine Taten vieler Menschen die Welt verändern können."
+        "content": "\"99 Cent\" ist ein soziales Projekt der kollektiven Wohltätigkeit.\n\nWir glauben, dass kleine Taten vieler Menschen die Welt verändern können.\n\n\"99 Cent\" ist eine globale Plattform, auf der jeder freiwillig $0,99 senden kann — eine einfache und bewusste gute Tat.\n\nDas Projekt verspricht keine Belohnungen oder Vorteile. Es ist kein Kauf, keine Investition, kein Service — es ist eine Entscheidung.\n\nWir nennen es ein Experiment, weil wir zeigen wollen, wie die Kraft einer kleinen Tat, tausendfach wiederholt, echte Hilfe bringen kann."
       },
       "howItWorks": {
-        "title": "So funktioniert es",
+        "title": "Wie das Projekt funktioniert",
         "items": [
-          "Du sendest genau 99 Cent",
-          "Deine Zahlung erscheint auf der Karte",
-          "Du kannst für Projekte abstimmen",
-          "Das Gewinnerprojekt erhält alle Gelder"
+          "Du sendest freiwillig 99 Cent.",
+          "Deine Zahlung erscheint auf der globalen Projektkarte.",
+          "Nach der Zahlung erhältst du das Recht, für hilfsbedürftige Projekte abzustimmen.",
+          "Abstimmungen finden regelmäßig statt.",
+          "Das Projekt mit den meisten Stimmen erhält alle gesammelten Gelder."
+        ]
+      },
+      "voting": {
+        "title": "Abstimmung",
+        "items": [
+          "Nur Nutzer, die eine Überweisung getätigt haben, können abstimmen.",
+          "Ein Nutzer kann einmal pro Tag abstimmen.",
+          "Aus allen eingereichten Anträgen wählt das System zufällig mehrere Projekte zur Abstimmung.",
+          "Ein Projekt gewinnt und erhält den gesamten gesammelten Betrag."
         ]
       },
       "whatYouGet": {
         "title": "Was du bekommst",
-        "content": "Nichts Materielles. Nur das Wissen, dass du eine kleine, aber bedeutsame Tat vollbracht hast. Und einen Punkt auf der Karte."
+        "content": "Du erhältst nichts Materielles. Keine Boni, Geschenke oder Privilegien.",
+        "items": [
+          "Das Bewusstsein, eine gute Tat vollbracht zu haben",
+          "Deinen Punkt auf der Weltkarte",
+          "Teilnahme an einem globalen Hilfsprozess"
+        ],
+        "quote": "99 Cent reichen aus, um keine Null zu sein."
       },
       "transparency": {
         "title": "Transparenz",
-        "content": "Alle Transaktionen sind öffentlich. Alle Überweisungen an Projekte werden dokumentiert. Wir nehmen keine Provision."
+        "items": [
+          "Alle Transaktionen sind öffentlich.",
+          "Alle Überweisungen an Gewinnerprojekte werden dokumentiert.",
+          "Das Projekt erhebt keine Provision auf Spenden.",
+          "Banken und Zahlungssysteme können Gebühren erheben.",
+          "Informationen zur Mittelverteilung sind für alle verfügbar."
+        ]
+      },
+      "legality": {
+        "title": "Projektlegalität",
+        "content": "Das Projekt finanziert keine Initiativen oder Handlungen, die gegen Gesetze eines Landes verstoßen."
+      },
+      "prohibited": {
+        "title": "Verbotene Inhalte",
+        "content": "Das Projekt unterstützt keine Materialien mit Gewaltpropaganda, Diskriminierung, Extremismus, Urheberrechtsverletzungen oder anderen illegalen Aktivitäten."
+      },
+      "aml": {
+        "title": "Internationale Compliance",
+        "content": "Das Projekt entspricht internationalen Standards zur Bekämpfung von Geldwäsche (AML) und Terrorismusfinanzierung (CFT)."
+      },
+      "responsibility": {
+        "title": "Verantwortung",
+        "content": "Die Teilnahme am Projekt ist vollständig freiwillig.\n\nMit dem Senden von 99 Cent bestätigst du, dass du die Projektregeln gelesen und akzeptiert hast."
       }
+    },
+    "cta": {
+      "button": "Projekt unterstützen",
+      "note": "Dies ist eine separate freiwillige Spende zur Unterstützung des \"99 Cent\"-Projekts."
     }
   },
   "transparency": {
@@ -99,8 +141,20 @@
       },
       "fees": {
         "title": "Keine versteckten Gebühren",
-        "content": "Wir nehmen keine Provision von deinen 99 Cent. Die einzigen Kosten sind Zahlungsabwicklungsgebühren (Stripe ~3% oder Blockchain-Gas)."
+        "content": "Das Projekt nimmt keine Provision von deinen 99 Cent. Die einzigen Kosten sind Bankgebühren, Zahlungssystemgebühren oder Blockchain-Gas."
+      },
+      "availability": {
+        "title": "Informationsverfügbarkeit",
+        "items": [
+          "Alle Informationen sind auf der Website ohne Registrierung verfügbar",
+          "Jeder Teilnehmer kann den aktuellen Kontostand, die Anzahl der Teilnehmer und Länder sehen",
+          "Berichte zu jedem Projekt werden sofort nach der Überweisung veröffentlicht"
+        ]
       }
+    },
+    "cta": {
+      "button": "Mitmachen und Projekt unterstützen",
+      "note": "Mit dem Klick sendest du 99 Cent und nimmst an einem globalen Experiment guter Taten teil."
     }
   },
   "howItWorks": {
@@ -129,12 +183,15 @@
       },
       "projects": {
         "title": "Projekte, die wir unterstützen",
-        "items": [
-          "Zugang zu sauberem Wasser",
-          "Bildungsprogramme",
-          "Medizinische Hilfe",
-          "Umweltinitiativen",
-          "Gemeinschaftsunterstützung"
+        "subtitle": "Hilfe für echte Menschen",
+        "categories": [
+          { "icon": "💧", "name": "Sauberes Wasser", "desc": "Zugang zu Trinkwasser ermöglichen" },
+          { "icon": "🏥", "name": "Gesundheit", "desc": "Behandlung, Medikamente, Patientenbetreuung" },
+          { "icon": "🍎", "name": "Ernährung", "desc": "Nahrung in Krisensituationen bereitstellen" },
+          { "icon": "📚", "name": "Bildung", "desc": "Zugang zu Lernmaterialien und Online-Kursen" },
+          { "icon": "🏠", "name": "Lebensbedingungen", "desc": "Unterkunft, Kleidung und Grundbedürfnisse" },
+          { "icon": "🌪️", "name": "Katastrophenhilfe", "desc": "Unterstützung für Katastrophenopfer" },
+          { "icon": "⚡", "name": "Dringende Bedürfnisse", "desc": "Individuelle Notfälle" }
         ],
         "note": "Projekte werden vor der Aufnahme in die Abstimmung geprüft."
       },
@@ -152,6 +209,10 @@
           "Feedback von Empfängern"
         ]
       }
+    },
+    "cta": {
+      "button": "Projekt unterstützen",
+      "note": "Dies ist eine separate freiwillige Spende zur Unterstützung des Projekts."
     }
   },
   "admin": {

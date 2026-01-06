@@ -25,7 +25,8 @@ export default function TransparencyPage() {
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl font-bold text-[#1e3a5f] mb-8">{t('title')}</h1>
 
-          <div className="space-y-6 text-gray-600">
+          <div className="space-y-8 text-gray-600">
+            {/* Полная прозрачность */}
             <section>
               <h2 className="text-xl font-semibold text-[#1e3a5f] mb-3">
                 {t('sections.full.title')}
@@ -33,6 +34,9 @@ export default function TransparencyPage() {
               <p>{t('sections.full.content')}</p>
             </section>
 
+            <hr className="border-gray-200" />
+
+            {/* Что мы публикуем */}
             <section>
               <h2 className="text-xl font-semibold text-[#1e3a5f] mb-3">
                 {t('sections.publish.title')}
@@ -44,6 +48,9 @@ export default function TransparencyPage() {
               </ul>
             </section>
 
+            <hr className="border-gray-200" />
+
+            {/* Блокчейн-верификация */}
             <section>
               <h2 className="text-xl font-semibold text-[#1e3a5f] mb-3">
                 {t('sections.blockchain.title')}
@@ -57,6 +64,9 @@ export default function TransparencyPage() {
               </div>
             </section>
 
+            <hr className="border-gray-200" />
+
+            {/* Ежемесячные отчёты */}
             <section>
               <h2 className="text-xl font-semibold text-[#1e3a5f] mb-3">
                 {t('sections.reports.title')}
@@ -69,15 +79,44 @@ export default function TransparencyPage() {
               </ul>
             </section>
 
+            <hr className="border-gray-200" />
+
+            {/* Нулевые скрытые комиссии */}
             <section>
               <h2 className="text-xl font-semibold text-[#1e3a5f] mb-3">
                 {t('sections.fees.title')}
               </h2>
               <p>{t('sections.fees.content')}</p>
             </section>
+
+            <hr className="border-gray-200" />
+
+            {/* Доступность информации */}
+            <section>
+              <h2 className="text-xl font-semibold text-[#1e3a5f] mb-3">
+                {t('sections.availability.title')}
+              </h2>
+              <ul className="list-disc pl-6 space-y-2">
+                {(t.raw('sections.availability.items') as string[]).map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
+              </ul>
+            </section>
           </div>
 
-          <div className="mt-12">
+          {/* CTA кнопка */}
+          <div className="mt-12 text-center bg-gray-50 rounded-2xl p-8">
+            <Link href={`/${locale}`}>
+              <button className="btn-primary text-lg px-8 py-3">
+                {t('cta.button')}
+              </button>
+            </Link>
+            <p className="text-gray-500 text-sm mt-3">
+              {t('cta.note')}
+            </p>
+          </div>
+
+          <div className="mt-8">
             <Link href={`/${locale}`} className="text-[#1e3a5f] hover:underline">
               {tNav('back')}
             </Link>

@@ -4,13 +4,13 @@
     "description": "Una pequeña acción. La elección de los fuertes."
   },
   "home": {
-    "title": "99 centavos.",
-    "subtitle1": "Una pequeña acción.",
-    "subtitle2": "La elección de los fuertes.",
+    "title": "99 cents",
+    "subtitle1": "Un proyecto global",
+    "subtitle2": "de pequeñas acciones bondadosas",
     "tagline": "Un clic. Sin registro. Sin recompensas.",
     "cta": {
-      "description": "Envías 99 centavos y no recibes nada a cambio.",
-      "meaning": "Ese es el punto.",
+      "description": "Una pequeña acción. La elección de los fuertes.",
+      "meaning": "",
       "button": "Enviar 99 centavos",
       "connecting": "Conectando...",
       "note": "Sin registro. Sin correos. Sin condiciones."
@@ -43,25 +43,67 @@
     "sections": {
       "idea": {
         "title": "La Idea",
-        "content": "99 centavos es un experimento de donación colectiva. Creemos que pequeñas acciones de muchas personas pueden cambiar el mundo."
+        "content": "\"99 centavos\" es un proyecto social de caridad colectiva.\n\nCreemos que las pequeñas acciones de muchas personas pueden cambiar el mundo.\n\n\"99 centavos\" es una plataforma global donde cualquier persona puede enviar voluntariamente $0.99, realizando un acto de bondad simple y consciente.\n\nEl proyecto no promete recompensas ni beneficios. No es una compra, no es una inversión, no es un servicio — es una elección.\n\nLo llamamos un experimento porque queremos mostrar cómo el poder de una pequeña acción, repetida miles de veces, puede brindar ayuda real a las personas."
       },
       "howItWorks": {
-        "title": "Cómo Funciona",
+        "title": "Cómo Funciona el Proyecto",
         "items": [
-          "Envías exactamente 99 centavos",
-          "Tu pago aparece en el mapa",
-          "Puedes votar por proyectos",
-          "El proyecto ganador recibe todos los fondos"
+          "Envías voluntariamente 99 centavos.",
+          "Tu pago aparece en el mapa global del proyecto.",
+          "Después del pago, obtienes el derecho de votar por proyectos que necesitan ayuda.",
+          "Las votaciones se realizan regularmente.",
+          "El proyecto con más votos recibe todos los fondos recaudados."
+        ]
+      },
+      "voting": {
+        "title": "Votación",
+        "items": [
+          "Solo pueden votar los usuarios que han realizado una transferencia.",
+          "Un usuario puede votar una vez al día.",
+          "De todas las solicitudes enviadas, el sistema selecciona aleatoriamente varios proyectos para votación.",
+          "Un proyecto gana y recibe toda la cantidad recaudada."
         ]
       },
       "whatYouGet": {
         "title": "Qué Obtienes",
-        "content": "Nada material. Solo la satisfacción de haber hecho una pequeña pero significativa acción. Y un punto en el mapa."
+        "content": "No recibes nada material. Sin bonos, regalos ni privilegios.",
+        "items": [
+          "La conciencia de haber hecho una buena acción",
+          "Tu punto en el mapa mundial",
+          "Participación en un proceso global de ayuda"
+        ],
+        "quote": "99 centavos es suficiente para no ser un cero."
       },
       "transparency": {
         "title": "Transparencia",
-        "content": "Todas las transacciones son públicas. Todas las transferencias a proyectos están documentadas. No cobramos comisión."
+        "items": [
+          "Todas las transacciones son públicas.",
+          "Todas las transferencias a proyectos ganadores están documentadas.",
+          "El proyecto no cobra comisión por las donaciones.",
+          "Los bancos y sistemas de pago pueden cobrar comisiones.",
+          "La información sobre distribución de fondos está disponible para todos."
+        ]
+      },
+      "legality": {
+        "title": "Legalidad del Proyecto",
+        "content": "El proyecto no financia iniciativas o acciones que violen las leyes de ningún país."
+      },
+      "prohibited": {
+        "title": "Contenido Prohibido",
+        "content": "El proyecto no apoya materiales que contengan propaganda de violencia, discriminación, extremismo, violación de derechos de autor u otras actividades ilegales."
+      },
+      "aml": {
+        "title": "Cumplimiento Internacional",
+        "content": "El proyecto cumple con los estándares internacionales de lucha contra el lavado de dinero (AML) y financiamiento del terrorismo (CFT)."
+      },
+      "responsibility": {
+        "title": "Responsabilidad",
+        "content": "La participación en el proyecto es completamente voluntaria.\n\nAl enviar 99 centavos, confirmas que has leído y aceptas las reglas del proyecto."
       }
+    },
+    "cta": {
+      "button": "Apoyar el Proyecto",
+      "note": "Esta es una donación voluntaria separada para apoyar el proyecto \"99 centavos\"."
     }
   },
   "transparency": {
@@ -99,8 +141,20 @@
       },
       "fees": {
         "title": "Cero Comisiones Ocultas",
-        "content": "No cobramos comisión de tus 99 centavos. Los únicos costos son las comisiones de procesadores de pago (Stripe ~3% o gas de blockchain)."
+        "content": "El proyecto no cobra comisión de tus 99 centavos. Los únicos costos son comisiones bancarias, de sistemas de pago o gas de blockchain."
+      },
+      "availability": {
+        "title": "Disponibilidad de Información",
+        "items": [
+          "Toda la información está disponible en el sitio web sin registro",
+          "Cualquier participante puede ver el saldo actual, número de participantes y países",
+          "Los informes de cada proyecto se publican inmediatamente después de la transferencia"
+        ]
       }
+    },
+    "cta": {
+      "button": "Únete y Apoya el Proyecto",
+      "note": "Al hacer clic, procedes a enviar 99 centavos y participas en un experimento global de buenas acciones."
     }
   },
   "howItWorks": {
@@ -129,12 +183,15 @@
       },
       "projects": {
         "title": "Proyectos que Apoyamos",
-        "items": [
-          "Acceso a agua limpia",
-          "Programas educativos",
-          "Asistencia médica",
-          "Iniciativas ambientales",
-          "Apoyo comunitario"
+        "subtitle": "Ayudando a personas reales",
+        "categories": [
+          { "icon": "💧", "name": "Agua Limpia", "desc": "Ayudando a acceder al agua potable" },
+          { "icon": "🏥", "name": "Salud", "desc": "Tratamiento, medicinas, apoyo a pacientes" },
+          { "icon": "🍎", "name": "Nutrición", "desc": "Proporcionando comida en situaciones de crisis" },
+          { "icon": "📚", "name": "Educación", "desc": "Acceso a materiales y cursos en línea" },
+          { "icon": "🏠", "name": "Condiciones de Vida", "desc": "Vivienda, ropa y necesidades esenciales" },
+          { "icon": "🌪️", "name": "Recuperación de Desastres", "desc": "Apoyo a víctimas de desastres naturales" },
+          { "icon": "⚡", "name": "Necesidades Urgentes", "desc": "Necesidades individuales urgentes" }
         ],
         "note": "Los proyectos son verificados antes de agregarse a la votación."
       },
@@ -152,6 +209,10 @@
           "Retroalimentación de beneficiarios"
         ]
       }
+    },
+    "cta": {
+      "button": "Apoyar el Proyecto",
+      "note": "Esta es una donación voluntaria separada para apoyar el proyecto."
     }
   },
   "admin": {

@@ -4,13 +4,13 @@
     "description": "A small action. A choice of the strong."
   },
   "home": {
-    "title": "99 cents.",
-    "subtitle1": "A small action.",
-    "subtitle2": "A choice of the strong.",
+    "title": "99 cents",
+    "subtitle1": "A global project",
+    "subtitle2": "of small kind actions",
     "tagline": "One click. No sign-up. No rewards.",
     "cta": {
-      "description": "You send 99 cents and get nothing in return.",
-      "meaning": "That's the whole point.",
+      "description": "A small action. A choice of the strong.",
+      "meaning": "",
       "button": "Send 99 cents",
       "connecting": "Connecting...",
       "note": "No registration. No emails. No strings attached."
@@ -43,25 +43,67 @@
     "sections": {
       "idea": {
         "title": "The Idea",
-        "content": "99 cents is an experiment in collective giving. We believe that small actions by many people can change the world."
+        "content": "\"99 cents\" is a social project of collective charity.\n\nWe believe that small actions by many people can change the world.\n\n\"99 cents\" is a global platform where anyone from anywhere in the world can voluntarily send $0.99, making a simple and conscious act of kindness.\n\nThe project promises no rewards or benefits. It's not a purchase, not an investment, not a service — it's a choice.\n\nWe call it an experiment because we want to show how the power of one small action, repeated thousands of times, can bring real help to people."
       },
       "howItWorks": {
-        "title": "How It Works",
+        "title": "How the Project Works",
         "items": [
-          "You send exactly 99 cents",
-          "Your payment appears on the map",
-          "You can vote for projects",
-          "The winning project receives all funds"
+          "You voluntarily send 99 cents.",
+          "Your payment appears on the project's global map.",
+          "After payment, you earn the right to vote for projects that need help.",
+          "Voting takes place regularly.",
+          "The project with the most votes receives all collected funds."
+        ]
+      },
+      "voting": {
+        "title": "Voting",
+        "items": [
+          "Only users who have made a transfer can vote.",
+          "One user can vote once per day.",
+          "From all submitted applications, the system randomly selects several projects for voting.",
+          "One project wins and receives the entire collected amount."
         ]
       },
       "whatYouGet": {
         "title": "What You Get",
-        "content": "Nothing material. Just the knowledge that you made a small but meaningful action. And a dot on the map."
+        "content": "You receive nothing material. No bonuses, gifts, or privileges.",
+        "items": [
+          "The awareness of having done a good deed",
+          "Your dot on the world map",
+          "Participation in a global process of helping others"
+        ],
+        "quote": "99 cents is enough not to be a zero."
       },
       "transparency": {
         "title": "Transparency",
-        "content": "All transactions are public. All transfers to projects are documented. We take no commission."
+        "items": [
+          "All transactions are public.",
+          "All transfers to winning projects are documented.",
+          "The project does not charge any commission on donations.",
+          "Fees may be charged by banks and payment systems.",
+          "Information about fund distribution is available to all project participants."
+        ]
+      },
+      "legality": {
+        "title": "Project Legality",
+        "content": "The project does not fund initiatives or actions that violate the laws or regulations of any country."
+      },
+      "prohibited": {
+        "title": "Prohibited Content",
+        "content": "The project does not support materials containing propaganda of violence, discrimination, extremism, copyright infringement, or other illegal activities."
+      },
+      "aml": {
+        "title": "International Compliance",
+        "content": "The project complies with international standards for combating money laundering (AML) and terrorist financing (CFT)."
+      },
+      "responsibility": {
+        "title": "Responsibility",
+        "content": "Participation in the project is completely voluntary.\n\nBy sending 99 cents, you confirm that you have read and accept the project rules."
       }
+    },
+    "cta": {
+      "button": "Support the Project",
+      "note": "This is a separate voluntary donation to support the \"99 cents\" project."
     }
   },
   "transparency": {
@@ -99,8 +141,20 @@
       },
       "fees": {
         "title": "Zero Hidden Fees",
-        "content": "We take no commission from your 99 cents. The only costs are payment processor fees (Stripe ~3% or blockchain gas)."
+        "content": "The project takes no commission from your 99 cents. The only costs are bank fees, payment system fees, or blockchain gas."
+      },
+      "availability": {
+        "title": "Information Availability",
+        "items": [
+          "All information is available on the website without registration",
+          "Any participant can see the current balance, number of participants, and countries",
+          "Reports on each project are published immediately after the fund transfer"
+        ]
       }
+    },
+    "cta": {
+      "button": "Join and Support the Project",
+      "note": "By clicking, you proceed to send 99 cents and participate in a global experiment of good deeds."
     }
   },
   "howItWorks": {
@@ -129,12 +183,15 @@
       },
       "projects": {
         "title": "Projects We Support",
-        "items": [
-          "Clean water access",
-          "Educational programs",
-          "Medical assistance",
-          "Environmental initiatives",
-          "Community support"
+        "subtitle": "Helping real people",
+        "categories": [
+          { "icon": "💧", "name": "Clean Water", "desc": "Helping people access drinking water" },
+          { "icon": "🏥", "name": "Healthcare", "desc": "Treatment, medicine, patient support" },
+          { "icon": "🍎", "name": "Nutrition", "desc": "Providing food for children and adults in crisis" },
+          { "icon": "📚", "name": "Education", "desc": "Access to learning materials and online courses" },
+          { "icon": "🏠", "name": "Living Conditions", "desc": "Housing, clothing, and essential needs" },
+          { "icon": "🌪️", "name": "Disaster Recovery", "desc": "Supporting victims of natural disasters" },
+          { "icon": "⚡", "name": "Emergency Personal Needs", "desc": "Urgent individual needs — medicine, education, equipment" }
         ],
         "note": "Projects are vetted before being added to the voting."
       },
@@ -152,6 +209,10 @@
           "Feedback from recipients"
         ]
       }
+    },
+    "cta": {
+      "button": "Support the Project",
+      "note": "This is a separate voluntary donation to support the \"99 cents\" project."
     }
   },
   "admin": {

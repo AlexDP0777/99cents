@@ -25,41 +25,127 @@ export default function RulesPage() {
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl font-bold text-[#1e3a5f] mb-8">{t('title')}</h1>
 
-          <div className="space-y-6 text-gray-600">
+          <div className="space-y-8 text-gray-600">
+            {/* Идея проекта */}
             <section>
               <h2 className="text-xl font-semibold text-[#1e3a5f] mb-3">
                 {t('sections.idea.title')}
               </h2>
-              <p>{t('sections.idea.content')}</p>
+              <div className="whitespace-pre-line">{t('sections.idea.content')}</div>
             </section>
 
+            <hr className="border-gray-200" />
+
+            {/* Как работает проект */}
             <section>
               <h2 className="text-xl font-semibold text-[#1e3a5f] mb-3">
                 {t('sections.howItWorks.title')}
               </h2>
-              <ul className="list-disc pl-6 space-y-2">
+              <ol className="list-decimal pl-6 space-y-2">
                 {(t.raw('sections.howItWorks.items') as string[]).map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
+              </ol>
+            </section>
+
+            <hr className="border-gray-200" />
+
+            {/* Голосование */}
+            <section>
+              <h2 className="text-xl font-semibold text-[#1e3a5f] mb-3">
+                {t('sections.voting.title')}
+              </h2>
+              <ul className="list-disc pl-6 space-y-2">
+                {(t.raw('sections.voting.items') as string[]).map((item, i) => (
                   <li key={i}>{item}</li>
                 ))}
               </ul>
             </section>
 
+            <hr className="border-gray-200" />
+
+            {/* Что вы получаете */}
             <section>
               <h2 className="text-xl font-semibold text-[#1e3a5f] mb-3">
                 {t('sections.whatYouGet.title')}
               </h2>
-              <p>{t('sections.whatYouGet.content')}</p>
+              <p className="mb-3">{t('sections.whatYouGet.content')}</p>
+              <ul className="list-disc pl-6 space-y-2 mb-4">
+                {(t.raw('sections.whatYouGet.items') as string[]).map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
+              </ul>
+              <p className="text-[#1e3a5f] font-medium italic">
+                {t('sections.whatYouGet.quote')}
+              </p>
             </section>
 
+            <hr className="border-gray-200" />
+
+            {/* Прозрачность */}
             <section>
               <h2 className="text-xl font-semibold text-[#1e3a5f] mb-3">
                 {t('sections.transparency.title')}
               </h2>
-              <p>{t('sections.transparency.content')}</p>
+              <ul className="list-disc pl-6 space-y-2">
+                {(t.raw('sections.transparency.items') as string[]).map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
+              </ul>
+            </section>
+
+            <hr className="border-gray-200" />
+
+            {/* Законность проектов */}
+            <section>
+              <h2 className="text-xl font-semibold text-[#1e3a5f] mb-3">
+                {t('sections.legality.title')}
+              </h2>
+              <p>{t('sections.legality.content')}</p>
+            </section>
+
+            <hr className="border-gray-200" />
+
+            {/* Запрет на запрещённый контент */}
+            <section>
+              <h2 className="text-xl font-semibold text-[#1e3a5f] mb-3">
+                {t('sections.prohibited.title')}
+              </h2>
+              <p>{t('sections.prohibited.content')}</p>
+            </section>
+
+            <hr className="border-gray-200" />
+
+            {/* Соответствие международным нормам */}
+            <section>
+              <h2 className="text-xl font-semibold text-[#1e3a5f] mb-3">
+                {t('sections.aml.title')}
+              </h2>
+              <p>{t('sections.aml.content')}</p>
+            </section>
+
+            <hr className="border-gray-200" />
+
+            {/* Ответственность */}
+            <section>
+              <h2 className="text-xl font-semibold text-[#1e3a5f] mb-3">
+                {t('sections.responsibility.title')}
+              </h2>
+              <div className="whitespace-pre-line">{t('sections.responsibility.content')}</div>
             </section>
           </div>
 
-          <div className="mt-12">
+          {/* CTA кнопка */}
+          <div className="mt-12 text-center bg-gray-50 rounded-2xl p-8">
+            <button className="btn-primary text-lg px-8 py-3">
+              {t('cta.button')}
+            </button>
+            <p className="text-gray-500 text-sm mt-3">
+              {t('cta.note')}
+            </p>
+          </div>
+
+          <div className="mt-8">
             <Link href={`/${locale}`} className="text-[#1e3a5f] hover:underline">
               {tNav('back')}
             </Link>

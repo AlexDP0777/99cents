@@ -4,13 +4,13 @@
     "description": "Un petit geste. Le choix des forts."
   },
   "home": {
-    "title": "99 centimes.",
-    "subtitle1": "Un petit geste.",
-    "subtitle2": "Le choix des forts.",
+    "title": "99 cents",
+    "subtitle1": "Un projet mondial",
+    "subtitle2": "de petits gestes bienveillants",
     "tagline": "Un clic. Sans inscription. Sans récompense.",
     "cta": {
-      "description": "Vous envoyez 99 centimes et ne recevez rien en retour.",
-      "meaning": "C'est tout l'intérêt.",
+      "description": "Un petit geste. Le choix des forts.",
+      "meaning": "",
       "button": "Envoyer 99 centimes",
       "connecting": "Connexion...",
       "note": "Sans inscription. Sans emails. Sans conditions."
@@ -43,25 +43,67 @@
     "sections": {
       "idea": {
         "title": "L'Idée",
-        "content": "99 centimes est une expérience de don collectif. Nous croyons que les petites actions de nombreuses personnes peuvent changer le monde."
+        "content": "\"99 centimes\" est un projet social de charité collective.\n\nNous croyons que les petites actions de nombreuses personnes peuvent changer le monde.\n\n\"99 centimes\" est une plateforme mondiale où chacun peut volontairement envoyer 0,99 $, accomplissant un acte de bonté simple et conscient.\n\nLe projet ne promet ni récompenses ni avantages. Ce n'est pas un achat, pas un investissement, pas un service — c'est un choix.\n\nNous l'appelons une expérience car nous voulons montrer comment la force d'une petite action, répétée des milliers de fois, peut apporter une aide réelle."
       },
       "howItWorks": {
-        "title": "Comment ça marche",
+        "title": "Comment fonctionne le projet",
         "items": [
-          "Vous envoyez exactement 99 centimes",
-          "Votre paiement apparaît sur la carte",
-          "Vous pouvez voter pour des projets",
-          "Le projet gagnant reçoit tous les fonds"
+          "Vous envoyez volontairement 99 centimes.",
+          "Votre paiement apparaît sur la carte mondiale du projet.",
+          "Après le paiement, vous obtenez le droit de voter pour des projets nécessitant de l'aide.",
+          "Les votes ont lieu régulièrement.",
+          "Le projet avec le plus de votes reçoit tous les fonds collectés."
+        ]
+      },
+      "voting": {
+        "title": "Vote",
+        "items": [
+          "Seuls les utilisateurs ayant effectué un transfert peuvent voter.",
+          "Un utilisateur peut voter une fois par jour.",
+          "Parmi toutes les candidatures, le système sélectionne aléatoirement plusieurs projets pour le vote.",
+          "Un projet gagne et reçoit la totalité du montant collecté."
         ]
       },
       "whatYouGet": {
         "title": "Ce que vous obtenez",
-        "content": "Rien de matériel. Juste la satisfaction d'avoir fait un petit geste significatif. Et un point sur la carte."
+        "content": "Vous ne recevez rien de matériel. Pas de bonus, de cadeaux ou de privilèges.",
+        "items": [
+          "La conscience d'avoir accompli une bonne action",
+          "Votre point sur la carte du monde",
+          "La participation à un processus d'aide mondial"
+        ],
+        "quote": "99 centimes suffisent pour ne pas être un zéro."
       },
       "transparency": {
         "title": "Transparence",
-        "content": "Toutes les transactions sont publiques. Tous les transferts aux projets sont documentés. Nous ne prenons aucune commission."
+        "items": [
+          "Toutes les transactions sont publiques.",
+          "Tous les transferts aux projets gagnants sont documentés.",
+          "Le projet ne prélève aucune commission sur les dons.",
+          "Des frais peuvent être facturés par les banques et systèmes de paiement.",
+          "Les informations sur la distribution des fonds sont accessibles à tous."
+        ]
+      },
+      "legality": {
+        "title": "Légalité du projet",
+        "content": "Le projet ne finance pas d'initiatives ou d'actions qui violent les lois d'un pays."
+      },
+      "prohibited": {
+        "title": "Contenu interdit",
+        "content": "Le projet ne soutient pas les contenus faisant la propagande de la violence, de la discrimination, de l'extrémisme, de la violation des droits d'auteur ou d'autres activités illégales."
+      },
+      "aml": {
+        "title": "Conformité internationale",
+        "content": "Le projet respecte les normes internationales de lutte contre le blanchiment d'argent (AML) et le financement du terrorisme (CFT)."
+      },
+      "responsibility": {
+        "title": "Responsabilité",
+        "content": "La participation au projet est entièrement volontaire.\n\nEn envoyant 99 centimes, vous confirmez avoir lu et accepté les règles du projet."
       }
+    },
+    "cta": {
+      "button": "Soutenir le projet",
+      "note": "Il s'agit d'un don volontaire séparé pour soutenir le projet \"99 centimes\"."
     }
   },
   "transparency": {
@@ -99,8 +141,20 @@
       },
       "fees": {
         "title": "Zéro frais cachés",
-        "content": "Nous ne prenons aucune commission sur vos 99 centimes. Les seuls coûts sont les frais de traitement des paiements (Stripe ~3% ou gas blockchain)."
+        "content": "Le projet ne prélève aucune commission sur vos 99 centimes. Les seuls coûts sont les frais bancaires, les frais de système de paiement ou le gas blockchain."
+      },
+      "availability": {
+        "title": "Disponibilité des informations",
+        "items": [
+          "Toutes les informations sont disponibles sur le site sans inscription",
+          "Tout participant peut voir le solde actuel, le nombre de participants et les pays",
+          "Les rapports de chaque projet sont publiés immédiatement après le transfert"
+        ]
       }
+    },
+    "cta": {
+      "button": "Rejoindre et soutenir le projet",
+      "note": "En cliquant, vous procédez à l'envoi de 99 centimes et participez à une expérience mondiale de bonnes actions."
     }
   },
   "howItWorks": {
@@ -129,12 +183,15 @@
       },
       "projects": {
         "title": "Projets que nous soutenons",
-        "items": [
-          "Accès à l'eau potable",
-          "Programmes éducatifs",
-          "Assistance médicale",
-          "Initiatives environnementales",
-          "Soutien communautaire"
+        "subtitle": "Aider de vraies personnes",
+        "categories": [
+          { "icon": "💧", "name": "Eau Potable", "desc": "Aider à accéder à l'eau potable" },
+          { "icon": "🏥", "name": "Santé", "desc": "Traitement, médicaments, soutien aux patients" },
+          { "icon": "🍎", "name": "Nutrition", "desc": "Fournir de la nourriture en situation de crise" },
+          { "icon": "📚", "name": "Éducation", "desc": "Accès aux matériels et cours en ligne" },
+          { "icon": "🏠", "name": "Conditions de Vie", "desc": "Logement, vêtements et besoins essentiels" },
+          { "icon": "🌪️", "name": "Récupération après Catastrophe", "desc": "Soutien aux victimes de catastrophes" },
+          { "icon": "⚡", "name": "Besoins Urgents", "desc": "Besoins individuels urgents" }
         ],
         "note": "Les projets sont vérifiés avant d'être ajoutés au vote."
       },
@@ -152,6 +209,10 @@
           "Retours des bénéficiaires"
         ]
       }
+    },
+    "cta": {
+      "button": "Soutenir le projet",
+      "note": "Il s'agit d'un don volontaire séparé pour soutenir le projet."
     }
   },
   "admin": {
