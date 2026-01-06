@@ -41,7 +41,7 @@ jobs:
 
       - name: Deploy to server 📡
         run: |
-          ssh target "cd ${{ secrets.DEPLOY_PATH }} && git pull origin master && npm ci && pm2 restart 99cents"
+          ssh target "cd ${{ secrets.DEPLOY_PATH }} && git pull origin master && npm ci && npm run build && pm2 restart 99cents"
 
       - name: Clear Cloudflare cache 🆑
         uses: Cyb3r-Jak3/action-cloudflare-cache@v3.0.0
