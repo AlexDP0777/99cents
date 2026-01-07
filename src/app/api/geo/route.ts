@@ -33,36 +33,98 @@ const countryFlags: Record<string, string> = {
   'LV': '🇱🇻', 'EE': '🇪🇪',
 };
 
+function getClientIp(request: NextRequest): string {
+  const forwarded = request.headers.get('x-forwarded-for');
+  if (forwarded) {
+    return forwarded.split(',')[0].trim();
+  }
+  const realIp = request.headers.get('x-real-ip');
+  if (realIp) {
+    return realIp.trim();
+  }
+  return '';
+}
+
+// Динамическая загрузка geoip-lite (чтобы избежать проблем с bundling)
+async function lookupWithGeoipLite(ip: string): Promise<{ country: string; city: string } | null> {
+  try {
+    // @ts-ignore - dynamic import
+    const geoip = await import('geoip-lite');
+    const geo = geoip.default?.lookup?.(ip) || geoip.lookup?.(ip);
+    if (geo) {
+      return { country: geo.country || '', city: geo.city || '' };
+    }
+  } catch (e) {
+    // geoip-lite не доступен в этом окружении
+    console.log('geoip-lite not available');
+  }
+  return null;
+}
+
 export async function GET(request: NextRequest) {
-  // 1. Пробуем Vercel geo-заголовки
-  let countryCode = request.headers.get('x-vercel-ip-country') || '';
-  let city = request.headers.get('x-vercel-ip-city') || '';
-  
-  // 2. Fallback на ip-api.com если Vercel не дал данные
-  if (!countryCode) {
+  let countryCode = '';
+  let city = '';
+  let source = '';
+
+  // 1. Пробуем Vercel geo-заголовки (бесплатно на Vercel)
+  countryCode = request.headers.get('x-vercel-ip-country') || '';
+  city = request.headers.get('x-vercel-ip-city') || '';
+  if (countryCode) {
+    source = 'vercel';
+  }
+
+  const ip = getClientIp(request);
+  const isLocalIp = !ip || ip === '::1' || ip === '127.0.0.1' || ip.startsWith('192.168.') || ip.startsWith('10.');
+
+  // 2. Fallback на ip-api.com (бесплатный внешний сервис)
+  if (!countryCode && !isLocalIp) {
     try {
-      const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || '';
-      if (ip && ip !== '::1' && ip !== '127.0.0.1') {
-        const res = await fetch(`http://ip-api.com/json/${ip}?fields=countryCode,city`);
-        if (res.ok) {
-          const data = await res.json();
-          countryCode = data.countryCode || '';
-          city = data.city || '';
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 3000); // 3 секунды таймаут
+
+      const res = await fetch(`http://ip-api.com/json/${ip}?fields=countryCode,city`, {
+        signal: controller.signal,
+      });
+      clearTimeout(timeout);
+
+      if (res.ok) {
+        const data = await res.json();
+        countryCode = data.countryCode || '';
+        city = data.city || '';
+        if (countryCode) {
+          source = 'ip-api';
         }
       }
     } catch (e) {
-      console.error('Geo fallback error:', e);
+      // ip-api недоступен, переходим к локальной базе
+      console.log('ip-api fallback failed, trying geoip-lite');
     }
   }
 
-  const countryName = countryNames[countryCode] || 'Другая';
+  // 3. Fallback на geoip-lite (локальная база MaxMind)
+  if (!countryCode && !isLocalIp) {
+    const geo = await lookupWithGeoipLite(ip);
+    if (geo) {
+      countryCode = geo.country;
+      city = geo.city;
+      if (countryCode) {
+        source = 'geoip-lite';
+      }
+    }
+  }
+
+  const countryName = countryNames[countryCode] || 'Other';
   const flag = countryFlags[countryCode] || '🌍';
 
   return NextResponse.json({
     countryCode,
     countryName,
-    city: decodeURIComponent(city),
+    city: city ? decodeURIComponent(city) : '',
     flag,
-    detected: !!countryCode
+    detected: !!countryCode,
+    source, // для дебага - откуда взяли данные
   });
 }
+
+// Отключаем статическую генерацию для этого API
+export const dynamic = 'force-dynamic';
