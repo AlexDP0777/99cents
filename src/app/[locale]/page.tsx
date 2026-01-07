@@ -37,7 +37,12 @@ export default function Home() {
 
   // Переводы для PaymentButton
   const paymentTranslations = {
-    connectWallet: tPayment('connectWallet'),
+    helpPeople: tPayment('helpPeople'),
+    supportProject: tPayment('supportProject'),
+    choosePaymentMethod: tPayment('choosePaymentMethod'),
+    cryptoPayment: tPayment('cryptoPayment'),
+    cardPayment: tPayment('cardPayment'),
+    cardComingSoon: tPayment('cardComingSoon'),
     sendAmount: tPayment('sendAmount'),
     processing: tPayment('processing'),
     switchNetwork: tPayment('switchNetwork'),
@@ -51,6 +56,7 @@ export default function Home() {
     transactionSuccess: tPayment('transactionSuccess'),
     transactionPending: tPayment('transactionPending'),
     insufficientBalance: tPayment('insufficientBalance'),
+    back: tPayment('back'),
   };
 
   const handlePaymentSuccess = (txHash: string, votes: number) => {
