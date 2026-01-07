@@ -243,6 +243,23 @@
     "justNow": "Щойно",
     "daysAgo": "дн. тому"
   },
+  "payment": {
+    "connectWallet": "Підключити гаманець",
+    "sendAmount": "Надіслати",
+    "processing": "Обробка...",
+    "switchNetwork": "Переключити на Base",
+    "votes": "голосів",
+    "disconnect": "Відключити",
+    "walletConnected": "Гаманець підключено",
+    "chooseWallet": "Оберіть спосіб підключення",
+    "coinbaseWallet": "Coinbase Smart Wallet",
+    "otherWallets": "Інші гаманці (MetaMask, Trust тощо)",
+    "confirmPayment": "Підтвердити оплату",
+    "transactionSuccess": "Платіж успішний!",
+    "transactionPending": "Підтвердження транзакції...",
+    "insufficientBalance": "Недостатньо USDC на балансі",
+    "back": "Назад"
+  },
   "apply": {
     "title": "Подати заявку на допомогу",
     "subtitle": "Опишіть вашу ситуацію. Заявка буде розглянута модератором і може бути обрана для голосування.",

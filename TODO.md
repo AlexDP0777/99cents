@@ -21,6 +21,23 @@
 
 ---
 
+## Платежи
+
+### Требуется от владельца
+- [ ] **Адрес кошелька проекта** - установить в `.env` как `NEXT_PUBLIC_RECIPIENT_ADDRESS`
+- [ ] **WalletConnect Project ID** - получить на https://cloud.walletconnect.com и установить `NEXT_PUBLIC_WC_PROJECT_ID`
+
+### Gas Sponsorship (опционально)
+**Приоритет:** Низкий (газ на Base ~$0.01)
+
+Для полностью бесплатных транзакций для пользователей:
+1. [ ] Зарегистрироваться в Coinbase Developer Platform
+2. [ ] Верифицировать приложение
+3. [ ] Настроить paymaster через useSendCalls
+4. [ ] Документация: https://docs.base.org/identity/smart-wallet/guides/paymasters
+
+---
+
 ## Контент
 
 ### Логотип
@@ -30,6 +47,14 @@
 ---
 
 ## Выполнено
+
+### Платежи (Base + Coinbase Smart Wallet)
+- [x] Интеграция Web3: wagmi + viem на Base chain
+- [x] Coinbase Smart Wallet (вход по email, без seed phrase)
+- [x] WalletConnect для продвинутых пользователей (MetaMask, Trust и др.)
+- [x] USDC платежи с выбором суммы (1x, 5x, 10x, 25x)
+- [x] Переводы для платежного интерфейса на 7 языков
+- [x] Подключение PaymentButton на главную страницу
 
 ### Инфраструктура
 - [x] Добавить документацию по установке PostgreSQL (SERVER_REQUIREMENTS.md)

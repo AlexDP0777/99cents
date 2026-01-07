@@ -243,6 +243,23 @@
     "justNow": "Gerade eben",
     "daysAgo": "Tage her"
   },
+  "payment": {
+    "connectWallet": "Wallet verbinden",
+    "sendAmount": "Senden",
+    "processing": "Wird verarbeitet...",
+    "switchNetwork": "Zu Base wechseln",
+    "votes": "Stimmen",
+    "disconnect": "Trennen",
+    "walletConnected": "Wallet verbunden",
+    "chooseWallet": "Verbindungsart wählen",
+    "coinbaseWallet": "Coinbase Smart Wallet",
+    "otherWallets": "Andere Wallets (MetaMask, Trust, etc.)",
+    "confirmPayment": "Zahlung bestätigen",
+    "transactionSuccess": "Zahlung erfolgreich!",
+    "transactionPending": "Transaktion wird bestätigt...",
+    "insufficientBalance": "USDC-Guthaben nicht ausreichend",
+    "back": "Zurück"
+  },
   "apply": {
     "title": "Hilfsantrag einreichen",
     "subtitle": "Beschreiben Sie Ihre Situation. Ihr Antrag wird von einem Moderator geprüft und kann zur Abstimmung ausgewählt werden.",

@@ -243,6 +243,23 @@
     "justNow": "Только что",
     "daysAgo": "дн. назад"
   },
+  "payment": {
+    "connectWallet": "Подключить кошелёк",
+    "sendAmount": "Отправить",
+    "processing": "Обработка...",
+    "switchNetwork": "Переключить на Base",
+    "votes": "голосов",
+    "disconnect": "Отключить",
+    "walletConnected": "Кошелёк подключён",
+    "chooseWallet": "Выберите способ подключения",
+    "coinbaseWallet": "Coinbase Smart Wallet",
+    "otherWallets": "Другие кошельки (MetaMask, Trust и др.)",
+    "confirmPayment": "Подтвердить оплату",
+    "transactionSuccess": "Платёж успешен!",
+    "transactionPending": "Подтверждение транзакции...",
+    "insufficientBalance": "Недостаточно USDC на балансе",
+    "back": "Назад"
+  },
   "apply": {
     "title": "Подать заявку на помощь",
     "subtitle": "Опишите вашу ситуацию. Заявка будет рассмотрена модератором и может быть выбрана для голосования.",

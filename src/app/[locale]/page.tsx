@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import PaymentButton from '@/components/PaymentButton';
 
 const ParticipantsMap = dynamic(() => import('@/components/ParticipantsMap'), {
   ssr: false,
@@ -24,19 +25,41 @@ interface Stats {
 
 export default function Home() {
   const t = useTranslations('home');
+  const tPayment = useTranslations('payment');
   const tFooter = useTranslations('footer');
   const locale = useLocale();
 
-  const [stats] = useState<Stats>({
+  const [stats, setStats] = useState<Stats>({
     totalParticipants: 999,
     totalCountries: 47,
     totalAmount: 989.01,
   });
-  const [isConnecting, setIsConnecting] = useState(false);
 
-  const handlePayment = async () => {
-    setIsConnecting(true);
-    setTimeout(() => setIsConnecting(false), 2000);
+  // Переводы для PaymentButton
+  const paymentTranslations = {
+    connectWallet: tPayment('connectWallet'),
+    sendAmount: tPayment('sendAmount'),
+    processing: tPayment('processing'),
+    switchNetwork: tPayment('switchNetwork'),
+    votes: tPayment('votes'),
+    disconnect: tPayment('disconnect'),
+    walletConnected: tPayment('walletConnected'),
+    chooseWallet: tPayment('chooseWallet'),
+    coinbaseWallet: tPayment('coinbaseWallet'),
+    otherWallets: tPayment('otherWallets'),
+    confirmPayment: tPayment('confirmPayment'),
+    transactionSuccess: tPayment('transactionSuccess'),
+    transactionPending: tPayment('transactionPending'),
+    insufficientBalance: tPayment('insufficientBalance'),
+  };
+
+  const handlePaymentSuccess = (txHash: string, votes: number) => {
+    // Обновляем статистику после успешного платежа
+    setStats(prev => ({
+      ...prev,
+      totalParticipants: prev.totalParticipants + 1,
+      totalAmount: prev.totalAmount + (0.99 * votes),
+    }));
   };
 
   return (
@@ -70,13 +93,10 @@ export default function Home() {
             <span className="font-medium">{t('cta.meaning')}</span>
           </p>
 
-          <button
-            onClick={handlePayment}
-            disabled={isConnecting}
-            className="btn-primary text-lg px-12 py-4"
-          >
-            {isConnecting ? t('cta.connecting') : t('cta.button')}
-          </button>
+          <PaymentButton
+            translations={paymentTranslations}
+            onSuccess={handlePaymentSuccess}
+          />
 
           <p className="text-gray-400 text-sm mt-4">
             {t('cta.note')}

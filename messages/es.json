@@ -243,6 +243,23 @@
     "justNow": "Ahora mismo",
     "daysAgo": "días atrás"
   },
+  "payment": {
+    "connectWallet": "Conectar billetera",
+    "sendAmount": "Enviar",
+    "processing": "Procesando...",
+    "switchNetwork": "Cambiar a Base",
+    "votes": "votos",
+    "disconnect": "Desconectar",
+    "walletConnected": "Billetera conectada",
+    "chooseWallet": "Elige cómo conectar",
+    "coinbaseWallet": "Coinbase Smart Wallet",
+    "otherWallets": "Otras billeteras (MetaMask, Trust, etc.)",
+    "confirmPayment": "Confirmar pago",
+    "transactionSuccess": "¡Pago exitoso!",
+    "transactionPending": "Confirmando transacción...",
+    "insufficientBalance": "Saldo USDC insuficiente",
+    "back": "Atrás"
+  },
   "apply": {
     "title": "Enviar solicitud de ayuda",
     "subtitle": "Describe tu situación. Tu solicitud será revisada por un moderador y puede ser seleccionada para votación.",

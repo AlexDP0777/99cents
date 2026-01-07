@@ -243,6 +243,23 @@
     "justNow": "刚刚",
     "daysAgo": "天前"
   },
+  "payment": {
+    "connectWallet": "连接钱包",
+    "sendAmount": "发送",
+    "processing": "处理中...",
+    "switchNetwork": "切换到Base网络",
+    "votes": "票",
+    "disconnect": "断开连接",
+    "walletConnected": "钱包已连接",
+    "chooseWallet": "选择连接方式",
+    "coinbaseWallet": "Coinbase智能钱包",
+    "otherWallets": "其他钱包（MetaMask、Trust等）",
+    "confirmPayment": "确认支付",
+    "transactionSuccess": "支付成功！",
+    "transactionPending": "确认交易中...",
+    "insufficientBalance": "USDC余额不足",
+    "back": "返回"
+  },
   "apply": {
     "title": "提交帮助申请",
     "subtitle": "描述您的情况。您的申请将由管理员审核，可能被选入投票。",

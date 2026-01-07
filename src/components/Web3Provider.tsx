@@ -1,39 +1,33 @@
 'use client';
 
 import { WagmiProvider, createConfig, http } from 'wagmi';
-import { arbitrum } from 'wagmi/chains';
+import { base } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { injected, walletConnect } from 'wagmi/connectors';
+import { coinbaseWallet, walletConnect } from 'wagmi/connectors';
 
-// Abstract chain config (L2 на базе Ethereum)
-const abstractChain = {
-  id: 2741, // Abstract mainnet chain ID
-  name: 'Abstract',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'Ether',
-    symbol: 'ETH',
-  },
-  rpcUrls: {
-    default: { http: ['https://api.mainnet.abs.xyz'] },
-    public: { http: ['https://api.mainnet.abs.xyz'] },
-  },
-  blockExplorers: {
-    default: { name: 'AbsScan', url: 'https://abscan.org' },
-  },
-};
-
+// Base chain - Coinbase L2, низкие комиссии, поддержка всех бирж
 const config = createConfig({
-  chains: [abstractChain as any, arbitrum],
+  chains: [base],
   connectors: [
-    injected(),
+    // Coinbase Smart Wallet - по умолчанию
+    // smartWalletOnly = только Smart Wallet (email login, без seed phrase)
+    coinbaseWallet({
+      appName: '99 cents',
+      preference: { options: 'smartWalletOnly' },
+    }),
+    // WalletConnect для продвинутых пользователей (MetaMask, Trust, etc.)
     walletConnect({
       projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID || 'demo',
+      metadata: {
+        name: '99 cents',
+        description: 'Global micro-donation platform',
+        url: 'https://99cents.org',
+        icons: ['https://99cents.org/logo.png'],
+      },
     }),
   ],
   transports: {
-    [abstractChain.id]: http(),
-    [arbitrum.id]: http(),
+    [base.id]: http(),
   },
 });
 
@@ -48,3 +42,7 @@ export function Web3Provider({ children }: { children: React.ReactNode }) {
     </WagmiProvider>
   );
 }
+
+// Экспорт констант для использования в других компонентах
+export const CHAIN_ID = base.id;
+export const CHAIN_NAME = base.name;
