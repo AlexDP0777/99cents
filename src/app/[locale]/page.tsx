@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLocale } from 'next-intl';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import PaymentButton from '@/components/PaymentButton';
@@ -77,7 +78,19 @@ export default function Home() {
 
       {/* Hero Section */}
       <main className="flex-1 flex flex-col items-center px-4 py-12 md:py-20">
-        {/* Logo & Title */}
+        {/* Logo */}
+        <div className="mb-8">
+          <Image
+            src="/logo.jpg"
+            alt="99 cents"
+            width={180}
+            height={180}
+            className="rounded-full shadow-lg"
+            priority
+          />
+        </div>
+
+        {/* Title */}
         <div className="text-center max-w-3xl">
           <h1 className="text-4xl md:text-5xl font-bold text-[#1e3a5f] mb-4">
             <span className="font-black">{t('title')}</span>{' '}
