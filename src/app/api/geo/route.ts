@@ -45,26 +45,59 @@ function getClientIp(request: NextRequest): string {
   return '';
 }
 
+// Локальная база MaxMind через geoip-lite (без лимитов, без внешних запросов)
+async function lookupWithGeoipLite(ip: string): Promise<{ country: string; city: string } | null> {
+  try {
+    const geoip = await import('geoip-lite');
+    const lookup = geoip.default?.lookup || geoip.lookup;
+    const geo = lookup(ip);
+    if (geo) {
+      return { country: geo.country || '', city: geo.city || '' };
+    }
+  } catch (e) {
+    console.log('geoip-lite lookup failed:', e);
+  }
+  return null;
+}
+
 export async function GET(request: NextRequest) {
   let countryCode = '';
   let city = '';
   let source = '';
 
-  // 1. Пробуем Vercel geo-заголовки (бесплатно на Vercel)
-  countryCode = request.headers.get('x-vercel-ip-country') || '';
-  city = request.headers.get('x-vercel-ip-city') || '';
+  // 1. Пробуем заголовки от хостинга (nginx, cloudflare и т.п.)
+  countryCode = request.headers.get('x-vercel-ip-country')
+    || request.headers.get('cf-ipcountry')  // Cloudflare
+    || request.headers.get('x-country-code') // Nginx GeoIP
+    || '';
+  city = request.headers.get('x-vercel-ip-city')
+    || request.headers.get('cf-ipcity')
+    || '';
   if (countryCode) {
-    source = 'vercel';
+    source = 'headers';
   }
 
   const ip = getClientIp(request);
   const isLocalIp = !ip || ip === '::1' || ip === '127.0.0.1' || ip.startsWith('192.168.') || ip.startsWith('10.');
 
-  // 2. Fallback на ip-api.com (бесплатный внешний сервис)
+  // 2. ОСНОВНОЙ: geoip-lite - локальная база MaxMind (без лимитов!)
+  if (!countryCode && !isLocalIp) {
+    const geo = await lookupWithGeoipLite(ip);
+    if (geo) {
+      countryCode = geo.country;
+      city = geo.city;
+      if (countryCode) {
+        source = 'geoip-lite';
+      }
+    }
+  }
+
+  // 3. Запасной: ip-api.com (только если geoip-lite не сработал)
+  // Осторожно: лимит 45 req/min, только некоммерческое использование
   if (!countryCode && !isLocalIp) {
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 3000); // 3 секунды таймаут
+      const timeout = setTimeout(() => controller.abort(), 3000);
 
       const res = await fetch(`http://ip-api.com/json/${ip}?fields=countryCode,city`, {
         signal: controller.signal,
@@ -93,9 +126,8 @@ export async function GET(request: NextRequest) {
     city: city ? decodeURIComponent(city) : '',
     flag,
     detected: !!countryCode,
-    source, // для дебага - откуда взяли данные
+    source,
   });
 }
 
-// Отключаем статическую генерацию для этого API
 export const dynamic = 'force-dynamic';
