@@ -45,22 +45,6 @@ function getClientIp(request: NextRequest): string {
   return '';
 }
 
-// Динамическая загрузка geoip-lite (чтобы избежать проблем с bundling)
-async function lookupWithGeoipLite(ip: string): Promise<{ country: string; city: string } | null> {
-  try {
-    // @ts-ignore - dynamic import
-    const geoip = await import('geoip-lite');
-    const geo = geoip.default?.lookup?.(ip) || geoip.lookup?.(ip);
-    if (geo) {
-      return { country: geo.country || '', city: geo.city || '' };
-    }
-  } catch (e) {
-    // geoip-lite не доступен в этом окружении
-    console.log('geoip-lite not available');
-  }
-  return null;
-}
-
 export async function GET(request: NextRequest) {
   let countryCode = '';
   let city = '';
@@ -96,20 +80,7 @@ export async function GET(request: NextRequest) {
         }
       }
     } catch (e) {
-      // ip-api недоступен, переходим к локальной базе
-      console.log('ip-api fallback failed, trying geoip-lite');
-    }
-  }
-
-  // 3. Fallback на geoip-lite (локальная база MaxMind)
-  if (!countryCode && !isLocalIp) {
-    const geo = await lookupWithGeoipLite(ip);
-    if (geo) {
-      countryCode = geo.country;
-      city = geo.city;
-      if (countryCode) {
-        source = 'geoip-lite';
-      }
+      console.log('ip-api fallback failed');
     }
   }
 
