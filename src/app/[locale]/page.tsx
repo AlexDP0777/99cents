@@ -46,7 +46,6 @@ export default function Home() {
     sendAmount: tPayment('sendAmount'),
     processing: tPayment('processing'),
     switchNetwork: tPayment('switchNetwork'),
-    votes: tPayment('votes'),
     disconnect: tPayment('disconnect'),
     walletConnected: tPayment('walletConnected'),
     chooseWallet: tPayment('chooseWallet'),
@@ -59,12 +58,12 @@ export default function Home() {
     back: tPayment('back'),
   };
 
-  const handlePaymentSuccess = (txHash: string, votes: number) => {
+  const handlePaymentSuccess = (txHash: string, amount: number) => {
     // Обновляем статистику после успешного платежа
     setStats(prev => ({
       ...prev,
       totalParticipants: prev.totalParticipants + 1,
-      totalAmount: prev.totalAmount + (0.99 * votes),
+      totalAmount: prev.totalAmount + amount,
     }));
   };
 

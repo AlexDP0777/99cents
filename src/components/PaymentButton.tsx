@@ -41,18 +41,13 @@ const ERC20_ABI = [
   },
 ] as const;
 
-// Множители для суммы платежа
-const AMOUNT_MULTIPLIERS = [
-  { value: 1, label: '1×' },
-  { value: 5, label: '5×' },
-  { value: 10, label: '10×' },
-  { value: 25, label: '25×' },
-];
+// Быстрые множители (подсказки)
+const QUICK_MULTIPLIERS = [1, 5, 10, 50, 100];
 
 const BASE_AMOUNT = 0.99; // $0.99
 
 interface PaymentButtonProps {
-  onSuccess?: (txHash: string, votes: number) => void;
+  onSuccess?: (txHash: string, amount: number) => void;
   onError?: (error: Error) => void;
   mode?: 'donation' | 'support';
   translations: {
@@ -65,7 +60,6 @@ interface PaymentButtonProps {
     sendAmount: string;
     processing: string;
     switchNetwork: string;
-    votes: string;
     disconnect: string;
     walletConnected: string;
     chooseWallet: string;
@@ -96,7 +90,6 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
 
   const totalAmount = BASE_AMOUNT * multiplier;
-  const totalVotes = multiplier;
 
   // Выбор кошелька получателя в зависимости от режима
   const recipientWallet = mode === 'donation' ? DONATION_WALLET : SUPPORT_WALLET;
@@ -109,7 +102,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
   useEffect(() => {
     if (isConfirmed && hash) {
       setStep('success');
-      onSuccess?.(hash, totalVotes);
+      onSuccess?.(hash, totalAmount);
 
       // Отправить на сервер для верификации
       fetch('/api/payment', {
@@ -119,12 +112,12 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
           walletAddress: address,
           txHash: hash,
           amount: totalAmount,
-          votes: totalVotes,
+          multiplier,
           chain: 'base',
         }),
       }).catch(console.error);
     }
-  }, [isConfirmed, hash, address, totalAmount, totalVotes, onSuccess]);
+  }, [isConfirmed, hash, address, totalAmount, multiplier, onSuccess]);
 
   // Эффект для отслеживания ошибок
   useEffect(() => {
@@ -285,30 +278,40 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
       case 'amount-select':
         return (
           <div className="flex flex-col gap-4 w-full">
-            {/* Выбор множителя */}
-            <div className="grid grid-cols-4 gap-2">
-              {AMOUNT_MULTIPLIERS.map(({ value, label }) => (
+            {/* Ввод количества */}
+            <div className="flex items-center justify-center gap-3">
+              <span className="text-gray-500">$0.99 ×</span>
+              <input
+                type="number"
+                min="1"
+                max="10000"
+                value={multiplier}
+                onChange={(e) => setMultiplier(Math.max(1, parseInt(e.target.value) || 1))}
+                className="w-24 text-center text-xl font-bold border-2 border-gray-200 rounded-lg py-2 focus:border-[#1e3a5f] focus:outline-none"
+              />
+            </div>
+
+            {/* Быстрый выбор */}
+            <div className="flex flex-wrap justify-center gap-2">
+              {QUICK_MULTIPLIERS.map((value) => (
                 <button
                   key={value}
                   onClick={() => setMultiplier(value)}
-                  className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
+                  className={`py-1 px-3 rounded-full text-sm transition-colors ${
                     multiplier === value
                       ? 'bg-[#1e3a5f] text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
-                  {label}
+                  {value}×
                 </button>
               ))}
             </div>
 
             {/* Итого */}
-            <div className="text-center py-3 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-[#1e3a5f]">
+            <div className="text-center py-4 bg-gray-50 rounded-lg">
+              <div className="text-3xl font-bold text-[#1e3a5f]">
                 ${totalAmount.toFixed(2)}
-              </div>
-              <div className="text-sm text-gray-500">
-                = {totalVotes} {t.votes}
               </div>
             </div>
 
@@ -336,8 +339,8 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
               <div className="text-3xl font-bold text-[#1e3a5f] mb-2">
                 ${totalAmount.toFixed(2)}
               </div>
-              <div className="text-gray-500">
-                {totalVotes} {t.votes}
+              <div className="text-gray-500 text-sm">
+                {multiplier} × $0.99
               </div>
             </div>
 
@@ -376,7 +379,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
               </svg>
             </div>
             <p className="text-green-600 font-medium">{t.transactionSuccess}</p>
-            <p className="text-gray-500 text-sm">+{totalVotes} {t.votes}</p>
+            <p className="text-gray-500 text-sm">${totalAmount.toFixed(2)}</p>
             <button
               onClick={resetState}
               className="btn-secondary py-2 px-6 text-sm mt-2"
