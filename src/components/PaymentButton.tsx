@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAccount, useConnect, useDisconnect, useWriteContract, useWaitForTransactionReceipt, useSwitchChain, useChainId } from 'wagmi';
-import { parseUnits, encodeFunctionData } from 'viem';
+import { useAccount, useDisconnect, useWriteContract, useWaitForTransactionReceipt, useSwitchChain, useChainId } from 'wagmi';
+import { useWeb3Modal } from '@web3modal/wagmi/react';
+import { parseUnits } from 'viem';
 import { base } from 'wagmi/chains';
 
 // USDC на Base (6 decimals)
@@ -62,9 +63,6 @@ interface PaymentButtonProps {
     switchNetwork: string;
     disconnect: string;
     walletConnected: string;
-    chooseWallet: string;
-    coinbaseWallet: string;
-    otherWallets: string;
     confirmPayment: string;
     transactionSuccess: string;
     transactionPending: string;
@@ -73,7 +71,7 @@ interface PaymentButtonProps {
   };
 }
 
-type Step = 'initial' | 'payment-method' | 'wallet-select' | 'amount-select' | 'confirm' | 'processing' | 'success' | 'error';
+type Step = 'initial' | 'payment-method' | 'amount-select' | 'confirm' | 'processing' | 'success' | 'error';
 
 export default function PaymentButton({ onSuccess, onError, mode = 'donation', translations: t }: PaymentButtonProps) {
   const [step, setStep] = useState<Step>('initial');
@@ -82,7 +80,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
 
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
-  const { connect, connectors, isPending: isConnecting } = useConnect();
+  const { open: openWalletModal } = useWeb3Modal();
   const { disconnect } = useDisconnect();
   const { switchChain } = useSwitchChain();
 
@@ -93,10 +91,6 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
 
   // Выбор кошелька получателя в зависимости от режима
   const recipientWallet = mode === 'donation' ? DONATION_WALLET : SUPPORT_WALLET;
-
-  // Найти коннекторы
-  const coinbaseConnector = connectors.find(c => c.name.toLowerCase().includes('coinbase'));
-  const walletConnectConnector = connectors.find(c => c.name.toLowerCase().includes('walletconnect'));
 
   // Эффект для отслеживания успешной транзакции
   useEffect(() => {
@@ -138,7 +132,8 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
 
   const handleSelectCrypto = () => {
     if (!isConnected) {
-      setStep('wallet-select');
+      // Открываем модал выбора кошелька
+      openWalletModal();
     } else if (isWrongNetwork) {
       switchChain?.({ chainId: base.id });
     } else {
@@ -146,16 +141,12 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
     }
   };
 
-  const handleConnectWallet = async (connector: typeof connectors[number]) => {
-    try {
-      connect({ connector });
-      // После подключения переходим к выбору суммы
+  // Переход к выбору суммы после подключения кошелька
+  useEffect(() => {
+    if (isConnected && step === 'payment-method') {
       setStep('amount-select');
-    } catch (err) {
-      setError((err as Error).message);
-      setStep('error');
     }
-  };
+  }, [isConnected, step]);
 
   const handleConfirmPayment = async () => {
     setStep('processing');
@@ -229,46 +220,6 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
 
             <button
               onClick={resetState}
-              className="text-gray-400 text-sm hover:text-gray-600 mt-2"
-            >
-              {t.back}
-            </button>
-          </div>
-        );
-
-      case 'wallet-select':
-        return (
-          <div className="flex flex-col gap-3 w-full">
-            <p className="text-gray-600 text-sm mb-2">{t.chooseWallet}</p>
-
-            {/* Простой вход через email - по умолчанию */}
-            {coinbaseConnector && (
-              <button
-                onClick={() => handleConnectWallet(coinbaseConnector)}
-                disabled={isConnecting}
-                className="btn-primary py-3 px-6 flex items-center justify-center gap-2"
-              >
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                  <polyline points="22,6 12,13 2,6"/>
-                </svg>
-                {t.coinbaseWallet}
-              </button>
-            )}
-
-            {/* Для тех у кого уже есть кошелек */}
-            {walletConnectConnector && (
-              <button
-                onClick={() => handleConnectWallet(walletConnectConnector)}
-                disabled={isConnecting}
-                className="btn-secondary py-3 px-6 text-sm"
-              >
-                {t.otherWallets}
-              </button>
-            )}
-
-            <button
-              onClick={() => setStep('payment-method')}
               className="text-gray-400 text-sm hover:text-gray-600 mt-2"
             >
               {t.back}
@@ -417,7 +368,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
       {renderContent()}
 
       {/* Информация о подключенном кошельке */}
-      {isConnected && step !== 'wallet-select' && step !== 'success' && step !== 'error' && (
+      {isConnected && step !== 'success' && step !== 'error' && (
         <div className="text-sm text-gray-400 flex items-center gap-2">
           <span className="w-2 h-2 bg-green-400 rounded-full"></span>
           <span>{address?.slice(0, 6)}...{address?.slice(-4)}</span>

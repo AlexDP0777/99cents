@@ -1,32 +1,41 @@
 'use client';
 
-import { WagmiProvider, createConfig, http } from 'wagmi';
+import { createWeb3Modal } from '@web3modal/wagmi/react';
+import { defaultWagmiConfig } from '@web3modal/wagmi/react/config';
+import { WagmiProvider } from 'wagmi';
 import { base } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { coinbaseWallet, walletConnect } from 'wagmi/connectors';
 
-// Base chain - Coinbase L2, низкие комиссии, поддержка всех бирж
-const config = createConfig({
+// WalletConnect Project ID
+const projectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID || 'demo';
+
+// Метаданные приложения
+const metadata = {
+  name: '99 cents',
+  description: 'Global micro-donation platform',
+  url: 'https://99cents.one',
+  icons: ['https://99cents.one/icon.png'],
+};
+
+// Создаем wagmi config через Web3Modal
+const config = defaultWagmiConfig({
   chains: [base],
-  connectors: [
-    // Coinbase Wallet - по умолчанию (через email, без seed phrase)
-    coinbaseWallet({
-      appName: '99 cents',
-      preference: 'smartWalletOnly',
-    }),
-    // WalletConnect - для браузерных кошельков (MetaMask, Trust, и др.)
-    walletConnect({
-      projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID || 'demo',
-      metadata: {
-        name: '99 cents',
-        description: 'Global micro-donation platform',
-        url: 'https://99cents.one',
-        icons: ['https://99cents.one/icon.png'],
-      },
-    }),
-  ],
-  transports: {
-    [base.id]: http(),
+  projectId,
+  metadata,
+  enableWalletConnect: true,
+  enableInjected: true, // MetaMask, Rabby и другие браузерные
+  enableEIP6963: true,  // Автоопределение кошельков
+  enableCoinbase: true, // Coinbase Wallet
+});
+
+// Инициализируем Web3Modal
+createWeb3Modal({
+  wagmiConfig: config,
+  projectId,
+  enableAnalytics: false,
+  themeMode: 'light',
+  themeVariables: {
+    '--w3m-accent': '#1e3a5f',
   },
 });
 
