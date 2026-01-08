@@ -96,11 +96,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
 
   // Найти коннекторы
   const coinbaseConnector = connectors.find(c => c.name.toLowerCase().includes('coinbase'));
-  const injectedConnector = connectors.find(c => c.id === 'injected' || c.name.toLowerCase().includes('injected'));
   const walletConnectConnector = connectors.find(c => c.name.toLowerCase().includes('walletconnect'));
-
-  // Проверяем есть ли установленный кошелек в браузере
-  const hasInjectedWallet = typeof window !== 'undefined' && (window as any).ethereum;
 
   // Эффект для отслеживания успешной транзакции
   useEffect(() => {
@@ -245,42 +241,29 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
           <div className="flex flex-col gap-3 w-full">
             <p className="text-gray-600 text-sm mb-2">{t.chooseWallet}</p>
 
-            {/* Браузерные кошельки (MetaMask, Rabby и т.д.) */}
-            {injectedConnector && hasInjectedWallet && (
-              <button
-                onClick={() => handleConnectWallet(injectedConnector)}
-                disabled={isConnecting}
-                className="btn-primary py-3 px-6 flex items-center justify-center gap-2"
-              >
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M21.53 7.15l-8.5-5a1 1 0 00-1.06 0l-8.5 5A1 1 0 003 8v8a1 1 0 00.47.85l8.5 5a1 1 0 001.06 0l8.5-5A1 1 0 0022 16V8a1 1 0 00-.47-.85zM12 4.17l6.93 4.07L12 12.31 5.07 8.24 12 4.17zM5 9.58l6 3.53v6.72l-6-3.53V9.58zm8 10.25v-6.72l6-3.53v6.72l-6 3.53z"/>
-                </svg>
-                MetaMask / Browser Wallet
-              </button>
-            )}
-
-            {/* Coinbase Smart Wallet */}
+            {/* Простой вход через email - по умолчанию */}
             {coinbaseConnector && (
               <button
                 onClick={() => handleConnectWallet(coinbaseConnector)}
                 disabled={isConnecting}
-                className="btn-secondary py-3 px-6 flex items-center justify-center gap-2"
+                className="btn-primary py-3 px-6 flex items-center justify-center gap-2"
               >
-                <svg className="w-5 h-5" viewBox="0 0 32 32" fill="currentColor">
-                  <path d="M16 0C7.163 0 0 7.163 0 16s7.163 16 16 16 16-7.163 16-16S24.837 0 16 0zm0 4c6.627 0 12 5.373 12 12s-5.373 12-12 12S4 22.627 4 16 9.373 4 16 4zm-2 6a2 2 0 00-2 2v8a2 2 0 002 2h4a2 2 0 002-2v-8a2 2 0 00-2-2h-4z"/>
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
                 </svg>
                 {t.coinbaseWallet}
               </button>
             )}
 
-            {/* WalletConnect для мобильных */}
+            {/* Для тех у кого уже есть кошелек */}
             {walletConnectConnector && (
               <button
                 onClick={() => handleConnectWallet(walletConnectConnector)}
                 disabled={isConnecting}
                 className="btn-secondary py-3 px-6 text-sm"
               >
-                {t.otherWallets} (QR)
+                {t.otherWallets}
               </button>
             )}
 

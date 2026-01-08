@@ -3,23 +3,18 @@
 import { WagmiProvider, createConfig, http } from 'wagmi';
 import { base } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { coinbaseWallet, walletConnect, injected } from 'wagmi/connectors';
+import { coinbaseWallet, walletConnect } from 'wagmi/connectors';
 
 // Base chain - Coinbase L2, низкие комиссии, поддержка всех бирж
 const config = createConfig({
   chains: [base],
   connectors: [
-    // Coinbase Smart Wallet - по умолчанию
-    // smartWalletOnly = только Smart Wallet (email login, без seed phrase)
+    // Coinbase Wallet - по умолчанию (через email, без seed phrase)
     coinbaseWallet({
       appName: '99 cents',
-      preference: { options: 'smartWalletOnly' },
+      preference: 'smartWalletOnly',
     }),
-    // Браузерные расширения (MetaMask, Rabby, и другие injected wallets)
-    injected({
-      shimDisconnect: true,
-    }),
-    // WalletConnect для мобильных кошельков (через QR код)
+    // WalletConnect - для браузерных кошельков (MetaMask, Trust, и др.)
     walletConnect({
       projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID || 'demo',
       metadata: {
