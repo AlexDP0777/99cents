@@ -21,8 +21,8 @@ const config = createConfig({
       metadata: {
         name: '99 cents',
         description: 'Global micro-donation platform',
-        url: 'https://99cents.org',
-        icons: ['https://99cents.org/logo.png'],
+        url: 'https://99cents.one',
+        icons: ['https://99cents.one/icon.png'],
       },
     }),
   ],
