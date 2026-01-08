@@ -1,51 +1,28 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAccount, useDisconnect, useWriteContract, useWaitForTransactionReceipt, useSwitchChain, useChainId } from 'wagmi';
-import { useWeb3Modal } from '@web3modal/wagmi/react';
-import { parseUnits } from 'viem';
-import { base } from 'wagmi/chains';
+import { ConnectButton, useActiveAccount, useActiveWallet, useDisconnect, useSendTransaction } from 'thirdweb/react';
+import { prepareContractCall, getContract, toUnits } from 'thirdweb';
+import { base } from 'thirdweb/chains';
+import { client } from '@/lib/thirdweb';
 
 // USDC на Base (6 decimals)
-const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' as const;
+const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
 
 // Адреса кошельков для разных типов платежей
-// NEXT_PUBLIC_DONATION_WALLET - для пожертвований на добрые дела
-// NEXT_PUBLIC_SUPPORT_WALLET - для поддержки самого проекта (юр.лицо)
-const DONATION_WALLET = (process.env.NEXT_PUBLIC_DONATION_WALLET || '0x0000000000000000000000000000000000000000') as `0x${string}`;
-const SUPPORT_WALLET = (process.env.NEXT_PUBLIC_SUPPORT_WALLET || '0x0000000000000000000000000000000000000000') as `0x${string}`;
+const DONATION_WALLET = process.env.NEXT_PUBLIC_DONATION_WALLET || '0x0000000000000000000000000000000000000000';
+const SUPPORT_WALLET = process.env.NEXT_PUBLIC_SUPPORT_WALLET || '0x0000000000000000000000000000000000000000';
 
-// NOTE: Gas Sponsorship (Paymaster)
-// Для бесплатного газа пользователям нужно:
-// 1. Зарегистрироваться в Coinbase Developer Platform
-// 2. Верифицировать приложение
-// 3. Использовать useSendCalls с capabilities.paymasterService
-// Подробнее: https://docs.base.org/identity/smart-wallet/guides/paymasters
-// Пока газ на Base стоит ~$0.01, это опционально
-
-// Минимальный ABI для ERC20 transfer
-const ERC20_ABI = [
-  {
-    name: 'transfer',
-    type: 'function',
-    inputs: [
-      { name: 'to', type: 'address' },
-      { name: 'amount', type: 'uint256' },
-    ],
-    outputs: [{ name: '', type: 'bool' }],
-  },
-  {
-    name: 'balanceOf',
-    type: 'function',
-    inputs: [{ name: 'account', type: 'address' }],
-    outputs: [{ name: '', type: 'uint256' }],
-  },
-] as const;
-
-// Быстрые множители (подсказки)
+// Быстрые множители
 const QUICK_MULTIPLIERS = [1, 5, 10, 50, 100];
+const BASE_AMOUNT = 0.99;
 
-const BASE_AMOUNT = 0.99; // $0.99
+// USDC контракт
+const usdcContract = getContract({
+  client,
+  chain: base,
+  address: USDC_ADDRESS,
+});
 
 interface PaymentButtonProps {
   onSuccess?: (txHash: string, amount: number) => void;
@@ -71,96 +48,82 @@ interface PaymentButtonProps {
   };
 }
 
-type Step = 'initial' | 'payment-method' | 'amount-select' | 'confirm' | 'processing' | 'success' | 'error';
+type Step = 'initial' | 'payment-method' | 'connect-wallet' | 'amount-select' | 'confirm' | 'processing' | 'success' | 'error';
 
 export default function PaymentButton({ onSuccess, onError, mode = 'donation', translations: t }: PaymentButtonProps) {
   const [step, setStep] = useState<Step>('initial');
   const [multiplier, setMultiplier] = useState(1);
   const [error, setError] = useState<string | null>(null);
+  const [txHash, setTxHash] = useState<string | null>(null);
 
-  const { address, isConnected } = useAccount();
-  const chainId = useChainId();
-  const { open: openWalletModal } = useWeb3Modal();
+  const account = useActiveAccount();
+  const wallet = useActiveWallet();
   const { disconnect } = useDisconnect();
-  const { switchChain } = useSwitchChain();
+  const { mutate: sendTransaction, isPending: isSending } = useSendTransaction();
 
-  const { writeContract, data: hash, isPending: isWriting, error: writeError } = useWriteContract();
-  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
-
+  const isConnected = !!account;
   const totalAmount = BASE_AMOUNT * multiplier;
-
-  // Выбор кошелька получателя в зависимости от режима
   const recipientWallet = mode === 'donation' ? DONATION_WALLET : SUPPORT_WALLET;
 
-  // Эффект для отслеживания успешной транзакции
+  // После подключения кошелька переходим к выбору суммы
   useEffect(() => {
-    if (isConfirmed && hash) {
-      setStep('success');
-      onSuccess?.(hash, totalAmount);
-
-      // Отправить на сервер для верификации
-      fetch('/api/payment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          walletAddress: address,
-          txHash: hash,
-          amount: totalAmount,
-          multiplier,
-          chain: 'base',
-        }),
-      }).catch(console.error);
+    if (isConnected && step === 'connect-wallet') {
+      setStep('amount-select');
     }
-  }, [isConfirmed, hash, address, totalAmount, multiplier, onSuccess]);
-
-  // Эффект для отслеживания ошибок
-  useEffect(() => {
-    if (writeError) {
-      setError(writeError.message);
-      setStep('error');
-      onError?.(writeError);
-    }
-  }, [writeError, onError]);
-
-  // Проверка сети
-  const isWrongNetwork = isConnected && chainId !== base.id;
+  }, [isConnected, step]);
 
   const handleInitialClick = () => {
-    // Всегда сначала показываем выбор способа оплаты
     setStep('payment-method');
   };
 
   const handleSelectCrypto = () => {
     if (!isConnected) {
-      // Открываем модал выбора кошелька
-      openWalletModal();
-    } else if (isWrongNetwork) {
-      switchChain?.({ chainId: base.id });
+      setStep('connect-wallet');
     } else {
       setStep('amount-select');
     }
   };
 
-  // Переход к выбору суммы после подключения кошелька
-  useEffect(() => {
-    if (isConnected && step === 'payment-method') {
-      setStep('amount-select');
-    }
-  }, [isConnected, step]);
-
   const handleConfirmPayment = async () => {
+    if (!account) return;
+
     setStep('processing');
     setError(null);
 
     try {
       // USDC имеет 6 decimals
-      const amount = parseUnits(totalAmount.toString(), 6);
+      const amount = toUnits(totalAmount.toString(), 6);
 
-      writeContract({
-        address: USDC_ADDRESS,
-        abi: ERC20_ABI,
-        functionName: 'transfer',
-        args: [recipientWallet, amount],
+      const transaction = prepareContractCall({
+        contract: usdcContract,
+        method: 'function transfer(address to, uint256 amount) returns (bool)',
+        params: [recipientWallet as `0x${string}`, amount],
+      });
+
+      sendTransaction(transaction, {
+        onSuccess: (result) => {
+          setTxHash(result.transactionHash);
+          setStep('success');
+          onSuccess?.(result.transactionHash, totalAmount);
+
+          // Отправить на сервер
+          fetch('/api/payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              walletAddress: account.address,
+              txHash: result.transactionHash,
+              amount: totalAmount,
+              multiplier,
+              chain: 'base',
+            }),
+          }).catch(console.error);
+        },
+        onError: (err) => {
+          setError(err.message);
+          setStep('error');
+          onError?.(err);
+        },
       });
     } catch (err) {
       setError((err as Error).message);
@@ -173,9 +136,9 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
     setStep('initial');
     setMultiplier(1);
     setError(null);
+    setTxHash(null);
   };
 
-  // Рендер в зависимости от шага
   const renderContent = () => {
     switch (step) {
       case 'initial':
@@ -192,8 +155,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
         return (
           <div className="flex flex-col gap-3 w-full">
             <p className="text-gray-600 text-sm mb-2 text-center">{t.choosePaymentMethod}</p>
-            
-            {/* Crypto (USDC) */}
+
             <button
               onClick={handleSelectCrypto}
               className="btn-primary py-3 px-6 flex items-center justify-center gap-2"
@@ -205,7 +167,6 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
               {t.cryptoPayment}
             </button>
 
-            {/* Card - Coming Soon */}
             <button
               disabled
               className="btn-secondary py-3 px-6 flex items-center justify-center gap-2 opacity-50 cursor-not-allowed"
@@ -227,10 +188,37 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
           </div>
         );
 
+      case 'connect-wallet':
+        return (
+          <div className="flex flex-col gap-3 w-full items-center">
+            <p className="text-gray-600 text-sm mb-2">{t.choosePaymentMethod}</p>
+
+            <ConnectButton
+              client={client}
+              chain={base}
+              theme="light"
+              connectModal={{
+                size: 'wide',
+                showThirdwebBranding: false,
+              }}
+              appMetadata={{
+                name: '99 cents',
+                url: 'https://99cents.one',
+              }}
+            />
+
+            <button
+              onClick={() => setStep('payment-method')}
+              className="text-gray-400 text-sm hover:text-gray-600 mt-2"
+            >
+              {t.back}
+            </button>
+          </div>
+        );
+
       case 'amount-select':
         return (
           <div className="flex flex-col gap-4 w-full">
-            {/* Ввод количества */}
             <div className="flex items-center justify-center gap-3">
               <span className="text-gray-500">$0.99 ×</span>
               <input
@@ -243,7 +231,6 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
               />
             </div>
 
-            {/* Быстрый выбор */}
             <div className="flex flex-wrap justify-center gap-2">
               {QUICK_MULTIPLIERS.map((value) => (
                 <button
@@ -260,14 +247,12 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
               ))}
             </div>
 
-            {/* Итого */}
             <div className="text-center py-4 bg-gray-50 rounded-lg">
               <div className="text-3xl font-bold text-[#1e3a5f]">
                 ${totalAmount.toFixed(2)}
               </div>
             </div>
 
-            {/* Кнопка подтверждения */}
             <button
               onClick={() => setStep('confirm')}
               className="btn-primary py-3"
@@ -298,6 +283,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
 
             <button
               onClick={handleConfirmPayment}
+              disabled={isSending}
               className="btn-primary py-4 text-lg"
             >
               {t.confirmPayment}
@@ -316,9 +302,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
         return (
           <div className="flex flex-col items-center gap-4 py-6">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#1e3a5f] border-t-transparent"></div>
-            <p className="text-gray-600">
-              {isWriting ? t.processing : isConfirming ? t.transactionPending : t.processing}
-            </p>
+            <p className="text-gray-600">{t.processing}</p>
           </div>
         );
 
@@ -367,13 +351,12 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
     <div className="flex flex-col items-center gap-4 w-full max-w-sm">
       {renderContent()}
 
-      {/* Информация о подключенном кошельке */}
-      {isConnected && step !== 'success' && step !== 'error' && (
+      {isConnected && step !== 'connect-wallet' && step !== 'success' && step !== 'error' && (
         <div className="text-sm text-gray-400 flex items-center gap-2">
           <span className="w-2 h-2 bg-green-400 rounded-full"></span>
-          <span>{address?.slice(0, 6)}...{address?.slice(-4)}</span>
+          <span>{account?.address?.slice(0, 6)}...{account?.address?.slice(-4)}</span>
           <button
-            onClick={() => { disconnect(); resetState(); }}
+            onClick={() => { if (wallet) disconnect(wallet); resetState(); }}
             className="text-red-400 hover:text-red-600 ml-2"
           >
             {t.disconnect}
