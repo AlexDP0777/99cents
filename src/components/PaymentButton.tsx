@@ -1,28 +1,32 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ConnectButton, useActiveAccount, useActiveWallet, useDisconnect, useSendTransaction } from 'thirdweb/react';
-import { prepareContractCall, getContract, toUnits } from 'thirdweb';
-import { base } from 'thirdweb/chains';
-import { client } from '@/lib/thirdweb';
+import { useAccount, useConnect, useDisconnect, useWriteContract, useWaitForTransactionReceipt, useSwitchChain, useChainId } from 'wagmi';
+import { parseUnits } from 'viem';
+import { base } from 'wagmi/chains';
 
 // USDC на Base (6 decimals)
-const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
+const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' as const;
 
-// Адреса кошельков для разных типов платежей
-const DONATION_WALLET = process.env.NEXT_PUBLIC_DONATION_WALLET || '0x0000000000000000000000000000000000000000';
-const SUPPORT_WALLET = process.env.NEXT_PUBLIC_SUPPORT_WALLET || '0x0000000000000000000000000000000000000000';
+// Адреса кошельков
+const DONATION_WALLET = (process.env.NEXT_PUBLIC_DONATION_WALLET || '0x0000000000000000000000000000000000000000') as `0x${string}`;
+const SUPPORT_WALLET = (process.env.NEXT_PUBLIC_SUPPORT_WALLET || '0x0000000000000000000000000000000000000000') as `0x${string}`;
 
-// Быстрые множители
+// ERC20 ABI для transfer
+const ERC20_ABI = [
+  {
+    name: 'transfer',
+    type: 'function',
+    inputs: [
+      { name: 'to', type: 'address' },
+      { name: 'amount', type: 'uint256' },
+    ],
+    outputs: [{ name: '', type: 'bool' }],
+  },
+] as const;
+
 const QUICK_MULTIPLIERS = [1, 5, 10, 50, 100];
 const BASE_AMOUNT = 0.99;
-
-// USDC контракт
-const usdcContract = getContract({
-  client,
-  chain: base,
-  address: USDC_ADDRESS,
-});
 
 interface PaymentButtonProps {
   onSuccess?: (txHash: string, amount: number) => void;
@@ -48,29 +52,60 @@ interface PaymentButtonProps {
   };
 }
 
-type Step = 'initial' | 'payment-method' | 'connect-wallet' | 'amount-select' | 'confirm' | 'processing' | 'success' | 'error';
+type Step = 'initial' | 'payment-method' | 'wallet-select' | 'amount-select' | 'confirm' | 'processing' | 'success' | 'error';
 
 export default function PaymentButton({ onSuccess, onError, mode = 'donation', translations: t }: PaymentButtonProps) {
   const [step, setStep] = useState<Step>('initial');
   const [multiplier, setMultiplier] = useState(1);
   const [error, setError] = useState<string | null>(null);
-  const [txHash, setTxHash] = useState<string | null>(null);
 
-  const account = useActiveAccount();
-  const wallet = useActiveWallet();
+  const { address, isConnected } = useAccount();
+  const chainId = useChainId();
+  const { connect, connectors, isPending: isConnecting } = useConnect();
   const { disconnect } = useDisconnect();
-  const { mutate: sendTransaction, isPending: isSending } = useSendTransaction();
+  const { switchChain } = useSwitchChain();
 
-  const isConnected = !!account;
+  const { writeContract, data: hash, isPending: isWriting, error: writeError } = useWriteContract();
+  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
+
   const totalAmount = BASE_AMOUNT * multiplier;
   const recipientWallet = mode === 'donation' ? DONATION_WALLET : SUPPORT_WALLET;
 
-  // После подключения кошелька переходим к выбору суммы
+  // Найти коннекторы
+  const injectedConnector = connectors.find(c => c.id === 'injected');
+  const coinbaseConnector = connectors.find(c => c.id === 'coinbaseWalletSDK');
+  const walletConnectConnector = connectors.find(c => c.id === 'walletConnect');
+
+  // Успешная транзакция
   useEffect(() => {
-    if (isConnected && step === 'connect-wallet') {
-      setStep('amount-select');
+    if (isConfirmed && hash) {
+      setStep('success');
+      onSuccess?.(hash, totalAmount);
+
+      fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          walletAddress: address,
+          txHash: hash,
+          amount: totalAmount,
+          multiplier,
+          chain: 'base',
+        }),
+      }).catch(console.error);
     }
-  }, [isConnected, step]);
+  }, [isConfirmed, hash, address, totalAmount, multiplier, onSuccess]);
+
+  // Ошибки
+  useEffect(() => {
+    if (writeError) {
+      setError(writeError.message);
+      setStep('error');
+      onError?.(writeError);
+    }
+  }, [writeError, onError]);
+
+  const isWrongNetwork = isConnected && chainId !== base.id;
 
   const handleInitialClick = () => {
     setStep('payment-method');
@@ -78,52 +113,36 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
 
   const handleSelectCrypto = () => {
     if (!isConnected) {
-      setStep('connect-wallet');
+      setStep('wallet-select');
+    } else if (isWrongNetwork) {
+      switchChain?.({ chainId: base.id });
     } else {
       setStep('amount-select');
     }
   };
 
-  const handleConfirmPayment = async () => {
-    if (!account) return;
+  const handleConnectWallet = (connector: typeof connectors[number]) => {
+    connect({ connector }, {
+      onSuccess: () => setStep('amount-select'),
+      onError: (err) => {
+        setError(err.message);
+        setStep('error');
+      },
+    });
+  };
 
+  const handleConfirmPayment = () => {
     setStep('processing');
     setError(null);
 
     try {
-      // USDC имеет 6 decimals
-      const amount = toUnits(totalAmount.toString(), 6);
+      const amount = parseUnits(totalAmount.toString(), 6);
 
-      const transaction = prepareContractCall({
-        contract: usdcContract,
-        method: 'function transfer(address to, uint256 amount) returns (bool)',
-        params: [recipientWallet as `0x${string}`, amount],
-      });
-
-      sendTransaction(transaction, {
-        onSuccess: (result) => {
-          setTxHash(result.transactionHash);
-          setStep('success');
-          onSuccess?.(result.transactionHash, totalAmount);
-
-          // Отправить на сервер
-          fetch('/api/payment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              walletAddress: account.address,
-              txHash: result.transactionHash,
-              amount: totalAmount,
-              multiplier,
-              chain: 'base',
-            }),
-          }).catch(console.error);
-        },
-        onError: (err) => {
-          setError(err.message);
-          setStep('error');
-          onError?.(err);
-        },
+      writeContract({
+        address: USDC_ADDRESS,
+        abi: ERC20_ABI,
+        functionName: 'transfer',
+        args: [recipientWallet, amount],
       });
     } catch (err) {
       setError((err as Error).message);
@@ -136,17 +155,13 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
     setStep('initial');
     setMultiplier(1);
     setError(null);
-    setTxHash(null);
   };
 
   const renderContent = () => {
     switch (step) {
       case 'initial':
         return (
-          <button
-            onClick={handleInitialClick}
-            className="btn-primary text-lg px-12 py-4 w-full"
-          >
+          <button onClick={handleInitialClick} className="btn-primary text-lg px-12 py-4 w-full">
             {mode === 'donation' ? t.helpPeople : t.supportProject}
           </button>
         );
@@ -156,10 +171,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
           <div className="flex flex-col gap-3 w-full">
             <p className="text-gray-600 text-sm mb-2 text-center">{t.choosePaymentMethod}</p>
 
-            <button
-              onClick={handleSelectCrypto}
-              className="btn-primary py-3 px-6 flex items-center justify-center gap-2"
-            >
+            <button onClick={handleSelectCrypto} className="btn-primary py-3 px-6 flex items-center justify-center gap-2">
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="10" />
                 <path d="M12 6v12M6 12h12" />
@@ -167,10 +179,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
               {t.cryptoPayment}
             </button>
 
-            <button
-              disabled
-              className="btn-secondary py-3 px-6 flex items-center justify-center gap-2 opacity-50 cursor-not-allowed"
-            >
+            <button disabled className="btn-secondary py-3 px-6 flex items-center justify-center gap-2 opacity-50 cursor-not-allowed">
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <rect x="1" y="4" width="22" height="16" rx="2" />
                 <line x1="1" y1="10" x2="23" y2="10" />
@@ -179,38 +188,57 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
               <span className="text-xs bg-gray-200 px-2 py-0.5 rounded ml-1">{t.cardComingSoon}</span>
             </button>
 
-            <button
-              onClick={resetState}
-              className="text-gray-400 text-sm hover:text-gray-600 mt-2"
-            >
+            <button onClick={resetState} className="text-gray-400 text-sm hover:text-gray-600 mt-2">
               {t.back}
             </button>
           </div>
         );
 
-      case 'connect-wallet':
+      case 'wallet-select':
         return (
-          <div className="flex flex-col gap-3 w-full items-center">
-            <p className="text-gray-600 text-sm mb-2">{t.choosePaymentMethod}</p>
+          <div className="flex flex-col gap-3 w-full">
+            <p className="text-gray-600 text-sm mb-2 text-center">Выберите кошелек</p>
 
-            <ConnectButton
-              client={client}
-              chain={base}
-              theme="light"
-              connectModal={{
-                size: 'wide',
-                showThirdwebBranding: false,
-              }}
-              appMetadata={{
-                name: '99 cents',
-                url: 'https://99cents.one',
-              }}
-            />
+            {/* Браузерные кошельки (MetaMask, Rabby) */}
+            {injectedConnector && (
+              <button
+                onClick={() => handleConnectWallet(injectedConnector)}
+                disabled={isConnecting}
+                className="btn-primary py-3 px-6 flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M21.53 7.15l-8.5-5a1 1 0 00-1.06 0l-8.5 5A1 1 0 003 8v8a1 1 0 00.47.85l8.5 5a1 1 0 001.06 0l8.5-5A1 1 0 0022 16V8a1 1 0 00-.47-.85z"/>
+                </svg>
+                MetaMask / Browser
+              </button>
+            )}
 
-            <button
-              onClick={() => setStep('payment-method')}
-              className="text-gray-400 text-sm hover:text-gray-600 mt-2"
-            >
+            {/* Coinbase */}
+            {coinbaseConnector && (
+              <button
+                onClick={() => handleConnectWallet(coinbaseConnector)}
+                disabled={isConnecting}
+                className="btn-secondary py-3 px-6 flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 32 32" fill="currentColor">
+                  <path d="M16 0C7.163 0 0 7.163 0 16s7.163 16 16 16 16-7.163 16-16S24.837 0 16 0zm0 4c6.627 0 12 5.373 12 12s-5.373 12-12 12S4 22.627 4 16 9.373 4 16 4z"/>
+                </svg>
+                Coinbase Wallet
+              </button>
+            )}
+
+            {/* WalletConnect */}
+            {walletConnectConnector && (
+              <button
+                onClick={() => handleConnectWallet(walletConnectConnector)}
+                disabled={isConnecting}
+                className="btn-secondary py-3 px-6 text-sm"
+              >
+                WalletConnect (QR)
+              </button>
+            )}
+
+            <button onClick={() => setStep('payment-method')} className="text-gray-400 text-sm hover:text-gray-600 mt-2">
               {t.back}
             </button>
           </div>
@@ -237,9 +265,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
                   key={value}
                   onClick={() => setMultiplier(value)}
                   className={`py-1 px-3 rounded-full text-sm transition-colors ${
-                    multiplier === value
-                      ? 'bg-[#1e3a5f] text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    multiplier === value ? 'bg-[#1e3a5f] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
                   {value}×
@@ -248,22 +274,14 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
             </div>
 
             <div className="text-center py-4 bg-gray-50 rounded-lg">
-              <div className="text-3xl font-bold text-[#1e3a5f]">
-                ${totalAmount.toFixed(2)}
-              </div>
+              <div className="text-3xl font-bold text-[#1e3a5f]">${totalAmount.toFixed(2)}</div>
             </div>
 
-            <button
-              onClick={() => setStep('confirm')}
-              className="btn-primary py-3"
-            >
+            <button onClick={() => setStep('confirm')} className="btn-primary py-3">
               {t.confirmPayment}
             </button>
 
-            <button
-              onClick={() => setStep('payment-method')}
-              className="text-gray-400 text-sm hover:text-gray-600"
-            >
+            <button onClick={() => setStep('payment-method')} className="text-gray-400 text-sm hover:text-gray-600">
               {t.back}
             </button>
           </div>
@@ -273,26 +291,15 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
         return (
           <div className="flex flex-col gap-4 w-full text-center">
             <div className="py-4">
-              <div className="text-3xl font-bold text-[#1e3a5f] mb-2">
-                ${totalAmount.toFixed(2)}
-              </div>
-              <div className="text-gray-500 text-sm">
-                {multiplier} × $0.99
-              </div>
+              <div className="text-3xl font-bold text-[#1e3a5f] mb-2">${totalAmount.toFixed(2)}</div>
+              <div className="text-gray-500 text-sm">{multiplier} × $0.99</div>
             </div>
 
-            <button
-              onClick={handleConfirmPayment}
-              disabled={isSending}
-              className="btn-primary py-4 text-lg"
-            >
+            <button onClick={handleConfirmPayment} className="btn-primary py-4 text-lg">
               {t.confirmPayment}
             </button>
 
-            <button
-              onClick={() => setStep('amount-select')}
-              className="text-gray-400 text-sm hover:text-gray-600"
-            >
+            <button onClick={() => setStep('amount-select')} className="text-gray-400 text-sm hover:text-gray-600">
               {t.back}
             </button>
           </div>
@@ -302,7 +309,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
         return (
           <div className="flex flex-col items-center gap-4 py-6">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#1e3a5f] border-t-transparent"></div>
-            <p className="text-gray-600">{t.processing}</p>
+            <p className="text-gray-600">{isWriting ? t.processing : isConfirming ? t.transactionPending : t.processing}</p>
           </div>
         );
 
@@ -316,12 +323,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
             </div>
             <p className="text-green-600 font-medium">{t.transactionSuccess}</p>
             <p className="text-gray-500 text-sm">${totalAmount.toFixed(2)}</p>
-            <button
-              onClick={resetState}
-              className="btn-secondary py-2 px-6 text-sm mt-2"
-            >
-              OK
-            </button>
+            <button onClick={resetState} className="btn-secondary py-2 px-6 text-sm mt-2">OK</button>
           </div>
         );
 
@@ -336,12 +338,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
             <p className="text-red-600 text-sm text-center max-w-xs">
               {error?.includes('insufficient') ? t.insufficientBalance : error}
             </p>
-            <button
-              onClick={resetState}
-              className="btn-secondary py-2 px-6 text-sm mt-2"
-            >
-              Try again
-            </button>
+            <button onClick={resetState} className="btn-secondary py-2 px-6 text-sm mt-2">Try again</button>
           </div>
         );
     }
@@ -351,14 +348,11 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
     <div className="flex flex-col items-center gap-4 w-full max-w-sm">
       {renderContent()}
 
-      {isConnected && step !== 'connect-wallet' && step !== 'success' && step !== 'error' && (
+      {isConnected && step !== 'wallet-select' && step !== 'success' && step !== 'error' && (
         <div className="text-sm text-gray-400 flex items-center gap-2">
           <span className="w-2 h-2 bg-green-400 rounded-full"></span>
-          <span>{account?.address?.slice(0, 6)}...{account?.address?.slice(-4)}</span>
-          <button
-            onClick={() => { if (wallet) disconnect(wallet); resetState(); }}
-            className="text-red-400 hover:text-red-600 ml-2"
-          >
+          <span>{address?.slice(0, 6)}...{address?.slice(-4)}</span>
+          <button onClick={() => { disconnect(); resetState(); }} className="text-red-400 hover:text-red-600 ml-2">
             {t.disconnect}
           </button>
         </div>

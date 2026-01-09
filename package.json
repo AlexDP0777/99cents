@@ -12,7 +12,7 @@
     "@coinbase/wallet-sdk": "^4.3.7",
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
-    "@tanstack/react-query": "^5.90.12",
+    "@tanstack/react-query": "^5.90.16",
     "@types/leaflet": "^1.9.21",
     "@walletconnect/ethereum-provider": "^2.21.10",
     "geoip-lite": "^1.4.10",
@@ -25,9 +25,8 @@
     "react-dom": "19.2.3",
     "react-leaflet": "^5.0.0",
     "socket.io-client": "^4.8.2",
-    "thirdweb": "^5.116.1",
-    "viem": "^2.43.3",
-    "wagmi": "^3.1.0"
+    "viem": "^2.44.0",
+    "wagmi": "^2.19.5"
   },
   "overrides": {
     "geoip-lite": {
