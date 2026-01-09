@@ -18,7 +18,7 @@
 | Мультиязычность | 6 языков (RU, EN, ES, DE, FR, ZH) |
 | API routes | /api/stats, /api/vote, /api/projects, /api/payment |
 | Prisma схема | Participant, Payment, Project, Vote, VotingPeriod |
-| Деплой | Vercel + GitHub |
+| Деплой | GitHub + хостинг |
 
 ### Добавлено в Фазе 1 (не протестировано) 🔧
 
@@ -528,12 +528,12 @@ model Payment {
 |-----------|------------|
 | Frontend | Next.js 14+, TypeScript, Tailwind |
 | i18n | next-intl (6+ языков) |
-| Database | PostgreSQL (Vercel Postgres) |
+| Database | PostgreSQL (PostgreSQL) |
 | ORM | Prisma |
 | Maps | Leaflet / react-leaflet |
 | Payments (Abstract) | @abstract-foundation/agw-react |
 | Payments (BASE/ETH) | wagmi, viem, ConnectKit |
-| Hosting | Vercel |
+| Hosting | Production |
 | Blockchain RPC | Public RPCs / Alchemy free tier |
 
 ---
@@ -551,12 +551,12 @@ model Payment {
 
 ## Следующий шаг
 
-**Фаза 1 (1.1-1.6) ЗАВЕРШЕНА** - код задеплоен на https://99cents.vercel.app
+**Фаза 1 (1.1-1.6) ЗАВЕРШЕНА** - код задеплоен на https://99cents.one
 
 Следующие действия:
 1. Протестировать весь флоу (заявка -> модерация -> голосование -> победитель)
 2. Исправить найденные баги
 3. Начать **Фазу 2.1 — Abstract + AGW интеграция**
 
-Деплой: https://99cents.vercel.app
-Админка: https://99cents.vercel.app/ru/admin (пароль: admin99)
+Деплой: https://99cents.one
+Админка: https://99cents.one/ru/admin (пароль: admin99)

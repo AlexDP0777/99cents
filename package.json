@@ -25,6 +25,7 @@
     "react-dom": "19.2.3",
     "react-leaflet": "^5.0.0",
     "socket.io-client": "^4.8.2",
+    "thirdweb": "^5.116.1",
     "viem": "^2.44.0",
     "wagmi": "^2.19.5"
   },

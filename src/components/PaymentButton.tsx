@@ -1,32 +1,43 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAccount, useConnect, useDisconnect, useWriteContract, useWaitForTransactionReceipt, useSwitchChain, useChainId } from 'wagmi';
-import { parseUnits } from 'viem';
-import { base } from 'wagmi/chains';
+import { ConnectButton, useActiveAccount, useSendTransaction } from 'thirdweb/react';
+import { prepareContractCall, getContract } from 'thirdweb';
+import { inAppWallet, createWallet } from 'thirdweb/wallets';
+import { thirdwebClient, CHAIN } from './Web3Provider';
 
 // USDC на Base (6 decimals)
-const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' as const;
+const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
 
 // Адреса кошельков
 const DONATION_WALLET = (process.env.NEXT_PUBLIC_DONATION_WALLET || '0x0000000000000000000000000000000000000000') as `0x${string}`;
 const SUPPORT_WALLET = (process.env.NEXT_PUBLIC_SUPPORT_WALLET || '0x0000000000000000000000000000000000000000') as `0x${string}`;
 
-// ERC20 ABI для transfer
-const ERC20_ABI = [
-  {
-    name: 'transfer',
-    type: 'function',
-    inputs: [
-      { name: 'to', type: 'address' },
-      { name: 'amount', type: 'uint256' },
-    ],
-    outputs: [{ name: '', type: 'bool' }],
-  },
-] as const;
-
 const QUICK_MULTIPLIERS = [1, 5, 10, 50, 100];
 const BASE_AMOUNT = 0.99;
+
+// Кошельки для thirdweb
+const wallets = [
+  // Email/Social login - первый и основной
+  inAppWallet({
+    auth: {
+      options: ['email', 'google', 'apple', 'facebook'],
+    },
+  }),
+  // Браузерные кошельки
+  createWallet('io.metamask'),
+  createWallet('io.rabby'),
+  createWallet('com.coinbase.wallet'),
+  // WalletConnect
+  createWallet('walletConnect'),
+];
+
+// USDC контракт
+const usdcContract = getContract({
+  client: thirdwebClient,
+  chain: CHAIN,
+  address: USDC_ADDRESS,
+});
 
 interface PaymentButtonProps {
   onSuccess?: (txHash: string, amount: number) => void;
@@ -52,113 +63,77 @@ interface PaymentButtonProps {
   };
 }
 
-type Step = 'initial' | 'payment-method' | 'wallet-select' | 'amount-select' | 'confirm' | 'processing' | 'success' | 'error';
+type Step = 'initial' | 'payment-method' | 'wallet-connect' | 'amount-select' | 'confirm' | 'processing' | 'success' | 'error';
 
 export default function PaymentButton({ onSuccess, onError, mode = 'donation', translations: t }: PaymentButtonProps) {
   const [step, setStep] = useState<Step>('initial');
   const [multiplier, setMultiplier] = useState(1);
   const [error, setError] = useState<string | null>(null);
 
-  const { address, isConnected } = useAccount();
-  const chainId = useChainId();
-  const { connect, connectors, isPending: isConnecting } = useConnect();
-  const { disconnect } = useDisconnect();
-  const { switchChain } = useSwitchChain();
-
-  const { writeContract, data: hash, isPending: isWriting, error: writeError } = useWriteContract();
-  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
+  const account = useActiveAccount();
+  const { mutate: sendTransaction, isPending: isSending } = useSendTransaction();
 
   const totalAmount = BASE_AMOUNT * multiplier;
   const recipientWallet = mode === 'donation' ? DONATION_WALLET : SUPPORT_WALLET;
 
-  // Найти коннекторы
-  const coinbaseConnector = connectors.find(c => c.id === 'coinbaseWalletSDK');
-  const injectedConnector = connectors.find(c => c.id === 'injected');
-  const walletConnectConnector = connectors.find(c => c.id === 'walletConnect');
-
-  // Успешная транзакция
+  // Когда кошелек подключен - переходим к выбору суммы
   useEffect(() => {
-    if (isConfirmed && hash) {
-      setStep('success');
-      onSuccess?.(hash, totalAmount);
-
-      fetch('/api/payment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          walletAddress: address,
-          txHash: hash,
-          amount: totalAmount,
-          multiplier,
-          chain: 'base',
-        }),
-      }).catch(console.error);
+    if (account && step === 'wallet-connect') {
+      setStep('amount-select');
     }
-  }, [isConfirmed, hash, address, totalAmount, multiplier, onSuccess]);
-
-  // Ошибки
-  useEffect(() => {
-    if (writeError) {
-      setError(writeError.message);
-      setStep('error');
-      onError?.(writeError);
-    }
-  }, [writeError, onError]);
-
-  const isWrongNetwork = isConnected && chainId !== base.id;
+  }, [account, step]);
 
   const handleInitialClick = () => {
     setStep('payment-method');
   };
 
   const handleSelectCrypto = () => {
-    if (!isConnected) {
-      setStep('wallet-select');
-    } else if (isWrongNetwork) {
-      switchChain?.({ chainId: base.id });
-    } else {
+    if (account) {
       setStep('amount-select');
+    } else {
+      setStep('wallet-connect');
     }
   };
 
-  const handleConnectWallet = (connector: typeof connectors[number], retryCount = 0) => {
-    connect({ connector }, {
-      onSuccess: () => setStep('amount-select'),
-      onError: (err) => {
-        // Known issue: Coinbase Smart Wallet may timeout on first attempt
-        // Retry up to 2 times automatically
-        if (retryCount < 2 && (err.message.includes('timeout') || err.message.includes('Время ожидания'))) {
-          console.log(`Coinbase connection retry ${retryCount + 1}/2...`);
-          setTimeout(() => handleConnectWallet(connector, retryCount + 1), 500);
-          return;
-        }
-        
-        // User-friendly error messages
-        let errorMsg = err.message;
-        if (err.message.includes('rejected') || err.message.includes('denied')) {
-          errorMsg = 'Подключение отклонено. Попробуйте снова.';
-        } else if (err.message.includes('must has at least one account')) {
-          errorMsg = 'Кошелёк не настроен. Откройте расширение кошелька и создайте аккаунт.';
-        }
-        
-        setError(errorMsg);
-        setStep('error');
-      },
-    });
-  };
+  const handleConfirmPayment = async () => {
+    if (!account) return;
 
-  const handleConfirmPayment = () => {
     setStep('processing');
     setError(null);
 
     try {
-      const amount = parseUnits(totalAmount.toString(), 6);
+      // Подготавливаем транзакцию transfer USDC
+      const amountInWei = BigInt(Math.floor(totalAmount * 1_000_000)); // 6 decimals
 
-      writeContract({
-        address: USDC_ADDRESS,
-        abi: ERC20_ABI,
-        functionName: 'transfer',
-        args: [recipientWallet, amount],
+      const transaction = prepareContractCall({
+        contract: usdcContract,
+        method: 'function transfer(address to, uint256 amount) returns (bool)',
+        params: [recipientWallet, amountInWei],
+      });
+
+      sendTransaction(transaction, {
+        onSuccess: (result) => {
+          setStep('success');
+          onSuccess?.(result.transactionHash, totalAmount);
+
+          // Сохраняем в БД
+          fetch('/api/payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              walletAddress: account.address,
+              txHash: result.transactionHash,
+              amount: totalAmount,
+              multiplier,
+              chain: 'base',
+            }),
+          }).catch(console.error);
+        },
+        onError: (err) => {
+          setError(err.message);
+          setStep('error');
+          onError?.(err);
+        },
       });
     } catch (err) {
       setError((err as Error).message);
@@ -210,54 +185,25 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
           </div>
         );
 
-      case 'wallet-select':
+      case 'wallet-connect':
         return (
-          <div className="flex flex-col gap-3 w-full">
-            <p className="text-gray-600 text-sm mb-2 text-center">Выберите кошелек</p>
+          <div className="flex flex-col gap-3 w-full items-center">
+            <p className="text-gray-600 text-sm mb-2 text-center">Выберите способ подключения</p>
 
-            {/* Coinbase - основной для новичков (email) */}
-            {coinbaseConnector && (
-              <button
-                onClick={() => handleConnectWallet(coinbaseConnector)}
-                disabled={isConnecting}
-                className="btn-primary py-3 px-6 flex items-center justify-center gap-2"
-              >
-                {isConnecting ? (
-                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-                ) : (
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="3" y="5" width="18" height="14" rx="2"/>
-                    <path d="M3 10h18"/>
-                  </svg>
-                )}
-                {isConnecting ? 'Подключение...' : 'Через email (просто)'}
-              </button>
-            )}
-
-            {/* Браузерные кошельки (MetaMask, Rabby) */}
-            {injectedConnector && (
-              <button
-                onClick={() => handleConnectWallet(injectedConnector)}
-                disabled={isConnecting}
-                className="btn-secondary py-3 px-6 flex items-center justify-center gap-2"
-              >
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M21.53 7.15l-8.5-5a1 1 0 00-1.06 0l-8.5 5A1 1 0 003 8v8a1 1 0 00.47.85l8.5 5a1 1 0 001.06 0l8.5-5A1 1 0 0022 16V8a1 1 0 00-.47-.85z"/>
-                </svg>
-                У меня есть кошелёк
-              </button>
-            )}
-
-            {/* WalletConnect */}
-            {walletConnectConnector && (
-              <button
-                onClick={() => handleConnectWallet(walletConnectConnector)}
-                disabled={isConnecting}
-                className="btn-secondary py-3 px-6 text-sm"
-              >
-                WalletConnect (QR)
-              </button>
-            )}
+            <ConnectButton
+              client={thirdwebClient}
+              wallets={wallets}
+              chain={CHAIN}
+              theme="light"
+              connectModal={{
+                size: 'wide',
+                title: 'Подключить кошелёк',
+                showThirdwebBranding: false,
+              }}
+              connectButton={{
+                label: 'Подключить кошелёк',
+              }}
+            />
 
             <button onClick={() => setStep('payment-method')} className="text-gray-400 text-sm hover:text-gray-600 mt-2">
               {t.back}
@@ -316,8 +262,8 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
               <div className="text-gray-500 text-sm">{multiplier} × $0.99</div>
             </div>
 
-            <button onClick={handleConfirmPayment} className="btn-primary py-4 text-lg">
-              {t.confirmPayment}
+            <button onClick={handleConfirmPayment} disabled={isSending} className="btn-primary py-4 text-lg">
+              {isSending ? t.processing : t.confirmPayment}
             </button>
 
             <button onClick={() => setStep('amount-select')} className="text-gray-400 text-sm hover:text-gray-600">
@@ -330,7 +276,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
         return (
           <div className="flex flex-col items-center gap-4 py-6">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#1e3a5f] border-t-transparent"></div>
-            <p className="text-gray-600">{isWriting ? t.processing : isConfirming ? t.transactionPending : t.processing}</p>
+            <p className="text-gray-600">{t.processing}</p>
           </div>
         );
 
@@ -359,7 +305,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
             <p className="text-red-600 text-sm text-center max-w-xs">
               {error?.includes('insufficient') ? t.insufficientBalance : error}
             </p>
-            <button onClick={resetState} className="btn-secondary py-2 px-6 text-sm mt-2">Try again</button>
+            <button onClick={resetState} className="btn-secondary py-2 px-6 text-sm mt-2">Попробовать снова</button>
           </div>
         );
     }
@@ -369,13 +315,10 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
     <div className="flex flex-col items-center gap-4 w-full max-w-sm">
       {renderContent()}
 
-      {isConnected && step !== 'wallet-select' && step !== 'success' && step !== 'error' && (
+      {account && step !== 'wallet-connect' && step !== 'success' && step !== 'error' && (
         <div className="text-sm text-gray-400 flex items-center gap-2">
           <span className="w-2 h-2 bg-green-400 rounded-full"></span>
-          <span>{address?.slice(0, 6)}...{address?.slice(-4)}</span>
-          <button onClick={() => { disconnect(); resetState(); }} className="text-red-400 hover:text-red-600 ml-2">
-            {t.disconnect}
-          </button>
+          <span>{account.address?.slice(0, 6)}...{account.address?.slice(-4)}</span>
         </div>
       )}
     </div>
