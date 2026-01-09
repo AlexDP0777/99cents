@@ -121,11 +121,27 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
     }
   };
 
-  const handleConnectWallet = (connector: typeof connectors[number]) => {
+  const handleConnectWallet = (connector: typeof connectors[number], retryCount = 0) => {
     connect({ connector }, {
       onSuccess: () => setStep('amount-select'),
       onError: (err) => {
-        setError(err.message);
+        // Known issue: Coinbase Smart Wallet may timeout on first attempt
+        // Retry up to 2 times automatically
+        if (retryCount < 2 && (err.message.includes('timeout') || err.message.includes('Время ожидания'))) {
+          console.log(`Coinbase connection retry ${retryCount + 1}/2...`);
+          setTimeout(() => handleConnectWallet(connector, retryCount + 1), 500);
+          return;
+        }
+        
+        // User-friendly error messages
+        let errorMsg = err.message;
+        if (err.message.includes('rejected') || err.message.includes('denied')) {
+          errorMsg = 'Подключение отклонено. Попробуйте снова.';
+        } else if (err.message.includes('must has at least one account')) {
+          errorMsg = 'Кошелёк не настроен. Откройте расширение кошелька и создайте аккаунт.';
+        }
+        
+        setError(errorMsg);
         setStep('error');
       },
     });
@@ -206,11 +222,15 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
                 disabled={isConnecting}
                 className="btn-primary py-3 px-6 flex items-center justify-center gap-2"
               >
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="3" y="5" width="18" height="14" rx="2"/>
-                  <path d="M3 10h18"/>
-                </svg>
-                Через email (просто)
+                {isConnecting ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                ) : (
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="5" width="18" height="14" rx="2"/>
+                    <path d="M3 10h18"/>
+                  </svg>
+                )}
+                {isConnecting ? 'Подключение...' : 'Через email (просто)'}
               </button>
             )}
 
