@@ -72,6 +72,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
   const recipientWallet = mode === 'donation' ? DONATION_WALLET : SUPPORT_WALLET;
 
   // Найти коннекторы
+  const coinbaseConnector = connectors.find(c => c.id === 'coinbaseWalletSDK');
   const injectedConnector = connectors.find(c => c.id === 'injected');
   const walletConnectConnector = connectors.find(c => c.id === 'walletConnect');
 
@@ -198,17 +199,32 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
           <div className="flex flex-col gap-3 w-full">
             <p className="text-gray-600 text-sm mb-2 text-center">Выберите кошелек</p>
 
-            {/* Браузерные кошельки (MetaMask, Rabby, Coinbase extension) */}
+            {/* Coinbase - основной для новичков (email) */}
+            {coinbaseConnector && (
+              <button
+                onClick={() => handleConnectWallet(coinbaseConnector)}
+                disabled={isConnecting}
+                className="btn-primary py-3 px-6 flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="5" width="18" height="14" rx="2"/>
+                  <path d="M3 10h18"/>
+                </svg>
+                Через email (просто)
+              </button>
+            )}
+
+            {/* Браузерные кошельки (MetaMask, Rabby) */}
             {injectedConnector && (
               <button
                 onClick={() => handleConnectWallet(injectedConnector)}
                 disabled={isConnecting}
-                className="btn-primary py-3 px-6 flex items-center justify-center gap-2"
+                className="btn-secondary py-3 px-6 flex items-center justify-center gap-2"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M21.53 7.15l-8.5-5a1 1 0 00-1.06 0l-8.5 5A1 1 0 003 8v8a1 1 0 00.47.85l8.5 5a1 1 0 001.06 0l8.5-5A1 1 0 0022 16V8a1 1 0 00-.47-.85z"/>
                 </svg>
-                Browser Wallet
+                У меня есть кошелёк
               </button>
             )}
 
