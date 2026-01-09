@@ -73,7 +73,6 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
 
   // Найти коннекторы
   const injectedConnector = connectors.find(c => c.id === 'injected');
-  const coinbaseConnector = connectors.find(c => c.id === 'coinbaseWalletSDK');
   const walletConnectConnector = connectors.find(c => c.id === 'walletConnect');
 
   // Успешная транзакция
@@ -199,7 +198,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
           <div className="flex flex-col gap-3 w-full">
             <p className="text-gray-600 text-sm mb-2 text-center">Выберите кошелек</p>
 
-            {/* Браузерные кошельки (MetaMask, Rabby) */}
+            {/* Браузерные кошельки (MetaMask, Rabby, Coinbase extension) */}
             {injectedConnector && (
               <button
                 onClick={() => handleConnectWallet(injectedConnector)}
@@ -209,21 +208,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M21.53 7.15l-8.5-5a1 1 0 00-1.06 0l-8.5 5A1 1 0 003 8v8a1 1 0 00.47.85l8.5 5a1 1 0 001.06 0l8.5-5A1 1 0 0022 16V8a1 1 0 00-.47-.85z"/>
                 </svg>
-                MetaMask / Browser
-              </button>
-            )}
-
-            {/* Coinbase */}
-            {coinbaseConnector && (
-              <button
-                onClick={() => handleConnectWallet(coinbaseConnector)}
-                disabled={isConnecting}
-                className="btn-secondary py-3 px-6 flex items-center justify-center gap-2"
-              >
-                <svg className="w-5 h-5" viewBox="0 0 32 32" fill="currentColor">
-                  <path d="M16 0C7.163 0 0 7.163 0 16s7.163 16 16 16 16-7.163 16-16S24.837 0 16 0zm0 4c6.627 0 12 5.373 12 12s-5.373 12-12 12S4 22.627 4 16 9.373 4 16 4z"/>
-                </svg>
-                Coinbase Wallet
+                Browser Wallet
               </button>
             )}
 

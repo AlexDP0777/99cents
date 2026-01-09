@@ -3,20 +3,16 @@
 import { WagmiProvider, createConfig, http } from 'wagmi';
 import { base } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { coinbaseWallet, walletConnect, injected } from 'wagmi/connectors';
+import { walletConnect, injected } from 'wagmi/connectors';
 
 const projectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID || 'demo';
 
 const config = createConfig({
   chains: [base],
   connectors: [
-    // Браузерные кошельки (MetaMask, Rabby, и др.)
+    // Браузерные кошельки (MetaMask, Rabby, Coinbase extension, и др.)
     injected(),
-    // Coinbase Wallet
-    coinbaseWallet({
-      appName: '99 cents',
-    }),
-    // WalletConnect для мобильных
+    // WalletConnect для мобильных и других кошельков
     walletConnect({
       projectId,
       metadata: {
