@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { ConnectButton, useActiveAccount, useSendTransaction } from 'thirdweb/react';
-import { prepareContractCall, getContract } from 'thirdweb';
+import { getContract } from 'thirdweb';
+import { transfer } from 'thirdweb/extensions/erc20';
 import { inAppWallet, createWallet } from 'thirdweb/wallets';
 import { thirdwebClient, CHAIN } from './Web3Provider';
 
@@ -48,8 +49,17 @@ interface PaymentButtonProps {
     supportProject: string;
     choosePaymentMethod: string;
     cryptoPayment: string;
+    cryptoPaymentHint: string;
     cardPayment: string;
     cardComingSoon: string;
+    walletConnectTitle: string;
+    walletConnectDescription: string;
+    walletConnectButton: string;
+    instructionTitle: string;
+    instructionCrypto: string;
+    instructionCard: string;
+    instructionCoinbase: string;
+    instructionStripe: string;
     sendAmount: string;
     processing: string;
     switchNetwork: string;
@@ -73,7 +83,10 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
   const account = useActiveAccount();
   const { mutate: sendTransaction, isPending: isSending } = useSendTransaction();
 
-  const totalAmount = BASE_AMOUNT * multiplier;
+  // Сумма для отображения в UI (всегда $0.99 × multiplier)
+  const displayAmount = BASE_AMOUNT * multiplier;
+  // Сумма для оплаты: при 1× отправляем $1.00 (минимум Stripe), иначе обычная сумма
+  const paymentAmount = multiplier === 1 ? 1.00 : BASE_AMOUNT * multiplier;
   const recipientWallet = mode === 'donation' ? DONATION_WALLET : SUPPORT_WALLET;
 
   // Когда кошелек подключен - переходим к выбору суммы
@@ -102,19 +115,17 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
     setError(null);
 
     try {
-      // Подготавливаем транзакцию transfer USDC
-      const amountInWei = BigInt(Math.floor(totalAmount * 1_000_000)); // 6 decimals
-
-      const transaction = prepareContractCall({
+      // Используем встроенную функцию transfer из thirdweb
+      const transaction = transfer({
         contract: usdcContract,
-        method: 'function transfer(address to, uint256 amount) returns (bool)',
-        params: [recipientWallet, amountInWei],
+        to: recipientWallet,
+        amount: paymentAmount.toString(),
       });
 
       sendTransaction(transaction, {
         onSuccess: (result) => {
           setStep('success');
-          onSuccess?.(result.transactionHash, totalAmount);
+          onSuccess?.(result.transactionHash, displayAmount);
 
           // Сохраняем в БД
           fetch('/api/payment', {
@@ -123,7 +134,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
             body: JSON.stringify({
               walletAddress: account.address,
               txHash: result.transactionHash,
-              amount: totalAmount,
+              amount: displayAmount,
               multiplier,
               chain: 'base',
             }),
@@ -162,22 +173,23 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
           <div className="flex flex-col gap-3 w-full">
             <p className="text-gray-600 text-sm mb-2 text-center">{t.choosePaymentMethod}</p>
 
-            <button onClick={handleSelectCrypto} className="btn-primary py-3 px-6 flex items-center justify-center gap-2">
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 6v12M6 12h12" />
-              </svg>
-              {t.cryptoPayment}
-            </button>
+            <div className="flex flex-col gap-1">
+              <button onClick={handleSelectCrypto} className="btn-primary py-2 px-4 text-xs">
+                {t.cryptoPayment}
+              </button>
+              <p className="text-gray-400 text-xs text-center">{t.cryptoPaymentHint}</p>
+            </div>
 
-            <button disabled className="btn-secondary py-3 px-6 flex items-center justify-center gap-2 opacity-50 cursor-not-allowed">
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="1" y="4" width="22" height="16" rx="2" />
-                <line x1="1" y1="10" x2="23" y2="10" />
-              </svg>
-              {t.cardPayment}
-              <span className="text-xs bg-gray-200 px-2 py-0.5 rounded ml-1">{t.cardComingSoon}</span>
-            </button>
+            <div className="flex flex-col gap-1">
+              <button disabled className="btn-secondary py-3 px-6 flex items-center justify-center gap-2 opacity-50 cursor-not-allowed">
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="1" y="4" width="22" height="16" rx="2" />
+                  <line x1="1" y1="10" x2="23" y2="10" />
+                </svg>
+                {t.cardPayment}
+                <span className="text-xs bg-gray-200 px-2 py-0.5 rounded ml-1">{t.cardComingSoon}</span>
+              </button>
+            </div>
 
             <button onClick={resetState} className="text-gray-400 text-sm hover:text-gray-600 mt-2">
               {t.back}
@@ -187,8 +199,11 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
 
       case 'wallet-connect':
         return (
-          <div className="flex flex-col gap-3 w-full items-center">
-            <p className="text-gray-600 text-sm mb-2 text-center">Выберите способ подключения</p>
+          <div className="flex flex-col gap-4 w-full">
+            <div className="text-center">
+              <h3 className="text-lg font-semibold text-[#1e3a5f] mb-2">{t.walletConnectTitle}</h3>
+              <p className="text-gray-600 text-sm">{t.walletConnectDescription}</p>
+            </div>
 
             <ConnectButton
               client={thirdwebClient}
@@ -197,15 +212,25 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
               theme="light"
               connectModal={{
                 size: 'wide',
-                title: 'Подключить кошелёк',
+                title: t.walletConnectButton,
                 showThirdwebBranding: false,
               }}
               connectButton={{
-                label: 'Подключить кошелёк',
+                label: t.walletConnectButton,
               }}
             />
 
-            <button onClick={() => setStep('payment-method')} className="text-gray-400 text-sm hover:text-gray-600 mt-2">
+            <div className="bg-gray-50 rounded-lg p-4 text-left">
+              <p className="text-sm font-medium text-gray-700 mb-2">{t.instructionTitle}</p>
+              <ul className="text-xs text-gray-600 space-y-1">
+                <li>• {t.instructionCrypto}</li>
+                <li>• {t.instructionCard}</li>
+                <li>• {t.instructionCoinbase}</li>
+                <li>• {t.instructionStripe}</li>
+              </ul>
+            </div>
+
+            <button onClick={() => setStep('payment-method')} className="text-gray-400 text-sm hover:text-gray-600">
               {t.back}
             </button>
           </div>
@@ -241,7 +266,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
             </div>
 
             <div className="text-center py-4 bg-gray-50 rounded-lg">
-              <div className="text-3xl font-bold text-[#1e3a5f]">${totalAmount.toFixed(2)}</div>
+              <div className="text-3xl font-bold text-[#1e3a5f]">${displayAmount.toFixed(2)}</div>
             </div>
 
             <button onClick={() => setStep('confirm')} className="btn-primary py-3">
@@ -258,7 +283,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
         return (
           <div className="flex flex-col gap-4 w-full text-center">
             <div className="py-4">
-              <div className="text-3xl font-bold text-[#1e3a5f] mb-2">${totalAmount.toFixed(2)}</div>
+              <div className="text-3xl font-bold text-[#1e3a5f] mb-2">${displayAmount.toFixed(2)}</div>
               <div className="text-gray-500 text-sm">{multiplier} × $0.99</div>
             </div>
 
@@ -289,7 +314,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
               </svg>
             </div>
             <p className="text-green-600 font-medium">{t.transactionSuccess}</p>
-            <p className="text-gray-500 text-sm">${totalAmount.toFixed(2)}</p>
+            <p className="text-gray-500 text-sm">${displayAmount.toFixed(2)}</p>
             <button onClick={resetState} className="btn-secondary py-2 px-6 text-sm mt-2">OK</button>
           </div>
         );

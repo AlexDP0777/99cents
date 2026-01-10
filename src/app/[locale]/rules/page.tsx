@@ -133,6 +133,44 @@ export default function RulesPage() {
               </h2>
               <div className="whitespace-pre-line">{t('sections.responsibility.content')}</div>
             </section>
+
+            <hr className="border-gray-200" />
+
+            {/* Команда проекта */}
+            <section>
+              <h2 className="text-xl font-semibold text-[#1e3a5f] mb-3">
+                {t('sections.team.title')}
+              </h2>
+              <div className="whitespace-pre-line mb-4">{t('sections.team.content')}</div>
+              <p className="text-gray-500 text-sm italic bg-gray-50 p-4 rounded-lg">
+                {t('sections.team.note')}
+              </p>
+            </section>
+
+            <hr className="border-gray-200" />
+
+            {/* Поддержка развития проекта */}
+            <section>
+              <h2 className="text-xl font-semibold text-[#1e3a5f] mb-3">
+                {t('sections.supportProject.title')}
+              </h2>
+              <p className="mb-3">{t('sections.supportProject.content')}</p>
+              <p className="font-medium mb-2">{t('sections.supportProject.usedFor')}</p>
+              <ul className="list-disc pl-6 space-y-1 mb-4">
+                {(t.raw('sections.supportProject.items') as string[]).map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
+              </ul>
+              <p className="text-gray-500 text-sm mb-3">{t('sections.supportProject.disclaimer')}</p>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="text-sm text-gray-600 font-medium mb-2">{t('sections.supportProject.important')}</p>
+                <ul className="text-sm text-gray-500 space-y-1">
+                  {(t.raw('sections.supportProject.notes') as string[]).map((note, i) => (
+                    <li key={i}>• {note}</li>
+                  ))}
+                </ul>
+              </div>
+            </section>
           </div>
 
           {/* CTA кнопка */}

@@ -99,6 +99,30 @@
       "responsibility": {
         "title": "责任",
         "content": "参与该项目完全自愿。\n\n发送99美分即表示您确认已阅读并接受项目规则。"
+      },
+      "team": {
+        "title": "项目团队",
+        "content": "「99美分」项目由一个小型国际团队创建，他们相信简单真诚行动的力量。\n\n我们不代表拥有大额预算的企业或基金会。项目独立且公开地发展。\n\n我们的目标是创建一个清晰、透明、有效的帮助机制，让每个人都能做出一个小小的善举，没有义务，没有回报。",
+        "note": "团队成员不从99美分捐款中获得任何个人经济利益。所有资金完全根据投票结果用于帮助有需要的人。"
+      },
+      "supportProject": {
+        "title": "支持项目发展",
+        "content": "这是对「99美分」项目运营的单独自愿支持。这些资金不参与投票，也不用于帮助人们的项目。",
+        "usedFor": "它们仅用于：",
+        "items": [
+          "平台开发",
+          "技术支持",
+          "服务器和基础设施费用",
+          "法律和运营费用"
+        ],
+        "disclaimer": "支持项目发展不是强制性的，与发送99美分没有任何关联。",
+        "important": "重要提示：",
+        "notes": [
+          "不影响投票",
+          "不授予额外权利",
+          "不显示在地图上",
+          "团队关于资金使用的报告单独形成"
+        ]
       }
     },
     "cta": {
@@ -247,9 +271,18 @@
     "helpPeople": "帮助他人",
     "supportProject": "支持项目",
     "choosePaymentMethod": "选择支付方式",
-    "cryptoPayment": "加密货币 (USDC)",
-    "cardPayment": "银行卡",
+    "cryptoPayment": "加密货币 / 银行卡",
+    "cryptoPaymentHint": "用加密货币或银行卡通过加密货币支付",
+    "cardPayment": "仅银行卡",
     "cardComingSoon": "即将推出",
+    "walletConnectTitle": "用加密货币或银行卡支付",
+    "walletConnectDescription": "您可以用加密货币或银行卡（通过加密货币）支付",
+    "walletConnectButton": "继续",
+    "instructionTitle": "如何支付：",
+    "instructionCrypto": "如果您有加密货币 — 连接您的钱包",
+    "instructionCard": "如果没有加密货币 — 输入邮箱并选择银行卡支付",
+    "instructionCoinbase": "美国居民或Coinbase用户 — 选择Coinbase（0%手续费）",
+    "instructionStripe": "其他国家居民或没有Coinbase账户 — 选择Stripe（最低手续费）",
     "sendAmount": "发送",
     "processing": "处理中...",
     "switchNetwork": "切换到Base网络",

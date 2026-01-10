@@ -99,6 +99,30 @@
       "responsibility": {
         "title": "Responsabilité",
         "content": "La participation au projet est entièrement volontaire.\n\nEn envoyant 99 centimes, vous confirmez avoir lu et accepté les règles du projet."
+      },
+      "team": {
+        "title": "Équipe du Projet",
+        "content": "Le projet \"99 centimes\" est créé par une petite équipe internationale de personnes qui croient en la force des actions simples et honnêtes.\n\nNous ne représentons pas une entreprise ou une fondation avec de gros budgets. Le projet se développe de manière indépendante et ouverte.\n\nNotre objectif est de créer un mécanisme d'aide clair, transparent et fonctionnel, où chacun peut faire un petit geste bienveillant sans obligations ni récompenses.",
+        "note": "Les membres de l'équipe ne reçoivent aucun avantage financier personnel des dons de 99 centimes. Tous les fonds sont exclusivement destinés aux besoins des personnes selon les résultats des votes."
+      },
+      "supportProject": {
+        "title": "Soutenir le Développement du Projet",
+        "content": "Il s'agit d'un soutien volontaire séparé pour le fonctionnement du projet \"99 centimes\". Ces fonds ne participent pas aux votes et ne sont pas dirigés vers des projets d'aide aux personnes.",
+        "usedFor": "Ils sont utilisés exclusivement pour :",
+        "items": [
+          "le développement de la plateforme",
+          "le support technique",
+          "les coûts de serveurs et d'infrastructure",
+          "les frais juridiques et opérationnels"
+        ],
+        "disclaimer": "Le soutien au développement du projet n'est pas obligatoire et n'est en aucun cas lié à l'envoi de 99 centimes.",
+        "important": "Important :",
+        "notes": [
+          "n'affecte pas le vote",
+          "n'accorde pas de droits supplémentaires",
+          "n'est pas affiché sur la carte",
+          "le rapport de l'équipe sur l'argent dépensé est établi séparément"
+        ]
       }
     },
     "cta": {
@@ -247,9 +271,18 @@
     "helpPeople": "Aider les gens",
     "supportProject": "Soutenir le projet",
     "choosePaymentMethod": "Choisir le mode de paiement",
-    "cryptoPayment": "Crypto (USDC)",
-    "cardPayment": "Carte bancaire",
+    "cryptoPayment": "Cryptomonnaie / Carte bancaire",
+    "cryptoPaymentHint": "Payez en cryptomonnaie ou par carte bancaire via cryptomonnaie",
+    "cardPayment": "Carte bancaire uniquement",
     "cardComingSoon": "Bientôt",
+    "walletConnectTitle": "Payer en Crypto ou par Carte",
+    "walletConnectDescription": "Vous pouvez payer en cryptomonnaie ou par carte bancaire (via cryptomonnaie)",
+    "walletConnectButton": "Continuer",
+    "instructionTitle": "Comment payer :",
+    "instructionCrypto": "Si vous avez de la crypto — connectez votre portefeuille",
+    "instructionCard": "Si vous n'avez pas de crypto — entrez votre email et choisissez le paiement par carte",
+    "instructionCoinbase": "Pour les résidents américains ou utilisateurs Coinbase — choisissez Coinbase (0% frais)",
+    "instructionStripe": "Pour les autres pays et sans compte Coinbase — choisissez Stripe (frais minimaux)",
     "sendAmount": "Envoyer",
     "processing": "Traitement...",
     "switchNetwork": "Passer à Base",

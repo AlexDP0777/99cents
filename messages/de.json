@@ -99,6 +99,30 @@
       "responsibility": {
         "title": "Verantwortung",
         "content": "Die Teilnahme am Projekt ist vollständig freiwillig.\n\nMit dem Senden von 99 Cent bestätigst du, dass du die Projektregeln gelesen und akzeptiert hast."
+      },
+      "team": {
+        "title": "Projektteam",
+        "content": "Das Projekt \"99 Cent\" wird von einem kleinen internationalen Team von Menschen geschaffen, die an die Kraft einfacher und ehrlicher Handlungen glauben.\n\nWir repräsentieren keine Konzerne oder Stiftungen mit großen Budgets. Das Projekt entwickelt sich unabhängig und offen.\n\nUnser Ziel ist es, einen klaren, transparenten und funktionierenden Hilfsmechanismus zu schaffen, bei dem jeder eine kleine gute Tat ohne Verpflichtungen oder Belohnungen tun kann.",
+        "note": "Teammitglieder erhalten keinen persönlichen finanziellen Vorteil aus den 99-Cent-Spenden. Alle Mittel gehen ausschließlich an die Bedürfnisse der Menschen gemäß den Abstimmungsergebnissen."
+      },
+      "supportProject": {
+        "title": "Projektentwicklung unterstützen",
+        "content": "Dies ist eine separate freiwillige Unterstützung für den Betrieb des \"99 Cent\"-Projekts. Diese Mittel nehmen nicht an Abstimmungen teil und werden nicht an Hilfsprojekte weitergeleitet.",
+        "usedFor": "Sie werden ausschließlich verwendet für:",
+        "items": [
+          "Plattformentwicklung",
+          "Technischen Support",
+          "Server- und Infrastrukturkosten",
+          "Rechts- und Betriebskosten"
+        ],
+        "disclaimer": "Die Unterstützung der Projektentwicklung ist nicht verpflichtend und steht in keinem Zusammenhang mit dem Senden von 99 Cent.",
+        "important": "Wichtig:",
+        "notes": [
+          "beeinflusst nicht die Abstimmung",
+          "gewährt keine zusätzlichen Rechte",
+          "wird nicht auf der Karte angezeigt",
+          "Teamreport über ausgegebene Gelder wird separat erstellt"
+        ]
       }
     },
     "cta": {
@@ -247,9 +271,18 @@
     "helpPeople": "Menschen helfen",
     "supportProject": "Projekt unterstützen",
     "choosePaymentMethod": "Zahlungsmethode wählen",
-    "cryptoPayment": "Krypto (USDC)",
-    "cardPayment": "Kreditkarte",
+    "cryptoPayment": "Kryptowährung / Kreditkarte",
+    "cryptoPaymentHint": "Mit Kryptowährung oder Kreditkarte via Kryptowährung bezahlen",
+    "cardPayment": "Nur Kartenzahlung",
     "cardComingSoon": "Demnächst",
+    "walletConnectTitle": "Mit Krypto oder Karte bezahlen",
+    "walletConnectDescription": "Sie können mit Kryptowährung oder Kreditkarte (über Kryptowährung) bezahlen",
+    "walletConnectButton": "Weiter",
+    "instructionTitle": "So bezahlen Sie:",
+    "instructionCrypto": "Wenn Sie Krypto haben — verbinden Sie Ihr Wallet",
+    "instructionCard": "Wenn Sie kein Krypto haben — geben Sie Ihre E-Mail ein und wählen Sie Kartenzahlung",
+    "instructionCoinbase": "Für US-Bürger oder Coinbase-Nutzer — wählen Sie Coinbase (0% Gebühr)",
+    "instructionStripe": "Für andere Länder und ohne Coinbase-Konto — wählen Sie Stripe (minimale Gebühr)",
     "sendAmount": "Senden",
     "processing": "Wird verarbeitet...",
     "switchNetwork": "Zu Base wechseln",

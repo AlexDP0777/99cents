@@ -99,6 +99,30 @@
       "responsibility": {
         "title": "Responsibility",
         "content": "Participation in the project is completely voluntary.\n\nBy sending 99 cents, you confirm that you have read and accept the project rules."
+      },
+      "team": {
+        "title": "Project Team",
+        "content": "The \"99 cents\" project is created by a small international team of people who believe in the power of simple and honest actions.\n\nWe do not represent a corporation or foundation with large budgets. The project develops independently and openly.\n\nOur goal is to create a clear, transparent, and working mechanism for helping, where everyone can make a small kind action without obligations or rewards.",
+        "note": "Team members do not receive personal financial benefits from 99-cent donations. All funds go exclusively to the needs of people according to the results of voting."
+      },
+      "supportProject": {
+        "title": "Supporting Project Development",
+        "content": "This is a separate voluntary support for the operation of the \"99 cents\" project. These funds do not participate in voting and are not directed to projects helping people.",
+        "usedFor": "They are used exclusively for:",
+        "items": [
+          "platform development",
+          "technical support",
+          "server and infrastructure costs",
+          "legal and operational expenses"
+        ],
+        "disclaimer": "Supporting project development is not mandatory and is in no way connected to sending 99 cents.",
+        "important": "Important:",
+        "notes": [
+          "does not affect voting",
+          "does not grant additional rights",
+          "is not displayed on the map",
+          "team report on spent money is formed separately"
+        ]
       }
     },
     "cta": {
@@ -247,9 +271,18 @@
     "helpPeople": "Help People",
     "supportProject": "Support Project",
     "choosePaymentMethod": "Choose payment method",
-    "cryptoPayment": "Crypto (USDC)",
-    "cardPayment": "Credit Card",
+    "cryptoPayment": "Cryptocurrency / Credit Card",
+    "cryptoPaymentHint": "Pay with cryptocurrency or credit card via cryptocurrency",
+    "cardPayment": "Direct Card Payment",
     "cardComingSoon": "Coming soon",
+    "walletConnectTitle": "Pay with Cryptocurrency or Credit Card",
+    "walletConnectDescription": "You can pay with cryptocurrency or credit card (via cryptocurrency)",
+    "walletConnectButton": "Continue",
+    "instructionTitle": "How to pay:",
+    "instructionCrypto": "If you have cryptocurrency — connect your crypto wallet",
+    "instructionCard": "If you do not have cryptocurrency — enter your email and choose credit card payment",
+    "instructionCoinbase": "For US residents or Coinbase exchange users — choose Coinbase (0% fee)",
+    "instructionStripe": "For other countries and if you do not have a Coinbase account — choose Stripe (minimal fee)",
     "sendAmount": "Send",
     "processing": "Processing...",
     "switchNetwork": "Switch to Base",
