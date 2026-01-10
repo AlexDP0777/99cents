@@ -235,8 +235,8 @@
       }
     },
     "cta": {
-      "button": "支持项目",
-      "note": "这是支持项目的单独自愿捐款。"
+      "button": "帮助他人",
+      "note": "点击后，您将发送99美分帮助他人。"
     }
   },
   "admin": {
@@ -296,7 +296,9 @@
     "transactionSuccess": "支付成功！",
     "transactionPending": "确认交易中...",
     "insufficientBalance": "USDC余额不足",
-    "back": "返回"
+    "back": "返回",
+    "enterAmount": "输入金额",
+    "minAmount": "最低 $1"
   },
   "apply": {
     "title": "提交帮助申请",

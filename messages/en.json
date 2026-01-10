@@ -235,8 +235,8 @@
       }
     },
     "cta": {
-      "button": "Support the Project",
-      "note": "This is a separate voluntary donation to support the \"99 cents\" project."
+      "button": "Help People",
+      "note": "By clicking, you proceed to send 99 cents to help people."
     }
   },
   "admin": {
@@ -296,7 +296,9 @@
     "transactionSuccess": "Payment successful!",
     "transactionPending": "Confirming transaction...",
     "insufficientBalance": "Insufficient USDC balance",
-    "back": "Back"
+    "back": "Back",
+    "enterAmount": "Enter amount",
+    "minAmount": "Minimum $1"
   },
   "apply": {
     "title": "Submit a Request for Help",

@@ -235,8 +235,8 @@
       }
     },
     "cta": {
-      "button": "Projekt unterstützen",
-      "note": "Dies ist eine separate freiwillige Spende zur Unterstützung des Projekts."
+      "button": "Menschen helfen",
+      "note": "Mit einem Klick überweisen Sie 99 Cent, um Menschen zu helfen."
     }
   },
   "admin": {
@@ -296,7 +296,9 @@
     "transactionSuccess": "Zahlung erfolgreich!",
     "transactionPending": "Transaktion wird bestätigt...",
     "insufficientBalance": "USDC-Guthaben nicht ausreichend",
-    "back": "Zurück"
+    "back": "Zurück",
+    "enterAmount": "Betrag eingeben",
+    "minAmount": "Mindestens $1"
   },
   "apply": {
     "title": "Hilfsantrag einreichen",

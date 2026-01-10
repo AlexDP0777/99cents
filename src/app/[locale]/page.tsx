@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -30,10 +30,24 @@ export default function Home() {
   const locale = useLocale();
 
   const [stats, setStats] = useState<Stats>({
-    totalParticipants: 999,
-    totalCountries: 47,
-    totalAmount: 989.01,
+    totalParticipants: 0,
+    totalCountries: 0,
+    totalAmount: 0,
   });
+
+  // Загружаем статистику из API
+  useEffect(() => {
+    fetch('/api/stats')
+      .then(res => res.json())
+      .then(data => {
+        setStats({
+          totalParticipants: data.totalParticipants,
+          totalCountries: data.totalCountries,
+          totalAmount: data.totalAmount,
+        });
+      })
+      .catch(console.error);
+  }, []);
 
   // Переводы для PaymentButton
   const paymentTranslations = {
@@ -65,12 +79,17 @@ export default function Home() {
   };
 
   const handlePaymentSuccess = (txHash: string, amount: number) => {
-    // Обновляем статистику после успешного платежа
-    setStats(prev => ({
-      ...prev,
-      totalParticipants: prev.totalParticipants + 1,
-      totalAmount: prev.totalAmount + amount,
-    }));
+    // Перезагружаем статистику из API после успешного платежа
+    fetch('/api/stats')
+      .then(res => res.json())
+      .then(data => {
+        setStats({
+          totalParticipants: data.totalParticipants,
+          totalCountries: data.totalCountries,
+          totalAmount: data.totalAmount,
+        });
+      })
+      .catch(console.error);
   };
 
   return (

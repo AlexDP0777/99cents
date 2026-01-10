@@ -3,12 +3,45 @@
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import PaymentButton from '@/components/PaymentButton';
 
 export default function TransparencyPage() {
   const t = useTranslations('transparency');
   const tFooter = useTranslations('footer');
   const tNav = useTranslations('nav');
+  const tPayment = useTranslations('payment');
   const locale = useLocale();
+
+  // Переводы для PaymentButton
+  const paymentTranslations = {
+    helpPeople: tPayment('helpPeople'),
+    supportProject: tPayment('supportProject'),
+    choosePaymentMethod: tPayment('choosePaymentMethod'),
+    cryptoPayment: tPayment('cryptoPayment'),
+    cryptoPaymentHint: tPayment('cryptoPaymentHint'),
+    cardPayment: tPayment('cardPayment'),
+    cardComingSoon: tPayment('cardComingSoon'),
+    walletConnectTitle: tPayment('walletConnectTitle'),
+    walletConnectDescription: tPayment('walletConnectDescription'),
+    walletConnectButton: tPayment('walletConnectButton'),
+    instructionTitle: tPayment('instructionTitle'),
+    instructionCrypto: tPayment('instructionCrypto'),
+    instructionCard: tPayment('instructionCard'),
+    instructionCoinbase: tPayment('instructionCoinbase'),
+    instructionStripe: tPayment('instructionStripe'),
+    sendAmount: tPayment('sendAmount'),
+    processing: tPayment('processing'),
+    switchNetwork: tPayment('switchNetwork'),
+    disconnect: tPayment('disconnect'),
+    walletConnected: tPayment('walletConnected'),
+    confirmPayment: tPayment('confirmPayment'),
+    transactionSuccess: tPayment('transactionSuccess'),
+    transactionPending: tPayment('transactionPending'),
+    insufficientBalance: tPayment('insufficientBalance'),
+    back: tPayment('back'),
+    enterAmount: tPayment('enterAmount'),
+    minAmount: tPayment('minAmount'),
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -106,11 +139,10 @@ export default function TransparencyPage() {
 
           {/* CTA кнопка */}
           <div className="mt-12 text-center bg-gray-50 rounded-2xl p-8">
-            <Link href={`/${locale}`}>
-              <button className="btn-primary text-lg px-8 py-3">
-                {t('cta.button')}
-              </button>
-            </Link>
+            <PaymentButton
+              mode="donation"
+              translations={paymentTranslations}
+            />
             <p className="text-gray-500 text-sm mt-3">
               {t('cta.note')}
             </p>

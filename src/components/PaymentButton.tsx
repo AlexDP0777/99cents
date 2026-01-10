@@ -44,6 +44,7 @@ interface PaymentButtonProps {
   onSuccess?: (txHash: string, amount: number) => void;
   onError?: (error: Error) => void;
   mode?: 'donation' | 'support';
+  freeAmount?: boolean;
   translations: {
     helpPeople: string;
     supportProject: string;
@@ -70,23 +71,26 @@ interface PaymentButtonProps {
     transactionPending: string;
     insufficientBalance: string;
     back: string;
+    enterAmount?: string;
+    minAmount?: string;
   };
 }
 
 type Step = 'initial' | 'payment-method' | 'wallet-connect' | 'amount-select' | 'confirm' | 'processing' | 'success' | 'error';
 
-export default function PaymentButton({ onSuccess, onError, mode = 'donation', translations: t }: PaymentButtonProps) {
+export default function PaymentButton({ onSuccess, onError, mode = 'donation', freeAmount = false, translations: t }: PaymentButtonProps) {
   const [step, setStep] = useState<Step>('initial');
   const [multiplier, setMultiplier] = useState(1);
+  const [customAmount, setCustomAmount] = useState(10);
   const [error, setError] = useState<string | null>(null);
 
   const account = useActiveAccount();
   const { mutate: sendTransaction, isPending: isSending } = useSendTransaction();
 
-  // Сумма для отображения в UI (всегда $0.99 × multiplier)
-  const displayAmount = BASE_AMOUNT * multiplier;
-  // Сумма для оплаты: при 1× отправляем $1.00 (минимум Stripe), иначе обычная сумма
-  const paymentAmount = multiplier === 1 ? 1.00 : BASE_AMOUNT * multiplier;
+  // Сумма для отображения и оплаты
+  const displayAmount = freeAmount ? customAmount : BASE_AMOUNT * multiplier;
+  // Сумма для оплаты: при freeAmount - customAmount, иначе при 1× отправляем $1.00 (минимум Stripe)
+  const paymentAmount = freeAmount ? customAmount : (multiplier === 1 ? 1.00 : BASE_AMOUNT * multiplier);
   const recipientWallet = mode === 'donation' ? DONATION_WALLET : SUPPORT_WALLET;
 
   // Когда кошелек подключен - переходим к выбору суммы
@@ -127,18 +131,25 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
           setStep('success');
           onSuccess?.(result.transactionHash, displayAmount);
 
-          // Сохраняем в БД
-          fetch('/api/payment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              walletAddress: account.address,
-              txHash: result.transactionHash,
-              amount: displayAmount,
-              multiplier,
-              chain: 'base',
-            }),
-          }).catch(console.error);
+          // Получаем гео-данные и сохраняем в БД
+          fetch('/api/geo')
+            .then(res => res.json())
+            .then(geo => {
+              return fetch('/api/payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  walletAddress: account.address,
+                  txHash: result.transactionHash,
+                  amount: displayAmount,
+                  multiplier,
+                  chain: 'base',
+                  country: geo.countryName,
+                  city: geo.city,
+                }),
+              });
+            })
+            .catch(console.error);
         },
         onError: (err) => {
           setError(err.message);
@@ -239,31 +250,67 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
       case 'amount-select':
         return (
           <div className="flex flex-col gap-4 w-full">
-            <div className="flex items-center justify-center gap-3">
-              <span className="text-gray-500">$0.99 ×</span>
-              <input
-                type="number"
-                min="1"
-                max="10000"
-                value={multiplier}
-                onChange={(e) => setMultiplier(Math.max(1, parseInt(e.target.value) || 1))}
-                className="w-24 text-center text-xl font-bold border-2 border-gray-200 rounded-lg py-2 focus:border-[#1e3a5f] focus:outline-none"
-              />
-            </div>
+            {freeAmount ? (
+              <>
+                <div className="text-center">
+                  <p className="text-gray-600 text-sm mb-2">{t.enterAmount || 'Введите сумму'}</p>
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="text-2xl font-bold text-[#1e3a5f]">$</span>
+                    <input
+                      type="number"
+                      min="1"
+                      max="10000"
+                      value={customAmount}
+                      onChange={(e) => setCustomAmount(Math.max(1, parseFloat(e.target.value) || 1))}
+                      className="w-32 text-center text-2xl font-bold border-2 border-gray-200 rounded-lg py-2 focus:border-[#1e3a5f] focus:outline-none"
+                    />
+                  </div>
+                  <p className="text-gray-400 text-xs mt-2">{t.minAmount || 'Минимум $1'}</p>
+                </div>
 
-            <div className="flex flex-wrap justify-center gap-2">
-              {QUICK_MULTIPLIERS.map((value) => (
-                <button
-                  key={value}
-                  onClick={() => setMultiplier(value)}
-                  className={`py-1 px-3 rounded-full text-sm transition-colors ${
-                    multiplier === value ? 'bg-[#1e3a5f] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                  }`}
-                >
-                  {value}×
-                </button>
-              ))}
-            </div>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {[5, 10, 25, 50, 100].map((value) => (
+                    <button
+                      key={value}
+                      onClick={() => setCustomAmount(value)}
+                      className={`py-1 px-3 rounded-full text-sm transition-colors ${
+                        customAmount === value ? 'bg-[#1e3a5f] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
+                    >
+                      ${value}
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center justify-center gap-3">
+                  <span className="text-gray-500">$0.99 ×</span>
+                  <input
+                    type="number"
+                    min="1"
+                    max="10000"
+                    value={multiplier}
+                    onChange={(e) => setMultiplier(Math.max(1, parseInt(e.target.value) || 1))}
+                    className="w-24 text-center text-xl font-bold border-2 border-gray-200 rounded-lg py-2 focus:border-[#1e3a5f] focus:outline-none"
+                  />
+                </div>
+
+                <div className="flex flex-wrap justify-center gap-2">
+                  {QUICK_MULTIPLIERS.map((value) => (
+                    <button
+                      key={value}
+                      onClick={() => setMultiplier(value)}
+                      className={`py-1 px-3 rounded-full text-sm transition-colors ${
+                        multiplier === value ? 'bg-[#1e3a5f] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
+                    >
+                      {value}×
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
 
             <div className="text-center py-4 bg-gray-50 rounded-lg">
               <div className="text-3xl font-bold text-[#1e3a5f]">${displayAmount.toFixed(2)}</div>
@@ -284,7 +331,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', t
           <div className="flex flex-col gap-4 w-full text-center">
             <div className="py-4">
               <div className="text-3xl font-bold text-[#1e3a5f] mb-2">${displayAmount.toFixed(2)}</div>
-              <div className="text-gray-500 text-sm">{multiplier} × $0.99</div>
+              <div className="text-gray-500 text-sm">{freeAmount ? t.supportProject : `${multiplier} × $0.99`}</div>
             </div>
 
             <button onClick={handleConfirmPayment} disabled={isSending} className="btn-primary py-4 text-lg">

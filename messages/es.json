@@ -235,8 +235,8 @@
       }
     },
     "cta": {
-      "button": "Apoyar el Proyecto",
-      "note": "Esta es una donación voluntaria separada para apoyar el proyecto."
+      "button": "Ayudar a la gente",
+      "note": "Al hacer clic, procedes a enviar 99 centavos para ayudar a la gente."
     }
   },
   "admin": {
@@ -296,7 +296,9 @@
     "transactionSuccess": "¡Pago exitoso!",
     "transactionPending": "Confirmando transacción...",
     "insufficientBalance": "Saldo USDC insuficiente",
-    "back": "Atrás"
+    "back": "Atrás",
+    "enterAmount": "Ingrese el monto",
+    "minAmount": "Mínimo $1"
   },
   "apply": {
     "title": "Enviar solicitud de ayuda",
