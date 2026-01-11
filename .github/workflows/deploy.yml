@@ -54,7 +54,7 @@ jobs:
           npx prisma migrate deploy
           npm run build
           pm2 restart 99cents
-        " 2>&1 | tee deploy.log
+          " 2>&1 | tee deploy.log
 
       - name: Clear Cloudflare cache 🆑
         uses: Cyb3r-Jak3/action-cloudflare-cache@v3.0.0
