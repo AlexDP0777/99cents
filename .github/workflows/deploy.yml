@@ -68,7 +68,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            DEPLOY STATUS: ${{ job.status }}
+            ${{ job.status == 'success' && '✅ DEPLOY SUCCESS' || job.status == 'cancelled' && '⚠️ DEPLOY CANCELLED' || '❌ DEPLOY FAILED' }}
 
             Repository: ${{ github.repository }}
             Branch: ${{ github.ref_name }}
