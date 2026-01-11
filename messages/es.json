@@ -103,6 +103,7 @@
       "team": {
         "title": "Equipo del Proyecto",
         "content": "El proyecto \"99 centavos\" es creado por un pequeño equipo internacional de personas que creen en el poder de las acciones simples y honestas.\n\nNo representamos una corporación o fundación con grandes presupuestos. El proyecto se desarrolla de forma independiente y abierta.\n\nNuestro objetivo es crear un mecanismo de ayuda claro, transparente y funcional, donde cada uno pueda hacer una pequeña acción bondadosa sin obligaciones ni recompensas.",
+        "contact": "Contactar al equipo: project@99cents.one",
         "note": "Los miembros del equipo no reciben beneficios financieros personales de las donaciones de 99 centavos. Todos los fondos se destinan exclusivamente a las necesidades de las personas según los resultados de las votaciones."
       },
       "supportProject": {

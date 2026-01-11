@@ -21,9 +21,9 @@ const formatDate = (dateString: string): string => {
   const diffMs = now.getTime() - date.getTime();
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
   
-  if (diffDays === 0) return 'Сегодня';
-  if (diffDays === 1) return 'Вчера';
-  return `${diffDays} дн. назад`;
+  if (diffDays === 0) return 'Today';
+  if (diffDays === 1) return 'Yesterday';
+  return `${diffDays} days ago`;
 };
 
 export default function ParticipantsMap() {
@@ -74,7 +74,7 @@ export default function ParticipantsMap() {
   if (!mapReady) {
     return (
       <div className="w-full h-[400px] bg-gray-100 rounded-lg flex items-center justify-center">
-        <span className="text-gray-400">Загрузка карты...</span>
+        <span className="text-gray-400">Loading map...</span>
       </div>
     );
   }
@@ -107,10 +107,10 @@ export default function ParticipantsMap() {
           >
             <Popup>
               <div className="text-center min-w-[100px]">
-                <div className="font-semibold text-[#1e3a5f]">{participant.city || 'Участник'}</div>
+                <div className="font-semibold text-[#1e3a5f]">{participant.city || 'Participant'}</div>
                 <div className="text-gray-500 text-sm">{participant.country || ''}</div>
                 <div className="text-xs text-gray-400 mt-1">{participant.date || ''}</div>
-                {participant.isNew && <div className="text-xs text-green-500 font-medium mt-1">Новый!</div>}
+                {participant.isNew && <div className="text-xs text-green-500 font-medium mt-1">New!</div>}
               </div>
             </Popup>
           </CircleMarker>

@@ -175,6 +175,9 @@ export default function RulesPage() {
                 {t('sections.team.title')}
               </h2>
               <div className="whitespace-pre-line mb-4">{t('sections.team.content')}</div>
+              <p className="text-[#1e3a5f] mb-4">
+                {t('sections.team.contact').split(': ')[0]}: <a href="mailto:project@99cents.one" className="text-blue-600 hover:underline">project@99cents.one</a>
+              </p>
               <p className="text-gray-500 text-sm italic bg-gray-50 p-4 rounded-lg">
                 {t('sections.team.note')}
               </p>
