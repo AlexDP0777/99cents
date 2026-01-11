@@ -44,7 +44,17 @@ jobs:
 
       - name: Deploy to server 📡
         run: |
-          ssh target "cd ${{ secrets.DEPLOY_PATH }} && git pull origin master && npm ci && npx prisma generate && npx prisma migrate deploy && npm run build && pm2 restart 99cents"
+          set -o pipefail
+          ssh target "
+          set -e
+          cd ${{ secrets.DEPLOY_PATH }}
+          git pull origin master
+          npm ci
+          npx prisma generate
+          npx prisma migrate deploy
+          npm run build
+          pm2 restart 99cents
+        " 2>&1 | tee deploy.log
 
       - name: Clear Cloudflare cache 🆑
         uses: Cyb3r-Jak3/action-cloudflare-cache@v3.0.0
@@ -83,3 +93,11 @@ jobs:
 
             See changes:
             ${{ github.server_url }}/${{ github.repository }}/commit/${{github.sha}}
+
+      - name: Send deploy log to Telegram
+        if: failure()
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument" \
+          -F chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+          -F document=@deploy.log \
+          -F caption="❌ Deploy failed — log file"
