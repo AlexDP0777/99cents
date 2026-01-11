@@ -2,25 +2,25 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getSelectedApplications } from '@/lib/applications';
 
-// Список стран для валидации
+// Country list for validation
 const VALID_COUNTRIES = [
-  'Россия', 'США', 'Великобритания', 'Германия', 'Франция', 'Испания', 'Италия',
-  'Китай', 'Япония', 'Южная Корея', 'Индия', 'Бразилия', 'Мексика', 'Канада',
-  'Австралия', 'Украина', 'Польша', 'Нидерланды', 'Бельгия', 'Швейцария',
-  'Австрия', 'Швеция', 'Норвегия', 'Дания', 'Финляндия', 'Чехия', 'Португалия',
-  'Греция', 'Турция', 'Израиль', 'ОАЭ', 'Саудовская Аравия', 'Египет', 'ЮАР',
-  'Аргентина', 'Чили', 'Колумбия', 'Перу', 'Венесуэла', 'Индонезия', 'Таиланд',
-  'Вьетнам', 'Филиппины', 'Малайзия', 'Сингапур', 'Новая Зеландия', 'Ирландия',
-  'Другая'
+  'Russia', 'USA', 'United Kingdom', 'Germany', 'France', 'Spain', 'Italy',
+  'China', 'Japan', 'South Korea', 'India', 'Brazil', 'Mexico', 'Canada',
+  'Australia', 'Ukraine', 'Poland', 'Netherlands', 'Belgium', 'Switzerland',
+  'Austria', 'Sweden', 'Norway', 'Denmark', 'Finland', 'Czech Republic', 'Portugal',
+  'Greece', 'Turkey', 'Israel', 'UAE', 'Saudi Arabia', 'Egypt', 'South Africa',
+  'Argentina', 'Chile', 'Colombia', 'Peru', 'Venezuela', 'Indonesia', 'Thailand',
+  'Vietnam', 'Philippines', 'Malaysia', 'Singapore', 'New Zealand', 'Ireland',
+  'Other'
 ];
 
-// Mock данные для fallback
+// Mock data for fallback
 const mockApplications = [
-  { id: '1', description: 'Нужна помощь с оплатой лечения ребёнка. Диагноз: ДЦП.', amount: 5000, country: 'Украина', votesCount: 127 },
-  { id: '2', description: 'Сбор средств на строительство колодца в деревне.', amount: 3000, country: 'Кения', votesCount: 89 },
-  { id: '3', description: 'Покупка школьных принадлежностей для 50 детей.', amount: 1500, country: 'Индия', votesCount: 156 },
-  { id: '4', description: 'Восстановление дома после пожара.', amount: 8000, country: 'Россия', votesCount: 203 },
-  { id: '5', description: 'Оплата операции для бездомных животных в приюте.', amount: 2000, country: 'Бразилия', votesCount: 78 },
+  { id: '1', description: 'Help needed for child medical treatment. Diagnosis: Cerebral palsy.', amount: 5000, country: 'Ukraine', votesCount: 127 },
+  { id: '2', description: 'Fundraising for building a well in a village.', amount: 3000, country: 'Kenya', votesCount: 89 },
+  { id: '3', description: 'Purchase of school supplies for 50 children.', amount: 1500, country: 'India', votesCount: 156 },
+  { id: '4', description: 'House restoration after fire.', amount: 8000, country: 'Russia', votesCount: 203 },
+  { id: '5', description: 'Surgery payment for homeless animals in shelter.', amount: 2000, country: 'Brazil', votesCount: 78 },
 ];
 
 interface ApplicationBody {

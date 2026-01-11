@@ -6,14 +6,14 @@ import Link from 'next/link';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 const COUNTRIES = [
-  'Россия', 'США', 'Великобритания', 'Германия', 'Франция', 'Испания', 'Италия',
-  'Китай', 'Япония', 'Южная Корея', 'Индия', 'Бразилия', 'Мексика', 'Канада',
-  'Австралия', 'Украина', 'Польша', 'Нидерланды', 'Бельгия', 'Швейцария',
-  'Австрия', 'Швеция', 'Норвегия', 'Дания', 'Финляндия', 'Чехия', 'Португалия',
-  'Греция', 'Турция', 'Израиль', 'ОАЭ', 'Египет', 'ЮАР', 'Кения',
-  'Аргентина', 'Чили', 'Колумбия', 'Перу', 'Индонезия', 'Таиланд',
-  'Вьетнам', 'Филиппины', 'Малайзия', 'Сингапур', 'Новая Зеландия', 'Ирландия',
-  'Другая'
+  'Russia', 'USA', 'United Kingdom', 'Germany', 'France', 'Spain', 'Italy',
+  'China', 'Japan', 'South Korea', 'India', 'Brazil', 'Mexico', 'Canada',
+  'Australia', 'Ukraine', 'Poland', 'Netherlands', 'Belgium', 'Switzerland',
+  'Austria', 'Sweden', 'Norway', 'Denmark', 'Finland', 'Czech Republic', 'Portugal',
+  'Greece', 'Turkey', 'Israel', 'UAE', 'Egypt', 'South Africa', 'Kenya',
+  'Argentina', 'Chile', 'Colombia', 'Peru', 'Indonesia', 'Thailand',
+  'Vietnam', 'Philippines', 'Malaysia', 'Singapore', 'New Zealand', 'Ireland',
+  'Other'
 ].sort();
 
 export default function ApplyPage() {

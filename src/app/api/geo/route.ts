@@ -1,21 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const countryNames: Record<string, string> = {
-  'RU': 'Россия', 'UA': 'Украина', 'US': 'США', 'GB': 'Великобритания',
-  'DE': 'Германия', 'FR': 'Франция', 'ES': 'Испания', 'IT': 'Италия',
-  'CN': 'Китай', 'JP': 'Япония', 'KR': 'Южная Корея', 'IN': 'Индия',
-  'BR': 'Бразилия', 'MX': 'Мексика', 'CA': 'Канада', 'AU': 'Австралия',
-  'PL': 'Польша', 'NL': 'Нидерланды', 'BE': 'Бельгия', 'CH': 'Швейцария',
-  'AT': 'Австрия', 'SE': 'Швеция', 'NO': 'Норвегия', 'DK': 'Дания',
-  'FI': 'Финляндия', 'CZ': 'Чехия', 'PT': 'Португалия', 'GR': 'Греция',
-  'TR': 'Турция', 'IL': 'Израиль', 'AE': 'ОАЭ', 'SA': 'Саудовская Аравия',
-  'EG': 'Египет', 'ZA': 'ЮАР', 'AR': 'Аргентина', 'CL': 'Чили',
-  'CO': 'Колумбия', 'PE': 'Перу', 'VE': 'Венесуэла', 'ID': 'Индонезия',
-  'TH': 'Таиланд', 'VN': 'Вьетнам', 'PH': 'Филиппины', 'MY': 'Малайзия',
-  'SG': 'Сингапур', 'NZ': 'Новая Зеландия', 'IE': 'Ирландия',
-  'KZ': 'Казахстан', 'BY': 'Беларусь', 'UZ': 'Узбекистан', 'GE': 'Грузия',
-  'AM': 'Армения', 'AZ': 'Азербайджан', 'MD': 'Молдова',
-  'LT': 'Литва', 'LV': 'Латвия', 'EE': 'Эстония',
+  'RU': 'Russia', 'UA': 'Ukraine', 'US': 'USA', 'GB': 'United Kingdom',
+  'DE': 'Germany', 'FR': 'France', 'ES': 'Spain', 'IT': 'Italy',
+  'CN': 'China', 'JP': 'Japan', 'KR': 'South Korea', 'IN': 'India',
+  'BR': 'Brazil', 'MX': 'Mexico', 'CA': 'Canada', 'AU': 'Australia',
+  'PL': 'Poland', 'NL': 'Netherlands', 'BE': 'Belgium', 'CH': 'Switzerland',
+  'AT': 'Austria', 'SE': 'Sweden', 'NO': 'Norway', 'DK': 'Denmark',
+  'FI': 'Finland', 'CZ': 'Czech Republic', 'PT': 'Portugal', 'GR': 'Greece',
+  'TR': 'Turkey', 'IL': 'Israel', 'AE': 'UAE', 'SA': 'Saudi Arabia',
+  'EG': 'Egypt', 'ZA': 'South Africa', 'AR': 'Argentina', 'CL': 'Chile',
+  'CO': 'Colombia', 'PE': 'Peru', 'VE': 'Venezuela', 'ID': 'Indonesia',
+  'TH': 'Thailand', 'VN': 'Vietnam', 'PH': 'Philippines', 'MY': 'Malaysia',
+  'SG': 'Singapore', 'NZ': 'New Zealand', 'IE': 'Ireland',
+  'KZ': 'Kazakhstan', 'BY': 'Belarus', 'UZ': 'Uzbekistan', 'GE': 'Georgia',
+  'AM': 'Armenia', 'AZ': 'Azerbaijan', 'MD': 'Moldova',
+  'LT': 'Lithuania', 'LV': 'Latvia', 'EE': 'Estonia',
 };
 
 const countryFlags: Record<string, string> = {
