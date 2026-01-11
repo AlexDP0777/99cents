@@ -11,6 +11,9 @@ jobs:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
+      - name: Set build start time
+        run: echo "BUILD_START=$(date +%s)" >> $GITHUB_ENV
+
       - name: Checkout code 🛎
         uses: actions/checkout@v4
 
@@ -49,20 +52,34 @@ jobs:
           zone: ${{ secrets.CLOUDFLARE_ZONE_ID }}
           api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
+      - name: Calculate build duration
+        if: always()
+        run: |
+          END=$(date +%s)
+          DURATION=$((END - BUILD_START))
+          MIN=$((DURATION / 60))
+          SEC=$((DURATION % 60))
+          echo "BUILD_DURATION=${MIN}m ${SEC}s" >> $GITHUB_ENV
+
       - name: Notify to Telegram
         if: always()
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
           message: |
-            ${{ job.status == 'success' && '✅ *Deploy 99cents.one SUCCESS*' || '❌ *Deploy 99cents.one FAILED*' }}
+            DEPLOY STATUS: ${{ job.status }}
 
-            *Repo:* `${{ github.repository }}`
-            *Branch:* `${{ github.ref_name }}`
-            *Commit:* `${{ github.sha }}`
-            *Author:* `${{ github.actor }}`
-            *Message:* _${{ github.event.head_commit.message }}_
-            [🔗 Open workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-            [🔗 See changes](${{ github.server_url }}/${{ github.repository }}/commit/${{github.sha}})
+            Repository: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Author: ${{ github.actor }}
+            Duration: ${{ env.BUILD_DURATION }}
+
+            Message:
+            ${{ github.event.head_commit.message }}
+
+            Workflow run:
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            See changes:
+            ${{ github.server_url }}/${{ github.repository }}/commit/${{github.sha}}
