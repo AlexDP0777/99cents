@@ -48,7 +48,7 @@ export default function ApplyPage() {
   }, []);
 
   const charCount = form.description.length;
-  const isValidLength = charCount >= 200 && charCount <= 1000;
+  const isValidLength = charCount >= 100 && charCount <= 1000;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

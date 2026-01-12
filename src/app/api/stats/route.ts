@@ -1,31 +1,41 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-// GET /api/stats - получить глобальную статистику
+// GET /api/stats - получить глобальную статистику (пересчитывается из реальных данных)
 export async function GET() {
   try {
-    // Получаем или создаём запись статистики
-    let stats = await prisma.stats.findUnique({
-      where: { id: 'global' }
+    // Считаем реальную статистику из базы данных
+    const [participantsCount, countriesResult, paymentsSum] = await Promise.all([
+      // Количество уникальных участников
+      prisma.participant.count(),
+      // Количество уникальных стран
+      prisma.participant.groupBy({
+        by: ['country'],
+        where: { country: { not: null } }
+      }),
+      // Сумма всех завершённых платежей
+      prisma.payment.aggregate({
+        _sum: { amount: true },
+        where: { status: 'completed' }
+      })
+    ]);
+
+    const totalParticipants = participantsCount;
+    const totalCountries = countriesResult.length;
+    const totalAmount = paymentsSum._sum.amount || 0;
+
+    // Обновляем кэш статистики для совместимости
+    await prisma.stats.upsert({
+      where: { id: 'global' },
+      update: { totalParticipants, totalCountries, totalAmount },
+      create: { id: 'global', totalParticipants, totalCountries, totalAmount }
     });
 
-    if (!stats) {
-      // Создаём начальную запись с нулями
-      stats = await prisma.stats.create({
-        data: {
-          id: 'global',
-          totalParticipants: 0,
-          totalCountries: 0,
-          totalAmount: 0,
-        }
-      });
-    }
-
     return NextResponse.json({
-      totalParticipants: stats.totalParticipants,
-      totalCountries: stats.totalCountries,
-      totalAmount: stats.totalAmount,
-      lastUpdated: stats.updatedAt.toISOString(),
+      totalParticipants,
+      totalCountries,
+      totalAmount,
+      lastUpdated: new Date().toISOString(),
     });
   } catch (error) {
     console.error('Stats error:', error);
@@ -39,7 +49,7 @@ export async function GET() {
   }
 }
 
-// POST /api/stats - обновить статистику (внутренний endpoint)
+// POST /api/stats - обновить статистику (внутренний endpoint, теперь опционален)
 export async function POST(request: Request) {
   try {
     const body = await request.json();

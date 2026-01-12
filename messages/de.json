@@ -298,6 +298,8 @@
     "transactionPending": "Transaktion wird bestätigt...",
     "insufficientBalance": "USDC-Guthaben nicht ausreichend",
     "back": "Zurück",
+    "submitRequest": "Hilfsantrag stellen",
+    "orJustClose": "oder schließen Sie dieses Fenster",
     "enterAmount": "Betrag eingeben",
     "minAmount": "Mindestens $1"
   },
@@ -308,7 +310,7 @@
       "description": {
         "label": "Beschreibung der Situation",
         "placeholder": "Beschreiben Sie Ihre Situation ausführlich und wofür die Mittel benötigt werden...",
-        "hint": "Mindestens 200 Zeichen, maximal 1000"
+        "hint": "Mindestens 100 Zeichen, maximal 1000"
       },
       "amount": {
         "label": "Benötigter Betrag (USD)",

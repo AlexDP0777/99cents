@@ -71,6 +71,8 @@ interface PaymentButtonProps {
     transactionPending: string;
     insufficientBalance: string;
     back: string;
+    submitRequest?: string;
+    orJustClose?: string;
     enterAmount?: string;
     minAmount?: string;
   };
@@ -362,7 +364,14 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', f
             </div>
             <p className="text-green-600 font-medium">{t.transactionSuccess}</p>
             <p className="text-gray-500 text-sm">${displayAmount.toFixed(2)}</p>
-            <button onClick={resetState} className="btn-secondary py-2 px-6 text-sm mt-2">OK</button>
+            {mode === 'donation' && (
+              <a href="/apply" className="btn-primary py-2 px-6 text-sm mt-2 text-center">
+                {t.submitRequest || 'Submit a request for help'}
+              </a>
+            )}
+            <button onClick={resetState} className="text-gray-400 text-sm hover:text-gray-600 mt-1">
+              {t.orJustClose || 'OK'}
+            </button>
           </div>
         );
 

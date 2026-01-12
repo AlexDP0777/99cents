@@ -298,6 +298,8 @@
     "transactionPending": "Confirmation de la transaction...",
     "insufficientBalance": "Solde USDC insuffisant",
     "back": "Retour",
+    "submitRequest": "Soumettre une demande d'aide",
+    "orJustClose": "ou fermez simplement cette fenêtre",
     "enterAmount": "Entrez le montant",
     "minAmount": "Minimum 1 $"
   },
@@ -308,7 +310,7 @@
       "description": {
         "label": "Description de la situation",
         "placeholder": "Décrivez votre situation en détail et à quoi les fonds sont destinés...",
-        "hint": "Minimum 200 caractères, maximum 1000"
+        "hint": "Minimum 100 caractères, maximum 1000"
       },
       "amount": {
         "label": "Montant nécessaire (USD)",

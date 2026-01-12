@@ -298,6 +298,8 @@
     "transactionPending": "确认交易中...",
     "insufficientBalance": "USDC余额不足",
     "back": "返回",
+    "submitRequest": "提交援助申请",
+    "orJustClose": "或者关闭此窗口",
     "enterAmount": "输入金额",
     "minAmount": "最低 $1"
   },
@@ -308,7 +310,7 @@
       "description": {
         "label": "情况描述",
         "placeholder": "详细描述您的情况以及资金用途...",
-        "hint": "最少200个字符，最多1000个"
+        "hint": "最少100个字符，最多1000个"
       },
       "amount": {
         "label": "所需金额（美元）",

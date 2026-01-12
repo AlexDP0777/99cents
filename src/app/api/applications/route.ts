@@ -76,8 +76,8 @@ export async function POST(request: NextRequest) {
     const body: ApplicationBody = await request.json();
     const errors: string[] = [];
 
-    if (!body.description || body.description.length < 200) {
-      errors.push('Описание должно содержать минимум 200 символов');
+    if (!body.description || body.description.length < 100) {
+      errors.push('Описание должно содержать минимум 100 символов');
     }
     if (body.description && body.description.length > 1000) {
       errors.push('Описание не должно превышать 1000 символов');
