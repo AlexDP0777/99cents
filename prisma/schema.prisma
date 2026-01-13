@@ -141,3 +141,26 @@ model Stats {
   totalAmount       Float    @default(0)
   updatedAt         DateTime @updatedAt
 }
+
+// Доступ к подаче заявок (регистрация email после оплаты)
+model ApplyAccess {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  verified         Boolean   @default(false)
+  verificationCode String?
+  codeExpiresAt    DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+// Лог отправленных кодов верификации
+model VerificationLog {
+  id        String   @id @default(cuid())
+  email     String
+  code      String
+  used      Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email, createdAt])
+}

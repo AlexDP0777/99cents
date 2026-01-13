@@ -85,6 +85,13 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', f
   const [multiplier, setMultiplier] = useState(1);
   const [customAmount, setCustomAmount] = useState(10);
   const [error, setError] = useState<string | null>(null);
+  
+  // Apply access states
+  const [wantToApply, setWantToApply] = useState(false);
+  const [applyEmail, setApplyEmail] = useState('');
+  const [applyEmailConfirm, setApplyEmailConfirm] = useState('');
+  const [applyRegistered, setApplyRegistered] = useState(false);
+  const [applyError, setApplyError] = useState('');
 
   const account = useActiveAccount();
   const { mutate: sendTransaction, isPending: isSending } = useSendTransaction();
@@ -355,6 +362,43 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', f
         );
 
       case 'success':
+        const handleApplyRegister = async () => {
+          setApplyError('');
+          
+          if (!applyEmail || !applyEmailConfirm) {
+            setApplyError('Please fill in both email fields');
+            return;
+          }
+          
+          if (applyEmail.toLowerCase() !== applyEmailConfirm.toLowerCase()) {
+            setApplyError('Emails do not match');
+            return;
+          }
+          
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(applyEmail)) {
+            setApplyError('Invalid email format');
+            return;
+          }
+          
+          try {
+            const res = await fetch('/api/apply/register', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: applyEmail.toLowerCase() })
+            });
+            const data = await res.json();
+            
+            if (data.success) {
+              setApplyRegistered(true);
+            } else {
+              setApplyError(data.error || 'Registration failed');
+            }
+          } catch {
+            setApplyError('Connection error');
+          }
+        };
+
         return (
           <div className="flex flex-col items-center gap-4 py-6">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
@@ -364,13 +408,63 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', f
             </div>
             <p className="text-green-600 font-medium">{t.transactionSuccess}</p>
             <p className="text-gray-500 text-sm">${displayAmount.toFixed(2)}</p>
-            {mode === 'donation' && (
-              <a href="/apply" className="btn-primary py-2 px-6 text-sm mt-2 text-center">
-                {t.submitRequest || 'Submit a request for help'}
-              </a>
+            
+            {mode === 'donation' && !applyRegistered && (
+              <div className="w-full mt-4 p-4 bg-gray-50 rounded-lg">
+                <label className="flex items-start gap-3 cursor-pointer mb-4">
+                  <input
+                    type="checkbox"
+                    checked={wantToApply}
+                    onChange={(e) => setWantToApply(e.target.checked)}
+                    className="mt-1 w-5 h-5 text-[#1e3a5f] rounded"
+                  />
+                  <span className="text-sm text-gray-700">
+                    I want to be able to submit a request for help
+                  </span>
+                </label>
+                
+                {wantToApply && (
+                  <div className="space-y-3">
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      value={applyEmail}
+                      onChange={(e) => setApplyEmail(e.target.value)}
+                      className="w-full p-3 border border-gray-200 rounded-lg text-sm"
+                    />
+                    <input
+                      type="email"
+                      placeholder="Confirm email"
+                      value={applyEmailConfirm}
+                      onChange={(e) => setApplyEmailConfirm(e.target.value)}
+                      className="w-full p-3 border border-gray-200 rounded-lg text-sm"
+                    />
+                    {applyError && (
+                      <p className="text-red-500 text-xs">{applyError}</p>
+                    )}
+                    <button
+                      onClick={handleApplyRegister}
+                      className="w-full btn-primary py-2 text-sm"
+                    >
+                      Save
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
-            <button onClick={resetState} className="text-gray-400 text-sm hover:text-gray-600 mt-1">
-              {t.orJustClose || 'OK'}
+            
+            {applyRegistered && (
+              <div className="w-full mt-4 p-4 bg-green-50 rounded-lg text-center">
+                <p className="text-green-700 text-sm font-medium mb-2">Email saved!</p>
+                <p className="text-gray-600 text-xs mb-3">You can submit a request now or later</p>
+                <a href="/apply" className="btn-primary py-2 px-6 text-sm inline-block">
+                  Submit request now
+                </a>
+              </div>
+            )}
+            
+            <button onClick={resetState} className="text-gray-400 text-sm hover:text-gray-600 mt-2">
+              {applyRegistered ? 'Close' : (t.orJustClose || 'Close')}
             </button>
           </div>
         );

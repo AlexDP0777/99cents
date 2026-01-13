@@ -34,6 +34,13 @@ export default function ApplyPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [detectedFlag, setDetectedFlag] = useState('');
 
+  // Email verification states
+  const [verifyStep, setVerifyStep] = useState<'email' | 'code' | 'form'>('email');
+  const [verifyEmail, setVerifyEmail] = useState('');
+  const [verifyCode, setVerifyCode] = useState('');
+  const [verifyLoading, setVerifyLoading] = useState(false);
+  const [verifyError, setVerifyError] = useState('');
+
   // Автоопределение страны по IP
   useEffect(() => {
     fetch('/api/geo')
@@ -46,6 +53,81 @@ export default function ApplyPage() {
       })
       .catch(() => {});
   }, []);
+
+  // Check if already verified on mount
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('applyEmail');
+    if (savedEmail) {
+      setVerifyEmail(savedEmail);
+      // Check verification status
+      fetch("/api/apply/verify?email=" + encodeURIComponent(savedEmail))
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.verified) {
+            setVerifyStep('form');
+          }
+        })
+        .catch(() => {});
+    }
+  }, []);
+
+  // Send verification code
+  const handleSendCode = async () => {
+    setVerifyError('');
+    setVerifyLoading(true);
+
+    try {
+      const response = await fetch('/api/apply/send-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: verifyEmail }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        if (data.alreadyVerified) {
+          setVerifyStep('form');
+          localStorage.setItem('applyEmail', verifyEmail);
+        } else {
+          setVerifyStep('code');
+          localStorage.setItem('applyEmail', verifyEmail);
+        }
+      } else {
+        setVerifyError(data.error || 'Failed to send code');
+      }
+    } catch {
+      setVerifyError('Network error');
+    } finally {
+      setVerifyLoading(false);
+    }
+  };
+
+  // Verify the code
+  const handleVerifyCode = async () => {
+    setVerifyError('');
+    setVerifyLoading(true);
+
+    try {
+      const response = await fetch('/api/apply/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: verifyEmail, code: verifyCode }),
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.verified) {
+        setVerifyStep('form');
+      } else {
+        setVerifyError(data.error || 'Invalid code');
+      }
+    } catch {
+      setVerifyError('Network error');
+    } finally {
+      setVerifyLoading(false);
+    }
+  };
 
   const charCount = form.description.length;
   const isValidLength = charCount >= 100 && charCount <= 1000;
@@ -125,17 +207,110 @@ export default function ApplyPage() {
           <h1 className="text-3xl font-bold text-[#1e3a5f] mb-2">{t('title')}</h1>
           <p className="text-gray-500 mb-8">{t('subtitle')}</p>
 
-          {errors.length > 0 && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-              <ul className="list-disc pl-5 text-red-600 text-sm">
-                {errors.map((error, i) => (
-                  <li key={i}>{error}</li>
-                ))}
-              </ul>
+          {/* Email verification step */}
+          {verifyStep === 'email' && (
+            <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+              <h2 className="text-lg font-semibold text-[#1e3a5f] mb-4">Verify your email</h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Enter the email you used when making the payment to verify your access.
+              </p>
+
+              {verifyError && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+                  <p className="text-red-600 text-sm">{verifyError}</p>
+                </div>
+              )}
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-[#1e3a5f] mb-2">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={verifyEmail}
+                  onChange={(e) => setVerifyEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  className="w-full p-4 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#1e3a5f]/20 focus:border-[#1e3a5f]"
+                />
+              </div>
+
+              <button
+                onClick={handleSendCode}
+                disabled={!verifyEmail || verifyLoading}
+                className={"w-full py-3 rounded-lg font-medium transition-colors " + (
+                  verifyEmail && !verifyLoading
+                    ? 'bg-[#1e3a5f] text-white hover:bg-[#2d4a6f]'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                )}
+              >
+                {verifyLoading ? 'Sending...' : 'Send verification code'}
+              </button>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Code verification step */}
+          {verifyStep === 'code' && (
+            <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+              <h2 className="text-lg font-semibold text-[#1e3a5f] mb-4">Enter verification code</h2>
+              <p className="text-sm text-gray-600 mb-4">
+                We sent a 6-digit code to <strong>{verifyEmail}</strong>. Check your inbox.
+              </p>
+
+              {verifyError && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+                  <p className="text-red-600 text-sm">{verifyError}</p>
+                </div>
+              )}
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-[#1e3a5f] mb-2">
+                  Code
+                </label>
+                <input
+                  type="text"
+                  value={verifyCode}
+                  onChange={(e) => setVerifyCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  placeholder="123456"
+                  maxLength={6}
+                  className="w-full p-4 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#1e3a5f]/20 focus:border-[#1e3a5f] text-center text-2xl tracking-widest"
+                />
+              </div>
+
+              <button
+                onClick={handleVerifyCode}
+                disabled={verifyCode.length !== 6 || verifyLoading}
+                className={"w-full py-3 rounded-lg font-medium transition-colors " + (
+                  verifyCode.length === 6 && !verifyLoading
+                    ? 'bg-[#1e3a5f] text-white hover:bg-[#2d4a6f]'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                )}
+              >
+                {verifyLoading ? 'Verifying...' : 'Verify'}
+              </button>
+
+              <button
+                onClick={() => { setVerifyStep('email'); setVerifyCode(''); setVerifyError(''); }}
+                className="w-full mt-3 py-2 text-sm text-[#1e3a5f] hover:underline"
+              >
+                Use different email
+              </button>
+            </div>
+          )}
+
+          {/* Application form - only shown after verification */}
+          {verifyStep === 'form' && (
+            <>
+              {errors.length > 0 && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                  <ul className="list-disc pl-5 text-red-600 text-sm">
+                    {errors.map((error, i) => (
+                      <li key={i}>{error}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-[#1e3a5f] mb-2">
                 {t('form.description.label')} *
@@ -237,7 +412,9 @@ export default function ApplyPage() {
             >
               {isSubmitting ? t('form.submitting') : t('form.submit')}
             </button>
-          </form>
+              </form>
+            </>
+          )}
 
           <div className="mt-8 text-center">
             <Link href={`/${locale}`} className="text-[#1e3a5f] hover:underline">
