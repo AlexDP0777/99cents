@@ -177,7 +177,7 @@ export async function voteForApplication(
       tomorrow.setHours(0, 0, 0, 0);
       return {
         success: false,
-        message: 'Вы уже голосовали сегодня',
+        message: 'You have already voted today',
         nextVoteTime: tomorrow.toISOString()
       };
     }
@@ -188,7 +188,7 @@ export async function voteForApplication(
     });
 
     if (!application || application.status !== 'SELECTED') {
-      return { success: false, message: 'Заявка не найдена или недоступна для голосования' };
+      return { success: false, message: 'Application not found or not available for voting' };
     }
 
     // Создаём голос и увеличиваем счётчик
@@ -212,16 +212,16 @@ export async function voteForApplication(
 
     return {
       success: true,
-      message: 'Голос учтён!',
+      message: 'Your vote has been counted!',
       nextVoteTime: tomorrow.toISOString()
     };
   } catch (error: unknown) {
     console.error('Vote error:', error);
     // Если ошибка уникальности - значит уже голосовал
     if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
-      return { success: false, message: 'Вы уже голосовали за эту заявку' };
+      return { success: false, message: 'You have already voted for this application' };
     }
-    return { success: false, message: 'Ошибка при голосовании' };
+    return { success: false, message: 'Voting error' };
   }
 }
 
@@ -350,7 +350,7 @@ export async function createNewPeriod(durationDays: number = 30) {
   });
 
   if (activePeriod) {
-    throw new Error('Активный период уже существует');
+    throw new Error('Active period already exists');
   }
 
   const now = new Date();

@@ -36,7 +36,12 @@
     "hours": "Stunden",
     "minutes": "Minuten",
     "mustPay": "Um abzustimmen, musst du zuerst 99 Cent senden",
-    "oneVotePerDay": "Eine Stimme pro Tag"
+    "oneVotePerDay": "Eine Stimme pro Tag",
+    "loading": "Laden...",
+    "voteError": "Abstimmungsfehler",
+    "voteSuccess": "Ihre Stimme wurde gezählt!",
+    "alreadyVoted": "Sie haben bereits abgestimmt",
+    "back": "← Zurück"
   },
   "rules": {
     "title": "Projektregeln",
@@ -210,13 +215,41 @@
         "title": "Projekte, die wir unterstützen",
         "subtitle": "Hilfe für echte Menschen",
         "categories": [
-          { "icon": "💧", "name": "Sauberes Wasser", "desc": "Zugang zu Trinkwasser ermöglichen" },
-          { "icon": "🏥", "name": "Gesundheit", "desc": "Behandlung, Medikamente, Patientenbetreuung" },
-          { "icon": "🍎", "name": "Ernährung", "desc": "Nahrung in Krisensituationen bereitstellen" },
-          { "icon": "📚", "name": "Bildung", "desc": "Zugang zu Lernmaterialien und Online-Kursen" },
-          { "icon": "🏠", "name": "Lebensbedingungen", "desc": "Unterkunft, Kleidung und Grundbedürfnisse" },
-          { "icon": "🌪️", "name": "Katastrophenhilfe", "desc": "Unterstützung für Katastrophenopfer" },
-          { "icon": "⚡", "name": "Dringende Bedürfnisse", "desc": "Individuelle Notfälle" }
+          {
+            "icon": "💧",
+            "name": "Sauberes Wasser",
+            "desc": "Zugang zu Trinkwasser ermöglichen"
+          },
+          {
+            "icon": "🏥",
+            "name": "Gesundheit",
+            "desc": "Behandlung, Medikamente, Patientenbetreuung"
+          },
+          {
+            "icon": "🍎",
+            "name": "Ernährung",
+            "desc": "Nahrung in Krisensituationen bereitstellen"
+          },
+          {
+            "icon": "📚",
+            "name": "Bildung",
+            "desc": "Zugang zu Lernmaterialien und Online-Kursen"
+          },
+          {
+            "icon": "🏠",
+            "name": "Lebensbedingungen",
+            "desc": "Unterkunft, Kleidung und Grundbedürfnisse"
+          },
+          {
+            "icon": "🌪️",
+            "name": "Katastrophenhilfe",
+            "desc": "Unterstützung für Katastrophenopfer"
+          },
+          {
+            "icon": "⚡",
+            "name": "Dringende Bedürfnisse",
+            "desc": "Individuelle Notfälle"
+          }
         ],
         "note": "Projekte werden vor der Aufnahme in die Abstimmung geprüft."
       },

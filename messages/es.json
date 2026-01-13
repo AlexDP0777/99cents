@@ -36,7 +36,12 @@
     "hours": "horas",
     "minutes": "minutos",
     "mustPay": "Para votar, primero debes enviar 99 centavos",
-    "oneVotePerDay": "Un voto por día"
+    "oneVotePerDay": "Un voto por día",
+    "loading": "Cargando...",
+    "voteError": "Error al votar",
+    "voteSuccess": "¡Tu voto ha sido contado!",
+    "alreadyVoted": "Ya has votado",
+    "back": "← Volver"
   },
   "rules": {
     "title": "Reglas del Proyecto",
@@ -210,13 +215,41 @@
         "title": "Proyectos que Apoyamos",
         "subtitle": "Ayudando a personas reales",
         "categories": [
-          { "icon": "💧", "name": "Agua Limpia", "desc": "Ayudando a acceder al agua potable" },
-          { "icon": "🏥", "name": "Salud", "desc": "Tratamiento, medicinas, apoyo a pacientes" },
-          { "icon": "🍎", "name": "Nutrición", "desc": "Proporcionando comida en situaciones de crisis" },
-          { "icon": "📚", "name": "Educación", "desc": "Acceso a materiales y cursos en línea" },
-          { "icon": "🏠", "name": "Condiciones de Vida", "desc": "Vivienda, ropa y necesidades esenciales" },
-          { "icon": "🌪️", "name": "Recuperación de Desastres", "desc": "Apoyo a víctimas de desastres naturales" },
-          { "icon": "⚡", "name": "Necesidades Urgentes", "desc": "Necesidades individuales urgentes" }
+          {
+            "icon": "💧",
+            "name": "Agua Limpia",
+            "desc": "Ayudando a acceder al agua potable"
+          },
+          {
+            "icon": "🏥",
+            "name": "Salud",
+            "desc": "Tratamiento, medicinas, apoyo a pacientes"
+          },
+          {
+            "icon": "🍎",
+            "name": "Nutrición",
+            "desc": "Proporcionando comida en situaciones de crisis"
+          },
+          {
+            "icon": "📚",
+            "name": "Educación",
+            "desc": "Acceso a materiales y cursos en línea"
+          },
+          {
+            "icon": "🏠",
+            "name": "Condiciones de Vida",
+            "desc": "Vivienda, ropa y necesidades esenciales"
+          },
+          {
+            "icon": "🌪️",
+            "name": "Recuperación de Desastres",
+            "desc": "Apoyo a víctimas de desastres naturales"
+          },
+          {
+            "icon": "⚡",
+            "name": "Necesidades Urgentes",
+            "desc": "Necesidades individuales urgentes"
+          }
         ],
         "note": "Los proyectos son verificados antes de agregarse a la votación."
       },

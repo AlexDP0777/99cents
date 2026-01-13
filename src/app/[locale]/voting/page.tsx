@@ -120,12 +120,12 @@ export default function VotingPage() {
         setMessage(result.message);
       } else {
         setMessage(result.message);
-        if (result.message.includes('уже голосовали')) {
+        if (result.message.includes('already voted')) {
           setCanVote(false);
         }
       }
     } catch (error) {
-      setMessage('Ошибка при голосовании');
+      setMessage(t('voteError'));
     }
 
     setTimeout(() => setMessage(''), 3000);
@@ -136,7 +136,7 @@ export default function VotingPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-500">Загрузка...</p>
+        <p className="text-gray-500">{t("loading")}</p>
       </div>
     );
   }
@@ -242,7 +242,7 @@ export default function VotingPage() {
 
           <div className="mt-8 text-center">
             <Link href={`/${locale}`} className="text-[#1e3a5f] hover:underline">
-              ← Back
+              {t("back") || "← Back"}
             </Link>
           </div>
         </div>

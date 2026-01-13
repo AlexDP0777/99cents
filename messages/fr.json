@@ -36,7 +36,12 @@
     "hours": "heures",
     "minutes": "minutes",
     "mustPay": "Pour voter, vous devez d'abord envoyer 99 centimes",
-    "oneVotePerDay": "Un vote par jour"
+    "oneVotePerDay": "Un vote par jour",
+    "loading": "Chargement...",
+    "voteError": "Erreur de vote",
+    "voteSuccess": "Votre vote a été compté!",
+    "alreadyVoted": "Vous avez déjà voté",
+    "back": "← Retour"
   },
   "rules": {
     "title": "Règles du Projet",
@@ -210,13 +215,41 @@
         "title": "Projets que nous soutenons",
         "subtitle": "Aider de vraies personnes",
         "categories": [
-          { "icon": "💧", "name": "Eau Potable", "desc": "Aider à accéder à l'eau potable" },
-          { "icon": "🏥", "name": "Santé", "desc": "Traitement, médicaments, soutien aux patients" },
-          { "icon": "🍎", "name": "Nutrition", "desc": "Fournir de la nourriture en situation de crise" },
-          { "icon": "📚", "name": "Éducation", "desc": "Accès aux matériels et cours en ligne" },
-          { "icon": "🏠", "name": "Conditions de Vie", "desc": "Logement, vêtements et besoins essentiels" },
-          { "icon": "🌪️", "name": "Récupération après Catastrophe", "desc": "Soutien aux victimes de catastrophes" },
-          { "icon": "⚡", "name": "Besoins Urgents", "desc": "Besoins individuels urgents" }
+          {
+            "icon": "💧",
+            "name": "Eau Potable",
+            "desc": "Aider à accéder à l'eau potable"
+          },
+          {
+            "icon": "🏥",
+            "name": "Santé",
+            "desc": "Traitement, médicaments, soutien aux patients"
+          },
+          {
+            "icon": "🍎",
+            "name": "Nutrition",
+            "desc": "Fournir de la nourriture en situation de crise"
+          },
+          {
+            "icon": "📚",
+            "name": "Éducation",
+            "desc": "Accès aux matériels et cours en ligne"
+          },
+          {
+            "icon": "🏠",
+            "name": "Conditions de Vie",
+            "desc": "Logement, vêtements et besoins essentiels"
+          },
+          {
+            "icon": "🌪️",
+            "name": "Récupération après Catastrophe",
+            "desc": "Soutien aux victimes de catastrophes"
+          },
+          {
+            "icon": "⚡",
+            "name": "Besoins Urgents",
+            "desc": "Besoins individuels urgents"
+          }
         ],
         "note": "Les projets sont vérifiés avant d'être ajoutés au vote."
       },

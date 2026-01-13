@@ -36,7 +36,12 @@
     "hours": "hours",
     "minutes": "minutes",
     "mustPay": "To vote, you need to send 99 cents first",
-    "oneVotePerDay": "One vote per day"
+    "oneVotePerDay": "One vote per day",
+    "loading": "Loading...",
+    "voteError": "Voting error",
+    "voteSuccess": "Your vote has been counted!",
+    "alreadyVoted": "You have already voted",
+    "back": "← Back"
   },
   "rules": {
     "title": "Project Rules",
@@ -210,13 +215,41 @@
         "title": "Projects We Support",
         "subtitle": "Helping real people",
         "categories": [
-          { "icon": "💧", "name": "Clean Water", "desc": "Helping people access drinking water" },
-          { "icon": "🏥", "name": "Healthcare", "desc": "Treatment, medicine, patient support" },
-          { "icon": "🍎", "name": "Nutrition", "desc": "Providing food for children and adults in crisis" },
-          { "icon": "📚", "name": "Education", "desc": "Access to learning materials and online courses" },
-          { "icon": "🏠", "name": "Living Conditions", "desc": "Housing, clothing, and essential needs" },
-          { "icon": "🌪️", "name": "Disaster Recovery", "desc": "Supporting victims of natural disasters" },
-          { "icon": "⚡", "name": "Emergency Personal Needs", "desc": "Urgent individual needs — medicine, education, equipment" }
+          {
+            "icon": "💧",
+            "name": "Clean Water",
+            "desc": "Helping people access drinking water"
+          },
+          {
+            "icon": "🏥",
+            "name": "Healthcare",
+            "desc": "Treatment, medicine, patient support"
+          },
+          {
+            "icon": "🍎",
+            "name": "Nutrition",
+            "desc": "Providing food for children and adults in crisis"
+          },
+          {
+            "icon": "📚",
+            "name": "Education",
+            "desc": "Access to learning materials and online courses"
+          },
+          {
+            "icon": "🏠",
+            "name": "Living Conditions",
+            "desc": "Housing, clothing, and essential needs"
+          },
+          {
+            "icon": "🌪️",
+            "name": "Disaster Recovery",
+            "desc": "Supporting victims of natural disasters"
+          },
+          {
+            "icon": "⚡",
+            "name": "Emergency Personal Needs",
+            "desc": "Urgent individual needs — medicine, education, equipment"
+          }
         ],
         "note": "Projects are vetted before being added to the voting."
       },
