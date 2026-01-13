@@ -76,10 +76,24 @@ export default function AdminPage() {
 
   useEffect(() => { if (isAuthenticated) loadData(); }, [isAuthenticated]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'admin99') { setIsAuthenticated(true); setError(''); }
-    else { setError(t('wrongPassword')); }
+    setError('');
+    try {
+      const res = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setIsAuthenticated(true);
+      } else {
+        setError(t('wrongPassword'));
+      }
+    } catch {
+      setError('Connection error');
+    }
   };
 
   const filteredApps = applications.filter(app =>

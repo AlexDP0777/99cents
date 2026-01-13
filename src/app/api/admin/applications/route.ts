@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
           success: true,
           period: updatedPeriod,
-          message: 'Голосование запущено'
+          message: 'Voting started'
         });
       }
 
@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
         const periodInfo = await getCurrentPeriodInfo();
         if (!periodInfo) {
           return NextResponse.json(
-            { error: 'Нет активного периода' },
+            { error: 'No active period' },
             { status: 400 }
           );
         }
@@ -117,8 +117,8 @@ export async function POST(request: NextRequest) {
           success: true,
           winner: result.winner,
           message: result.winner 
-            ? `Голосование завершено! Победитель: заявка на ${result.winner.amount} USD`
-            : 'Голосование завершено, победитель не определён'
+            ? `Voting completed! Winner: application for ${result.winner.amount} USD`
+            : 'Voting completed, no winner'
         });
       }
 
@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
           success: true,
           period,
-          message: 'Новый период создан'
+          message: 'New period created'
         });
       }
 
