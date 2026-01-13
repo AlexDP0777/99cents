@@ -371,6 +371,19 @@
     },
     "errors": {
       "generic": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    },
+    "verify": {
+      "title": "E-Mail bestätigen",
+      "description": "Geben Sie die E-Mail-Adresse ein, die Sie bei der Zahlung verwendet haben, um Ihren Zugang zu bestätigen.",
+      "emailLabel": "E-Mail",
+      "sendCode": "Bestätigungscode senden",
+      "sending": "Wird gesendet...",
+      "codeTitle": "Bestätigungscode eingeben",
+      "codeSent": "Wir haben einen 6-stelligen Code an <strong>{email}</strong> gesendet. Überprüfen Sie Ihren Posteingang.",
+      "codeLabel": "Code",
+      "verifyButton": "Bestätigen",
+      "verifying": "Wird überprüft...",
+      "useDifferentEmail": "Andere E-Mail verwenden"
     }
   }
 }

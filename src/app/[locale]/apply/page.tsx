@@ -210,9 +210,9 @@ export default function ApplyPage() {
           {/* Email verification step */}
           {verifyStep === 'email' && (
             <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-              <h2 className="text-lg font-semibold text-[#1e3a5f] mb-4">Verify your email</h2>
+              <h2 className="text-lg font-semibold text-[#1e3a5f] mb-4">{t('verify.title')}</h2>
               <p className="text-sm text-gray-600 mb-4">
-                Enter the email you used when making the payment to verify your access.
+                {t('verify.description')}
               </p>
 
               {verifyError && (
@@ -223,7 +223,7 @@ export default function ApplyPage() {
 
               <div className="mb-4">
                 <label className="block text-sm font-medium text-[#1e3a5f] mb-2">
-                  Email
+                  {t('verify.emailLabel')}
                 </label>
                 <input
                   type="email"
@@ -243,7 +243,7 @@ export default function ApplyPage() {
                     : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 )}
               >
-                {verifyLoading ? 'Sending...' : 'Send verification code'}
+                {verifyLoading ? t('verify.sending') : t('verify.sendCode')}
               </button>
             </div>
           )}
@@ -251,9 +251,9 @@ export default function ApplyPage() {
           {/* Code verification step */}
           {verifyStep === 'code' && (
             <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-              <h2 className="text-lg font-semibold text-[#1e3a5f] mb-4">Enter verification code</h2>
+              <h2 className="text-lg font-semibold text-[#1e3a5f] mb-4">{t('verify.codeTitle')}</h2>
               <p className="text-sm text-gray-600 mb-4">
-                We sent a 6-digit code to <strong>{verifyEmail}</strong>. Check your inbox.
+                {t('verify.codeSent', { email: verifyEmail })}
               </p>
 
               {verifyError && (
@@ -264,7 +264,7 @@ export default function ApplyPage() {
 
               <div className="mb-4">
                 <label className="block text-sm font-medium text-[#1e3a5f] mb-2">
-                  Code
+                  {t('verify.codeLabel')}
                 </label>
                 <input
                   type="text"
@@ -285,14 +285,14 @@ export default function ApplyPage() {
                     : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 )}
               >
-                {verifyLoading ? 'Verifying...' : 'Verify'}
+                {verifyLoading ? t('verify.verifying') : t('verify.verifyButton')}
               </button>
 
               <button
                 onClick={() => { setVerifyStep('email'); setVerifyCode(''); setVerifyError(''); }}
                 className="w-full mt-3 py-2 text-sm text-[#1e3a5f] hover:underline"
               >
-                Use different email
+                {t('verify.useDifferentEmail')}
               </button>
             </div>
           )}

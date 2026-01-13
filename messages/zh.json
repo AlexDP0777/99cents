@@ -371,6 +371,19 @@
     },
     "errors": {
       "generic": "发生错误，请重试。"
+    },
+    "verify": {
+      "title": "验证您的邮箱",
+      "description": "输入您付款时使用的邮箱以验证您的访问权限。",
+      "emailLabel": "邮箱",
+      "sendCode": "发送验证码",
+      "sending": "发送中...",
+      "codeTitle": "输入验证码",
+      "codeSent": "我们已向 <strong>{email}</strong> 发送了6位数验证码。请查看您的收件箱。",
+      "codeLabel": "验证码",
+      "verifyButton": "验证",
+      "verifying": "验证中...",
+      "useDifferentEmail": "使用其他邮箱"
     }
   }
 }

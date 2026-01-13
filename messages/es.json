@@ -371,6 +371,19 @@
     },
     "errors": {
       "generic": "Ocurrió un error. Por favor, inténtalo de nuevo."
+    },
+    "verify": {
+      "title": "Verifica tu email",
+      "description": "Ingresa el email que usaste al realizar el pago para verificar tu acceso.",
+      "emailLabel": "Email",
+      "sendCode": "Enviar código de verificación",
+      "sending": "Enviando...",
+      "codeTitle": "Ingresa el código de verificación",
+      "codeSent": "Enviamos un código de 6 dígitos a <strong>{email}</strong>. Revisa tu bandeja de entrada.",
+      "codeLabel": "Código",
+      "verifyButton": "Verificar",
+      "verifying": "Verificando...",
+      "useDifferentEmail": "Usar otro email"
     }
   }
 }

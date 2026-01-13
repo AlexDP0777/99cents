@@ -371,6 +371,19 @@
     },
     "errors": {
       "generic": "Une erreur s'est produite. Veuillez réessayer."
+    },
+    "verify": {
+      "title": "Vérifiez votre email",
+      "description": "Entrez l'email que vous avez utilisé lors du paiement pour vérifier votre accès.",
+      "emailLabel": "Email",
+      "sendCode": "Envoyer le code de vérification",
+      "sending": "Envoi en cours...",
+      "codeTitle": "Entrez le code de vérification",
+      "codeSent": "Nous avons envoyé un code à 6 chiffres à <strong>{email}</strong>. Vérifiez votre boîte de réception.",
+      "codeLabel": "Code",
+      "verifyButton": "Vérifier",
+      "verifying": "Vérification...",
+      "useDifferentEmail": "Utiliser un autre email"
     }
   }
 }

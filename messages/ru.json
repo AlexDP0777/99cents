@@ -371,6 +371,19 @@
     },
     "errors": {
       "generic": "Произошла ошибка. Попробуйте ещё раз."
+    },
+    "verify": {
+      "title": "Подтвердите email",
+      "description": "Введите email, который вы использовали при оплате, чтобы подтвердить доступ.",
+      "emailLabel": "Email",
+      "sendCode": "Отправить код",
+      "sending": "Отправка...",
+      "codeTitle": "Введите код подтверждения",
+      "codeSent": "Мы отправили 6-значный код на <strong>{email}</strong>. Проверьте почту.",
+      "codeLabel": "Код",
+      "verifyButton": "Подтвердить",
+      "verifying": "Проверка...",
+      "useDifferentEmail": "Использовать другой email"
     }
   }
 }
