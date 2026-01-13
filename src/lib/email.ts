@@ -1,10 +1,11 @@
 import nodemailer from 'nodemailer';
 
 // SMTP configuration from environment variables
+const smtpPort = parseInt(process.env.SMTP_PORT || '587');
 const smtpConfig = {
   host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
+  port: smtpPort,
+  secure: smtpPort === 465, // auto-detect: 465 = SSL, other ports = STARTTLS
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
