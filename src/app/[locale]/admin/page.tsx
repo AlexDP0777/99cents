@@ -38,6 +38,8 @@ export default function AdminPage() {
   const [statusFilter, setStatusFilter] = useState<string>('PENDING');
   const [loading, setLoading] = useState(false);
   const [actionMessage, setActionMessage] = useState('');
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [newApp, setNewApp] = useState({ description: '', amount: '', country: '', contact: '' });
 
   const loadData = async () => {
     if (!isAuthenticated) return;
@@ -62,10 +64,17 @@ export default function AdminPage() {
 
   const handleAction = async (action: string, appId?: string) => {
     try {
+      const payload: Record<string, unknown> = { action, applicationId: appId };
+      if (action === 'createApplication') {
+        payload.description = newApp.description;
+        payload.amount = parseFloat(newApp.amount);
+        payload.country = newApp.country;
+        payload.contact = newApp.contact;
+      }
       const res = await fetch('/api/admin/applications', {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + password, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action, applicationId: appId })
+        body: JSON.stringify(payload)
       });
       const data = await res.json();
       setActionMessage(data.message || (data.success ? 'Done!' : 'Error'));
@@ -168,7 +177,23 @@ export default function AdminPage() {
                   <button onClick={() => handleAction('endVoting')} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm">Завершить</button>
                   <button onClick={() => handleAction('newPeriod')} className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm">Новый период</button>
                   <button onClick={loadData} className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg text-sm">Обновить</button>
+                  <button onClick={() => handleAction("deleteAllApplications")} className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm">Удалить все заявки</button>
+                  <button onClick={() => setShowCreateForm(!showCreateForm)} className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm">{showCreateForm ? "Скрыть форму" : "Создать заявку"}</button>
                 </div>
+                {showCreateForm && (
+                  <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                    <h3 className="font-medium mb-3">Новая заявка</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <textarea placeholder="Описание" value={newApp.description} onChange={(e) => setNewApp({...newApp, description: e.target.value})} className="p-2 border rounded-lg text-sm" rows={3} />
+                      <div className="space-y-2">
+                        <input type="number" placeholder="Сумма ($)" value={newApp.amount} onChange={(e) => setNewApp({...newApp, amount: e.target.value})} className="w-full p-2 border rounded-lg text-sm" />
+                        <input type="text" placeholder="Страна" value={newApp.country} onChange={(e) => setNewApp({...newApp, country: e.target.value})} className="w-full p-2 border rounded-lg text-sm" />
+                        <input type="text" placeholder="Контакт (email/telegram)" value={newApp.contact} onChange={(e) => setNewApp({...newApp, contact: e.target.value})} className="w-full p-2 border rounded-lg text-sm" />
+                      </div>
+                    </div>
+                    <button onClick={async () => { await handleAction("createApplication", undefined); setNewApp({ description: "", amount: "", country: "", contact: "" }); setShowCreateForm(false); }} className="mt-3 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm">Создать</button>
+                  </div>
+                )}
                 {period.selectedApplications.length > 0 && (
                   <div className="mt-6"><h3 className="font-medium mb-3">На голосовании:</h3>
                     {period.selectedApplications.map((app, idx) => (

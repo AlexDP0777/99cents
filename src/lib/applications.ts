@@ -361,3 +361,40 @@ export async function createNewPeriod(durationDays: number = 30) {
     data: { startDate: now, endDate, status: 'COLLECTING' }
   });
 }
+
+/**
+ * Создаёт заявку от администратора
+ */
+export async function createApplication(data: {
+  description: string;
+  amount: number;
+  country: string;
+  contact: string;
+}) {
+  if (!prisma) throw new Error('Database not connected');
+  
+  return prisma.application.create({
+    data: {
+      description: data.description,
+      amount: data.amount,
+      country: data.country,
+      contact: data.contact,
+      status: 'PENDING'
+    }
+  });
+}
+
+/**
+ * Удаляет все заявки и связанные голоса
+ */
+export async function deleteAllApplications() {
+  if (!prisma) throw new Error('Database not connected');
+  
+  // Сначала удаляем все голоса за заявки
+  await prisma.applicationVote.deleteMany({});
+  
+  // Затем удаляем все заявки
+  const result = await prisma.application.deleteMany({});
+  
+  return result.count;
+}

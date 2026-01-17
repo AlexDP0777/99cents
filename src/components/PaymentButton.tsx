@@ -78,7 +78,7 @@ interface PaymentButtonProps {
   };
 }
 
-type Step = 'initial' | 'payment-method' | 'wallet-connect' | 'amount-select' | 'confirm' | 'processing' | 'success' | 'error';
+type Step = 'initial' | 'wallet-connect' | 'amount-select' | 'confirm' | 'processing' | 'success' | 'error';
 
 export default function PaymentButton({ onSuccess, onError, mode = 'donation', freeAmount = false, translations: t }: PaymentButtonProps) {
   const [step, setStep] = useState<Step>('initial');
@@ -110,10 +110,6 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', f
   }, [account, step]);
 
   const handleInitialClick = () => {
-    setStep('payment-method');
-  };
-
-  const handleSelectCrypto = () => {
     if (account) {
       setStep('amount-select');
     } else {
@@ -188,35 +184,6 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', f
           </button>
         );
 
-      case 'payment-method':
-        return (
-          <div className="flex flex-col gap-3 w-full">
-            <p className="text-gray-600 text-sm mb-2 text-center">{t.choosePaymentMethod}</p>
-
-            <div className="flex flex-col gap-1">
-              <button onClick={handleSelectCrypto} className="btn-primary py-2 px-4 text-xs">
-                {t.cryptoPayment}
-              </button>
-              <p className="text-gray-400 text-xs text-center">{t.cryptoPaymentHint}</p>
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <button disabled className="btn-secondary py-3 px-6 flex items-center justify-center gap-2 opacity-50 cursor-not-allowed">
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="1" y="4" width="22" height="16" rx="2" />
-                  <line x1="1" y1="10" x2="23" y2="10" />
-                </svg>
-                {t.cardPayment}
-                <span className="text-xs bg-gray-200 px-2 py-0.5 rounded ml-1">{t.cardComingSoon}</span>
-              </button>
-            </div>
-
-            <button onClick={resetState} className="text-gray-400 text-sm hover:text-gray-600 mt-2">
-              {t.back}
-            </button>
-          </div>
-        );
-
       case 'wallet-connect':
         return (
           <div className="flex flex-col gap-4 w-full">
@@ -240,17 +207,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', f
               }}
             />
 
-            <div className="bg-gray-50 rounded-lg p-4 text-left">
-              <p className="text-sm font-medium text-gray-700 mb-2">{t.instructionTitle}</p>
-              <ul className="text-xs text-gray-600 space-y-1">
-                <li>• {t.instructionCrypto}</li>
-                <li>• {t.instructionCard}</li>
-                <li>• {t.instructionCoinbase}</li>
-                <li>• {t.instructionStripe}</li>
-              </ul>
-            </div>
-
-            <button onClick={() => setStep('payment-method')} className="text-gray-400 text-sm hover:text-gray-600">
+            <button onClick={resetState} className="text-gray-400 text-sm hover:text-gray-600">
               {t.back}
             </button>
           </div>
@@ -329,7 +286,7 @@ export default function PaymentButton({ onSuccess, onError, mode = 'donation', f
               {t.confirmPayment}
             </button>
 
-            <button onClick={() => setStep('payment-method')} className="text-gray-400 text-sm hover:text-gray-600">
+            <button onClick={resetState} className="text-gray-400 text-sm hover:text-gray-600">
               {t.back}
             </button>
           </div>

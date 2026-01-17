@@ -131,6 +131,25 @@ export async function POST(request: NextRequest) {
         });
       }
 
+      case 'createApplication': {
+        const { description, amount, country, contact } = body;
+        if (!description || !amount || !country || !contact) {
+          return NextResponse.json(
+            { error: 'description, amount, country, contact required' },
+            { status: 400 }
+          );
+        }
+        const { createApplication } = await import('@/lib/applications');
+        const application = await createApplication({ description, amount, country, contact });
+        return NextResponse.json({ success: true, application, message: 'Application created' });
+      }
+
+      case 'deleteAllApplications': {
+        const { deleteAllApplications } = await import('@/lib/applications');
+        const count = await deleteAllApplications();
+        return NextResponse.json({ success: true, count, message: 'All applications deleted' });
+      }
+
       default:
         return NextResponse.json(
           { error: 'Unknown action' },
