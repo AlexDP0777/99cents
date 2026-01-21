@@ -14,14 +14,7 @@ const VALID_COUNTRIES = [
   'Other'
 ];
 
-// Mock data for fallback
-const mockApplications = [
-  { id: '1', description: 'Help needed for child medical treatment. Diagnosis: Cerebral palsy.', amount: 5000, country: 'Ukraine', votesCount: 127 },
-  { id: '2', description: 'Fundraising for building a well in a village.', amount: 3000, country: 'Kenya', votesCount: 89 },
-  { id: '3', description: 'Purchase of school supplies for 50 children.', amount: 1500, country: 'India', votesCount: 156 },
-  { id: '4', description: 'House restoration after fire.', amount: 8000, country: 'Russia', votesCount: 203 },
-  { id: '5', description: 'Surgery payment for homeless animals in shelter.', amount: 2000, country: 'Brazil', votesCount: 78 },
-];
+
 
 interface ApplicationBody {
   description: string;
@@ -56,15 +49,15 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({
-      applications: mockApplications,
-      totalSubmitted: 47,
+      applications: [],
+      totalSubmitted: 0,
       periodEnd: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
     });
   } catch (error) {
     console.error('Error fetching applications:', error);
     return NextResponse.json({
-      applications: mockApplications,
-      totalSubmitted: 47,
+      applications: [],
+      totalSubmitted: 0,
       periodEnd: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
     });
   }
